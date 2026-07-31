@@ -1,0 +1,17 @@
+﻿using HR_system.Models;
+using Microsoft.EntityFrameworkCore;
+namespace HR_system.Data
+{
+    public class ApplicationDbContext : DbContext
+    {
+        // This constructor lets ASP.NET Core inject configuration
+        // (like the connection string) automatically via Dependency Injection.
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
+
+        public DbSet<Department> Departments { get; set; }
+
+    }
+}

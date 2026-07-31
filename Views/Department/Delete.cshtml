@@ -1,0 +1,77 @@
+﻿@model HR_system.Models.Department
+
+@{
+    ViewData["Title"] = "Delete Department";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <!-- Back Button Link -->
+            <div class="mb-3">
+                <a asp-action="Index" class="text-decoration-none text-muted small">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Departments
+                </a>
+            </div>
+
+            <!-- Card Wrapper -->
+            <div class="card border-0 shadow-sm rounded-3">
+
+                <!-- Card Header -->
+                <div class="card-header bg-white border-bottom py-3 px-4">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-sm bg-danger-subtle text-danger rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 42px; height: 42px;">
+                            <i class="bi bi-exclamation-triangle fs-5"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold text-danger mb-0">Delete Department</h4>
+                            <p class="text-muted small mb-0">Are you sure you want to permanently remove this record?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body p-4">
+
+                    <!-- Confirmation Alert Box -->
+                    <div class="alert alert-warning border-0 bg-warning-subtle text-warning-emphasis small mb-4" role="alert">
+                        <i class="bi bi-info-circle me-1"></i>
+                        <strong>Warning:</strong> Deleting this department cannot be undone.
+                    </div>
+
+                    <!-- Department Details Display Box -->
+                    <div class="bg-light p-3 rounded-3 border mb-4">
+                        <div class="mb-3">
+                            <label class="text-uppercase text-muted fw-bold fs-7 mb-1 d-block">Department Name</label>
+                            <span class="fw-semibold fs-6 text-dark">@Model.Name</span>
+                        </div>
+
+                        <div>
+                            <label class="text-uppercase text-muted fw-bold fs-7 mb-1 d-block">Description</label>
+                            <span class="text-muted">
+                                @(string.IsNullOrEmpty(Model.Description) ? "No description provided." : Model.Description)
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Action Form -->
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="d-flex align-items-center justify-content-end gap-2 pt-2 border-top">
+                            <a asp-action="Index" class="btn btn-outline-secondary px-4 rounded-2">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-danger px-4 rounded-2 shadow-sm">
+                                <i class="bi bi-trash me-1"></i> Confirm Delete
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
