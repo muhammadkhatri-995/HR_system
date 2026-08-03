@@ -1,0 +1,156 @@
+﻿@model HR_system.ViewModels.EmployeeViewModel
+
+@{
+    ViewData["Title"] = "Add Employee";
+}
+
+<h2>Add Employee</h2>
+
+<div class="employee-form-container">
+
+    @* enctype="multipart/form-data" is REQUIRED whenever a form contains
+       a file input — without it, IFormFile in the Controller will always be null,
+       no matter what the user selects. *@
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        @* Live photo preview box — shows the selected image BEFORE upload,
+           using plain JavaScript (FileReader), no server round-trip needed. *@
+        <div class="photo-preview-box" id="photoPreviewBox">
+            <span id="photoPlaceholderText">No Photo</span>
+            <img id="photoPreviewImg" src="#" alt="Preview" style="display:none;" />
+        </div>
+
+        <div class="form-group-full mb-3" style="text-align:center;">
+            <label asp-for="PhotoFile" class="form-label">Employee Photo</label><br />
+            <input asp-for="PhotoFile" type="file" accept="image/*" onchange="previewPhoto(this)" />
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label asp-for="FirstName" class="form-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LastName" class="form-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Phone" class="form-label"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CNIC" class="form-label"></label>
+                <input asp-for="CNIC" class="form-control" />
+                <span asp-validation-for="CNIC" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Gender" class="form-label"></label>
+                @* asp-items generates <option> tags from a list of SelectListItem.
+                   We build this list manually since Gender isn't stored in its own DB table. *@
+                <select asp-for="Gender" class="form-control">
+                    <option value="">-- Select Gender --</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DateOfBirth" class="form-label"></label>
+                <input asp-for="DateOfBirth" class="form-control" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="JoiningDate" class="form-label"></label>
+                <input asp-for="JoiningDate" class="form-control" />
+                <span asp-validation-for="JoiningDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DepartmentId" class="form-label">Department</label>
+                @* asp-items pulls the Value/Text pairs from model.Departments,
+                   which the Controller populated via PopulateDropdowns() *@
+                <select asp-for="DepartmentId" asp-items="Model.Departments" class="form-control">
+                    <option value="">-- Select Department --</option>
+                </select>
+                <span asp-validation-for="DepartmentId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="RoleId" class="form-label">Role</label>
+                <select asp-for="RoleId" asp-items="Model.Roles" class="form-control">
+                    <option value="">-- Select Role --</option>
+                </select>
+                <span asp-validation-for="RoleId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Salary" class="form-label"></label>
+                <input asp-for="Salary" class="form-control" />
+                <span asp-validation-for="Salary" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Status" class="form-label"></label>
+                <select asp-for="Status" class="form-control">
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+            </div>
+
+            <div class="form-group form-group-full">
+                <label asp-for="Address" class="form-label"></label>
+                <textarea asp-for="Address" class="form-control"></textarea>
+            </div>
+        </div>
+
+        <div class="mt-3" style="text-align:center;">
+            <button type="submit" class="btn-add-employee">Save Employee</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Shows a live preview of the selected photo before the form is submitted.
+        // FileReader is a built-in browser API that reads a local file's contents
+        // into memory (here, as a Base64 image URL) without uploading it yet.
+        function previewPhoto(input) {
+            const preview = document.getElementById('photoPreviewImg');
+            const placeholder = document.getElementById('photoPlaceholderText');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    placeholder.style.display = 'none';
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}

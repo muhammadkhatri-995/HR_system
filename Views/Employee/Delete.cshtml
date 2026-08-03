@@ -1,0 +1,33 @@
+﻿@model HR_system.Models.Employee
+
+@{
+    ViewData["Title"] = "Delete Employee";
+}
+
+<h2>Delete Employee</h2>
+
+<div class="employee-form-container" style="text-align:center;">
+    <div class="employee-photo-wrapper" style="margin-bottom:15px;">
+        @if (!string.IsNullOrEmpty(Model.EmployeePhoto))
+        {
+            <img src="@Model.EmployeePhoto" alt="@Model.FirstName" />
+        }
+        else
+        {
+            <span class="employee-photo-placeholder">@Model.FirstName.Substring(0, 1)</span>
+        }
+    </div>
+
+    <h4>@Model.FirstName @Model.LastName</h4>
+    <p>@(Model.Department?.Name ?? "No Department") — @(Model.Role?.Name ?? "No Role")</p>
+
+    <p style="color:#c0392b; font-weight:500;">
+        Are you sure you want to delete this employee? This cannot be undone.
+    </p>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="id" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

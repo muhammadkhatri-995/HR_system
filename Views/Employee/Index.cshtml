@@ -1,0 +1,92 @@
+﻿@model IEnumerable<HR_system.Models.Employee>
+
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<h2>Employees</h2>
+
+<div class="employee-toolbar">
+    @* method="get" so the search term appears in the URL (e.g. ?searchTerm=ali),
+       which lets pagination links preserve the search when clicked *@
+    <form method="get" asp-action="Index" class="employee-search-form">
+        <input type="text" name="searchTerm" value="@ViewBag.SearchTerm"
+               placeholder="Search by name, email, or CNIC..." />
+        <button type="submit" class="btn-add-employee">Search</button>
+    </form>
+
+    <a asp-action="Create" class="btn-add-employee">+ Add Employee</a>
+</div>
+
+@if (!Model.Any())
+{
+    <p>No employees found.</p>
+}
+else
+{
+    <div class="employee-grid">
+        @foreach (var emp in Model)
+        {
+            <div class="employee-card">
+                <div class="employee-photo-wrapper">
+                    @* If a photo was uploaded, show it. Otherwise show the
+                       first letter of the first name as a placeholder. *@
+                    @if (!string.IsNullOrEmpty(emp.EmployeePhoto))
+                    {
+                        <img src="@emp.EmployeePhoto" alt="@emp.FirstName" />
+                    }
+                    else
+                    {
+                        <span class="employee-photo-placeholder">@emp.FirstName.Substring(0, 1)</span>
+                    }
+                </div>
+
+                <div class="employee-name">@emp.FirstName @emp.LastName</div>
+
+                @* emp.Role comes from .Include(e => e.Role) in the Repository —
+                   without that Include, emp.Role would be null here. *@
+                @* <div class="employee-role">@(emp.Role?.Name ?? emp.Role?.Name)</div>
+
+                <div class="employee-detail">📧 @emp.Email</div>
+                <div class="employee-detail">📞 @emp.Phone</div>
+                <div class="employee-detail">🏢 @(emp.Department?.Name ?? emp.Department?.Name)</div>
+
+                <span class="status-badge @(emp.Status == "Active" ? "status-active" : "status-inactive")">
+                    @emp.Status
+                </span> *@
+                <div class="employee-role">@emp.Role?.Name</div>
+
+                <div class="employee-detail">📧 @emp.Email</div>
+                <div class="employee-detail">📞 @emp.Phone</div>
+                <div class="employee-detail">🏢 @emp.Department?.Name</div>
+
+                <span class="status-badge @(emp.Status == "Active" ? "status-active" : "status-inactive")">
+                    @emp.Status
+                </span>
+                <div class="employee-card-actions">
+                    <a asp-action="Edit" asp-route-id="@emp.id" class="btn-edit">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@emp.id" class="btn-delete">Delete</a>
+                </div>
+            </div>
+        }
+    </div>
+
+    @* ===== Pagination ===== *@
+    <div class="pagination-wrapper">
+        @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
+        {
+            @* Preserve the search term when navigating between pages,
+               by passing it as a route value in asp-route-searchTerm *@
+            if (i == (int)ViewBag.CurrentPage)
+            {
+                <span class="active">@i</span>
+            }
+            else
+            {
+                <a asp-action="Index"
+                   asp-route-pageNumber="@i"
+                   asp-route-searchTerm="@ViewBag.SearchTerm">@i</a>
+            }
+        }
+    </div>
+}

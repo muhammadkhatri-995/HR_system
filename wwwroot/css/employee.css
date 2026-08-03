@@ -1,0 +1,431 @@
+﻿/* ==========================================================================
+   Modern HRMS Dashboard Stylesheet
+   Theme: Indigo Slate (SaaS / Enterprise Modern)
+   ========================================================================== */
+
+/* ===== Variables & Design Tokens ===== */
+:root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --primary-light: #e0e7ff;
+    --bg-main: #f8fafc;
+    --card-bg: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border-color: #e2e8f0;
+    --border-focus: #818cf8;
+    --success-bg: #dcfce7;
+    --success-text: #15803d;
+    --danger-bg: #ffe4e6;
+    --danger-text: #be123c;
+    --warning-bg: #fef3c7;
+    --warning-text: #b45309;
+    --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05);
+    --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 12px 24px -4px rgba(15, 23, 42, 0.12);
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== Employee Card Grid Layout ===== */
+.employee-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+}
+
+/* ===== Individual Employee Card ===== */
+.employee-card {
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 24px;
+    text-align: center;
+    transition: var(--transition);
+    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+
+    /* Top accent line decoration */
+    .employee-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), #a855f7);
+        opacity: 0;
+        transition: var(--transition);
+    }
+
+    .employee-card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-lg);
+        border-color: transparent;
+    }
+
+        .employee-card:hover::before {
+            opacity: 1;
+        }
+
+/* ===== Photo ===== */
+.employee-photo-wrapper {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 16px auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #ffffff;
+    box-shadow: 0 0 0 3px var(--primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    transition: var(--transition);
+}
+
+.employee-card:hover .employee-photo-wrapper {
+    box-shadow: 0 0 0 3px var(--primary);
+}
+
+.employee-photo-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Placeholder Avatar Initial */
+.employee-photo-placeholder {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+}
+
+/* ===== Text Inside Card ===== */
+.employee-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 4px;
+    letter-spacing: -0.2px;
+}
+
+.employee-role {
+    font-size: 13px;
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.employee-detail {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+/* ===== Status Badges ===== */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 16px;
+    letter-spacing: 0.2px;
+}
+
+.status-active {
+    background: var(--success-bg);
+    color: var(--success-text);
+}
+
+    .status-active::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: var(--success-text);
+    }
+
+.status-inactive {
+    background: var(--danger-bg);
+    color: var(--danger-text);
+}
+
+    .status-inactive::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: var(--danger-text);
+    }
+
+/* ===== Card Action Buttons ===== */
+.employee-card-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 14px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 16px;
+}
+
+    .employee-card-actions a {
+        flex: 1;
+        padding: 8px 0;
+        border-radius: var(--radius-md);
+        font-size: 13px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+    }
+
+.btn-edit {
+    background: var(--warning-bg);
+    color: var(--warning-text);
+}
+
+    .btn-edit:hover {
+        background: #fde68a;
+        transform: translateY(-1px);
+    }
+
+.btn-delete {
+    background: var(--danger-bg);
+    color: var(--danger-text);
+}
+
+    .btn-delete:hover {
+        background: #fecdd3;
+        transform: translateY(-1px);
+    }
+
+/* ===== Aesthetic Add Employee Placeholder Card (Grid View) ===== */
+.add-employee-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    border: 2px dashed #a5b4fc;
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: var(--transition);
+    cursor: pointer;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Floating Plus Icon Wrapper */
+.add-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+    transition: var(--transition);
+}
+
+.add-card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 4px;
+    transition: var(--transition);
+}
+
+.add-card-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+/* Add Card Hover Effects */
+.add-employee-card:hover {
+    background: #ffffff;
+    border-color: var(--primary);
+    border-style: solid;
+    box-shadow: 0 12px 30px -5px rgba(99, 102, 241, 0.2);
+    transform: translateY(-6px);
+}
+
+    .add-employee-card:hover .add-icon-wrapper {
+        background: linear-gradient(135deg, var(--primary), #8b5cf6);
+        color: #ffffff;
+        transform: scale(1.1) rotate(90deg);
+        box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    .add-employee-card:hover .add-card-title {
+        color: var(--primary);
+    }
+
+/* ===== Toolbar & Search Bar ===== */
+.employee-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+    background: var(--card-bg);
+    padding: 16px 20px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.employee-search-form {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+    max-width: 420px;
+}
+
+    .employee-search-form input {
+        width: 100%;
+        padding: 10px 16px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        font-size: 14px;
+        background-color: var(--bg-main);
+        color: var(--text-main);
+        outline: none;
+        transition: var(--transition);
+    }
+
+        .employee-search-form input:focus {
+            border-color: var(--border-focus);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+/* ===== Premium Add Employee Button (Toolbar) ===== */
+.btn-add-employee {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+    background-size: 200% auto;
+    color: #ffffff;
+    padding: 11px 22px;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+    transition: var(--transition);
+}
+
+    .btn-add-employee:hover {
+        background-position: right center;
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
+        transform: translateY(-2px);
+        color: #ffffff;
+    }
+
+    .btn-add-employee:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+/* ===== Pagination ===== */
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 36px;
+}
+
+    .pagination-wrapper a,
+    .pagination-wrapper span {
+        padding: 9px 16px;
+        border-radius: var(--radius-md);
+        text-decoration: none;
+        color: var(--text-muted);
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        font-size: 14px;
+        font-weight: 600;
+        transition: var(--transition);
+    }
+
+        .pagination-wrapper a:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+    .pagination-wrapper .active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+    }
+
+/* ===== Form Styling (Create/Edit Pages) ===== */
+.employee-form-container {
+    max-width: 840px;
+    margin: 30px auto;
+    background: var(--card-bg);
+    padding: 36px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.form-group-full {
+    grid-column: 1 / -1;
+}
+
+.photo-preview-box {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px dashed var(--border-focus);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+    background: var(--primary-light);
+    transition: var(--transition);
+}
+
+    .photo-preview-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }

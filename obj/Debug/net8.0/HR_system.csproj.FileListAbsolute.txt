@@ -137,3 +137,4 @@ C:\Users\DELL\Desktop\HR_system\obj\Debug\net8.0\refint\HR_system.dll
 C:\Users\DELL\Desktop\HR_system\obj\Debug\net8.0\HR_system.pdb
 C:\Users\DELL\Desktop\HR_system\obj\Debug\net8.0\HR_system.genruntimeconfig.cache
 C:\Users\DELL\Desktop\HR_system\obj\Debug\net8.0\ref\HR_system.dll
+C:\Users\DELL\Desktop\HR_system\obj\Debug\net8.0\HR_system.sourcelink.json

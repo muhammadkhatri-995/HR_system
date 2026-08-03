@@ -12,6 +12,9 @@ namespace HR_system.Data
         }
 
         public DbSet<Department> Departments { get; set; }
+        public DbSet<Role> Roles { get; set; }
+
+        public DbSet<Employee> Employees { get; set; }
 
     }
 }
