@@ -3,52 +3,88 @@
   "WorkspaceRootPath": "C:\\Users\\DELL\\Desktop\\HR_system\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\department\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|solutionrelative:views\\department\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\department\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|solutionrelative:views\\department\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\role\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:views\\role\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\department\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|solutionrelative:views\\department\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\role\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:views\\role\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\department\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|solutionrelative:views\\department\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\role\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:views\\role\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\controllers\\departmentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|solutionrelative:controllers\\departmentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\role\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:views\\role\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\controllers\\rolecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:controllers\\rolecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\repositories\\departmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|solutionrelative:repositories\\departmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\interfaces\\irolerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:interfaces\\irolerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\interfaces\\idepartmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|solutionrelative:interfaces\\idepartmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\controllers\\departmentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:controllers\\departmentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\repositories\\rolerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:repositories\\rolerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|solutionrelative:data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\repositories\\departmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:repositories\\departmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\models\\department.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{18322413-1917-402A-BAD1-0DE9CD7A5C63}|HR_system.csproj|solutionrelative:models\\department.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\models\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:models\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\models\\department.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:models\\department.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\department\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:views\\department\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\department\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:views\\department\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\department\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:views\\department\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\department\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:views\\department\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\interfaces\\idepartmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:interfaces\\idepartmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -58,11 +94,128 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 18,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Role\\Delete.cshtml",
+              "RelativeDocumentMoniker": "Views\\Role\\Delete.cshtml",
+              "ToolTip": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Role\\Delete.cshtml",
+              "RelativeToolTip": "Views\\Role\\Delete.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-08-01T08:00:39.228Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Role\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Views\\Role\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Role\\Edit.cshtml",
+              "RelativeToolTip": "Views\\Role\\Edit.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-08-01T07:59:26.599Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Role\\Create.cshtml",
+              "RelativeDocumentMoniker": "Views\\Role\\Create.cshtml",
+              "ToolTip": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Role\\Create.cshtml",
+              "RelativeToolTip": "Views\\Role\\Create.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-08-01T07:56:44.156Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "index.cshtml",
+              "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Role\\index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Role\\index.cshtml",
+              "ToolTip": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Role\\index.cshtml",
+              "RelativeToolTip": "Views\\Role\\index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-08-01T07:54:31.889Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "RoleController.cs",
+              "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Controllers\\RoleController.cs",
+              "RelativeDocumentMoniker": "Controllers\\RoleController.cs",
+              "ToolTip": "C:\\Users\\DELL\\Desktop\\HR_system\\Controllers\\RoleController.cs",
+              "RelativeToolTip": "Controllers\\RoleController.cs",
+              "ViewState": "AgIAACgAAAAAAAAAAAAcwE8AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-01T07:16:21.797Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "RoleRepository.cs",
+              "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Repositories\\RoleRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\RoleRepository.cs",
+              "ToolTip": "C:\\Users\\DELL\\Desktop\\HR_system\\Repositories\\RoleRepository.cs",
+              "RelativeToolTip": "Repositories\\RoleRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-01T07:03:57.504Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "IRoleRepository.cs",
+              "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Interfaces\\IRoleRepository.cs",
+              "RelativeDocumentMoniker": "Interfaces\\IRoleRepository.cs",
+              "ToolTip": "C:\\Users\\DELL\\Desktop\\HR_system\\Interfaces\\IRoleRepository.cs",
+              "RelativeToolTip": "Interfaces\\IRoleRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-01T06:08:18.114Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ErrorViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Models\\ErrorViewModel.cs",
+              "RelativeDocumentMoniker": "Models\\ErrorViewModel.cs",
+              "ToolTip": "C:\\Users\\DELL\\Desktop\\HR_system\\Models\\ErrorViewModel.cs",
+              "RelativeToolTip": "Models\\ErrorViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-01T06:05:49.316Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Role.cs",
+              "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Models\\Role.cs",
+              "RelativeDocumentMoniker": "Models\\Role.cs",
+              "ToolTip": "C:\\Users\\DELL\\Desktop\\HR_system\\Models\\Role.cs",
+              "RelativeToolTip": "Models\\Role.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-01T06:04:38.521Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
               "Title": "Delete.cshtml",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Department\\Delete.cshtml",
               "RelativeDocumentMoniker": "Views\\Department\\Delete.cshtml",
@@ -70,12 +223,11 @@
               "RelativeToolTip": "Views\\Department\\Delete.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-07-31T17:25:10.666Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-31T17:25:10.666Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 17,
               "Title": "Edit.cshtml",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Department\\Edit.cshtml",
               "RelativeDocumentMoniker": "Views\\Department\\Edit.cshtml",
@@ -83,12 +235,11 @@
               "RelativeToolTip": "Views\\Department\\Edit.cshtml",
               "ViewState": "AgIAABsAAAAAAAAAAAAAAAAAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-07-31T17:24:12.746Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-31T17:24:12.746Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 18,
               "Title": "create.cshtml",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Department\\create.cshtml",
               "RelativeDocumentMoniker": "Views\\Department\\create.cshtml",
@@ -96,25 +247,24 @@
               "RelativeToolTip": "Views\\Department\\create.cshtml",
               "ViewState": "AgIAAD8AAAAAAAAAAAAAAAAAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-07-31T17:22:48.92Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-31T17:22:48.92Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
               "ToolTip": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Shared\\_Layout.cshtml",
               "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAAB4AAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAACAAAABoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-07-31T17:21:43.091Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 15,
               "Title": "index.cshtml",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Department\\index.cshtml",
               "RelativeDocumentMoniker": "Views\\Department\\index.cshtml",
@@ -127,33 +277,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 8,
               "Title": "DepartmentController.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Controllers\\DepartmentController.cs",
               "RelativeDocumentMoniker": "Controllers\\DepartmentController.cs",
               "ToolTip": "C:\\Users\\DELL\\Desktop\\HR_system\\Controllers\\DepartmentController.cs",
               "RelativeToolTip": "Controllers\\DepartmentController.cs",
-              "ViewState": "AgIAADAAAAAAAAAAAAAmwEcAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-31T17:15:26.757Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 10,
               "Title": "DepartmentRepository.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Repositories\\DepartmentRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\DepartmentRepository.cs",
               "ToolTip": "C:\\Users\\DELL\\Desktop\\HR_system\\Repositories\\DepartmentRepository.cs",
               "RelativeToolTip": "Repositories\\DepartmentRepository.cs",
-              "ViewState": "AgIAABoAAAAAAAAAAAAwwDAAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADAAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-31T17:06:11.076Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 19,
               "Title": "IDepartmentRepository.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Interfaces\\IDepartmentRepository.cs",
               "RelativeDocumentMoniker": "Interfaces\\IDepartmentRepository.cs",
@@ -161,12 +311,11 @@
               "RelativeToolTip": "Interfaces\\IDepartmentRepository.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-31T16:59:19.055Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-31T16:59:19.055Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 14,
               "Title": "Department.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Models\\Department.cs",
               "RelativeDocumentMoniker": "Models\\Department.cs",
@@ -179,33 +328,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\DELL\\Desktop\\HR_system\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAABKAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA+AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-31T16:44:42.127Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "ApplicationDbContext.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Data\\ApplicationDbContext.cs",
               "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
               "ToolTip": "C:\\Users\\DELL\\Desktop\\HR_system\\Data\\ApplicationDbContext.cs",
               "RelativeToolTip": "Data\\ApplicationDbContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAA6AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-31T16:42:43.879Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 20,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
@@ -213,8 +362,7 @@
               "RelativeToolTip": "appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAABJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-07-31T16:38:12.225Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-31T16:38:12.225Z"
             }
           ]
         }
