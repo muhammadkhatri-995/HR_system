@@ -1,46 +1,38 @@
 ﻿/* ==========================================================================
-   Modern HRMS Dashboard Stylesheet
-   Theme: Aurora Noir (Dark Glassmorphic / Neon Enterprise)
+   HRMS Dashboard Stylesheet
+   Theme: Standard Light (clean, professional)
    ========================================================================== */
 
 /* ===== Variables & Design Tokens ===== */
 :root {
-    --primary: #818cf8;
-    --primary-hover: #a5b4fc;
-    --primary-light: rgba(129, 140, 248, 0.15);
-    --accent: #d946ef;
-    --accent-cyan: #22d3ee;
-    --bg-main: #0a0a12;
-    --bg-glow-1: radial-gradient(circle at 15% 10%, rgba(99, 102, 241, 0.18), transparent 40%);
-    --bg-glow-2: radial-gradient(circle at 85% 90%, rgba(217, 70, 239, 0.14), transparent 45%);
-    --card-bg: rgba(24, 24, 38, 0.65);
-    --card-bg-solid: #14141f;
-    --glass-border: rgba(148, 163, 184, 0.12);
-    --glass-border-hover: rgba(129, 140, 248, 0.5);
-    --text-main: #f1f5f9;
-    --text-muted: #94a3b8;
-    --text-light: #64748b;
-    --success-bg: rgba(34, 197, 94, 0.12);
-    --success-text: #4ade80;
-    --danger-bg: rgba(244, 63, 94, 0.12);
-    --danger-text: #fb7185;
-    --warning-bg: rgba(245, 158, 11, 0.12);
-    --warning-text: #fbbf24;
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 8px 24px -4px rgba(0, 0, 0, 0.5);
-    --shadow-lg: 0 20px 40px -8px rgba(0, 0, 0, 0.6);
-    --glow-primary: 0 0 24px rgba(129, 140, 248, 0.35);
-    --glow-accent: 0 0 32px rgba(217, 70, 239, 0.25);
-    --radius-md: 10px;
-    --radius-lg: 18px;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --primary-light: rgba(79, 70, 229, 0.08);
+    --bg-main: #f5f6fa;
+    --card-bg: #ffffff;
+    --card-bg-solid: #ffffff;
+    --glass-border: #e5e7eb;
+    --glass-border-hover: #c7cbf5;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --text-light: #9ca3af;
+    --success-bg: #ecfdf3;
+    --success-text: #16a34a;
+    --danger-bg: #fef2f2;
+    --danger-text: #dc2626;
+    --warning-bg: #fffbeb;
+    --warning-text: #b45309;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.08);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --transition: all 0.2s ease;
 }
 
-/* ===== Page Backdrop (apply to <body> for full effect) ===== */
+/* ===== Page Backdrop ===== */
 body {
     background-color: var(--bg-main);
-    background-image: var(--bg-glow-1), var(--bg-glow-2);
-    background-attachment: fixed;
     color: var(--text-main);
 }
 
@@ -55,8 +47,6 @@ body {
 /* ===== Individual Employee Card ===== */
 .employee-card {
     background: var(--card-bg);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
     padding: 24px;
@@ -64,53 +54,12 @@ body {
     transition: var(--transition);
     border: 1px solid var(--glass-border);
     position: relative;
-    overflow: hidden;
 }
-
-    /* Subtle inner sheen */
-    .employee-card::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(160deg, rgba(255, 255, 255, 0.05) 0%, transparent 35%);
-        pointer-events: none;
-    }
-
-    /* Top accent line decoration */
-    .employee-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, var(--primary), var(--accent), var(--accent-cyan));
-        background-size: 200% auto;
-        opacity: 0;
-        transition: var(--transition);
-        z-index: 2;
-    }
 
     .employee-card:hover {
-        transform: translateY(-8px);
-        box-shadow: var(--shadow-lg), var(--glow-primary);
+        box-shadow: var(--shadow-md);
         border-color: var(--glass-border-hover);
     }
-
-        .employee-card:hover::before {
-            opacity: 1;
-            animation: shimmer 2.5s linear infinite;
-        }
-
-@keyframes shimmer {
-    0% {
-        background-position: 0% center;
-    }
-
-    100% {
-        background-position: 200% center;
-    }
-}
 
 /* ===== Photo ===== */
 .employee-photo-wrapper {
@@ -119,19 +68,17 @@ body {
     margin: 0 auto 16px auto;
     border-radius: 50%;
     overflow: hidden;
-    border: 3px solid rgba(20, 20, 31, 0.8);
-    box-shadow: 0 0 0 3px var(--primary-light), 0 4px 14px rgba(0, 0, 0, 0.4);
+    border: 3px solid var(--card-bg);
+    box-shadow: 0 0 0 3px var(--primary-light);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #1e1e2e, #14141f);
+    background: #f3f4f6;
     transition: var(--transition);
-    position: relative;
-    z-index: 1;
 }
 
 .employee-card:hover .employee-photo-wrapper {
-    box-shadow: 0 0 0 3px var(--primary), var(--glow-primary);
+    box-shadow: 0 0 0 3px var(--primary);
 }
 
 .employee-photo-wrapper img {
@@ -144,11 +91,7 @@ body {
 .employee-photo-placeholder {
     font-size: 30px;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--primary), var(--accent-cyan));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    letter-spacing: -0.5px;
+    color: var(--primary);
 }
 
 /* ===== Text Inside Card ===== */
@@ -157,16 +100,15 @@ body {
     font-weight: 700;
     color: var(--text-main);
     margin-bottom: 4px;
-    letter-spacing: -0.2px;
 }
 
 .employee-role {
     font-size: 12px;
-    color: var(--primary-hover);
+    color: var(--primary);
     font-weight: 600;
     margin-bottom: 12px;
     text-transform: uppercase;
-    letter-spacing: 0.6px;
+    letter-spacing: 0.4px;
 }
 
 .employee-detail {
@@ -190,14 +132,13 @@ body {
     font-weight: 600;
     margin-top: 10px;
     margin-bottom: 16px;
-    letter-spacing: 0.2px;
     border: 1px solid transparent;
 }
 
 .status-active {
     background: var(--success-bg);
     color: var(--success-text);
-    border-color: rgba(74, 222, 128, 0.25);
+    border-color: rgba(22, 163, 74, 0.2);
 }
 
     .status-active::before {
@@ -206,13 +147,12 @@ body {
         height: 6px;
         border-radius: 50%;
         background-color: var(--success-text);
-        box-shadow: 0 0 8px var(--success-text);
     }
 
 .status-inactive {
     background: var(--danger-bg);
     color: var(--danger-text);
-    border-color: rgba(251, 113, 133, 0.25);
+    border-color: rgba(220, 38, 38, 0.2);
 }
 
     .status-inactive::before {
@@ -221,7 +161,6 @@ body {
         height: 6px;
         border-radius: 50%;
         background-color: var(--danger-text);
-        box-shadow: 0 0 8px var(--danger-text);
     }
 
 /* ===== Card Action Buttons ===== */
@@ -232,8 +171,6 @@ body {
     margin-top: 14px;
     border-top: 1px solid var(--glass-border);
     padding-top: 16px;
-    position: relative;
-    z-index: 1;
 }
 
     .employee-card-actions a {
@@ -250,33 +187,27 @@ body {
 .btn-edit {
     background: var(--warning-bg);
     color: var(--warning-text);
-    border-color: rgba(251, 191, 36, 0.2);
+    border-color: rgba(180, 83, 9, 0.2);
 }
 
     .btn-edit:hover {
-        background: rgba(245, 158, 11, 0.22);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25);
+        background: #fef3c7;
     }
 
 .btn-delete {
     background: var(--danger-bg);
     color: var(--danger-text);
-    border-color: rgba(251, 113, 133, 0.2);
+    border-color: rgba(220, 38, 38, 0.2);
 }
 
     .btn-delete:hover {
-        background: rgba(244, 63, 94, 0.22);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 14px rgba(244, 63, 94, 0.25);
+        background: #fee2e2;
     }
 
-/* ===== Aesthetic Add Employee Placeholder Card (Grid View) ===== */
+/* ===== Add Employee Placeholder Card (Grid View) ===== */
 .add-employee-card {
-    background: rgba(20, 20, 31, 0.4);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 2px dashed rgba(129, 140, 248, 0.35);
+    background: #fafafa;
+    border: 2px dashed var(--glass-border-hover);
     border-radius: var(--radius-lg);
     padding: 24px;
     min-height: 280px;
@@ -287,8 +218,6 @@ body {
     text-decoration: none;
     transition: var(--transition);
     cursor: pointer;
-    position: relative;
-    box-shadow: var(--shadow-sm);
 }
 
 /* Floating Plus Icon Wrapper */
@@ -296,7 +225,7 @@ body {
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(129, 140, 248, 0.15), rgba(217, 70, 239, 0.15));
+    background: var(--primary-light);
     color: var(--primary);
     display: flex;
     align-items: center;
@@ -304,7 +233,6 @@ body {
     font-size: 28px;
     font-weight: 600;
     margin-bottom: 16px;
-    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.2);
     transition: var(--transition);
 }
 
@@ -324,22 +252,18 @@ body {
 
 /* Add Card Hover Effects */
 .add-employee-card:hover {
-    background: rgba(20, 20, 31, 0.75);
+    background: #ffffff;
     border-color: var(--primary);
-    border-style: solid;
-    box-shadow: var(--shadow-lg), var(--glow-primary);
-    transform: translateY(-8px);
+    box-shadow: var(--shadow-md);
 }
 
     .add-employee-card:hover .add-icon-wrapper {
-        background: linear-gradient(135deg, var(--primary), var(--accent));
+        background: var(--primary);
         color: #ffffff;
-        transform: scale(1.1) rotate(90deg);
-        box-shadow: 0 8px 24px rgba(129, 140, 248, 0.5);
     }
 
     .add-employee-card:hover .add-card-title {
-        color: var(--primary-hover);
+        color: var(--primary);
     }
 
 /* ===== Toolbar & Search Bar ===== */
@@ -351,8 +275,6 @@ body {
     gap: 16px;
     margin-bottom: 16px;
     background: var(--card-bg);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
     padding: 16px 20px;
     border-radius: var(--radius-lg);
     border: 1px solid var(--glass-border);
@@ -372,7 +294,7 @@ body {
         border: 1px solid var(--glass-border);
         border-radius: var(--radius-md);
         font-size: 14px;
-        background-color: rgba(10, 10, 18, 0.6);
+        background-color: #ffffff;
         color: var(--text-main);
         outline: none;
         transition: var(--transition);
@@ -384,38 +306,31 @@ body {
 
         .employee-search-form input:focus {
             border-color: var(--primary);
-            background-color: rgba(10, 10, 18, 0.9);
-            box-shadow: 0 0 0 4px var(--primary-light);
+            box-shadow: 0 0 0 3px var(--primary-light);
         }
 
-/* ===== Premium Add Employee Button (Toolbar) ===== */
+/* ===== Add Employee Button (Toolbar) ===== */
 .btn-add-employee {
-    background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #d946ef 100%);
-    background-size: 200% auto;
+    background: var(--primary);
     color: #ffffff;
     padding: 11px 22px;
     border-radius: var(--radius-md);
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
-    letter-spacing: 0.3px;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.45);
     transition: var(--transition);
 }
 
     .btn-add-employee:hover {
-        background-position: right center;
-        box-shadow: 0 8px 30px rgba(217, 70, 239, 0.55);
-        transform: translateY(-2px);
+        background: var(--primary-hover);
         color: #ffffff;
     }
 
     .btn-add-employee:active {
-        transform: translateY(0);
-        box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+        transform: translateY(1px);
     }
 
 /* ===== Pagination ===== */
@@ -433,7 +348,6 @@ body {
         text-decoration: none;
         color: var(--text-muted);
         background: var(--card-bg);
-        backdrop-filter: blur(10px);
         border: 1px solid var(--glass-border);
         font-size: 14px;
         font-weight: 600;
@@ -442,15 +356,14 @@ body {
 
         .pagination-wrapper a:hover {
             border-color: var(--primary);
-            color: var(--primary-hover);
+            color: var(--primary);
             background: var(--primary-light);
         }
 
     .pagination-wrapper .active {
-        background: linear-gradient(135deg, var(--primary), var(--accent));
+        background: var(--primary);
         color: white;
-        border-color: transparent;
-        box-shadow: 0 2px 12px rgba(129, 140, 248, 0.45);
+        border-color: var(--primary);
     }
 
 /* ===== Form Styling (Create/Edit Pages) ===== */
@@ -458,8 +371,6 @@ body {
     max-width: 840px;
     margin: 30px auto;
     background: var(--card-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     padding: 36px;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
@@ -481,7 +392,7 @@ body {
     height: 120px;
     border-radius: 50%;
     overflow: hidden;
-    border: 2px dashed var(--primary);
+    border: 2px dashed var(--glass-border-hover);
     display: flex;
     align-items: center;
     justify-content: center;

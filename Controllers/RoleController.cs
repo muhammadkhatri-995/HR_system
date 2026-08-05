@@ -1,9 +1,11 @@
 ﻿using HR_system.Interfaces;
 using HR_system.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HR_system.Controllers
 {
+    [Authorize(Roles = "Admin,HR")]
     public class RoleController : Controller
     {
         private readonly IRoleRepository _roleRepository;

@@ -10,6 +10,6 @@ namespace HR_system.Interfaces
         Task AddAsync(Employee employee);
         Task UpdateAsync(Employee employee);
         Task DeleteAsync(int id);
-
+        Task<Employee?> GetEmployeeByEmailAsync(string email);  
     }
 }

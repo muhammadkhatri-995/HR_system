@@ -10,7 +10,7 @@ namespace HR_system.Controllers
 {
     // Only Admin and HR can manage employees — a plain "Employee" role
     // should not be able to create/edit/delete other employees.
-    [Authorize(Roles = "Admin,HR")]
+   // [Authorize(Roles = "Admin,HR")]
     public class EmployeeController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;

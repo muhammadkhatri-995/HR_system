@@ -52,6 +52,14 @@ namespace HR_system.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<Employee?> GetEmployeeByEmailAsync(string email)
+        {
+            return await _context.Employees
+                .Include(e => e.Department)
+                .Include(e => e.Role)
+                .FirstOrDefaultAsync(e => e.Email == email);
+        }
+
         public async Task UpdateAsync(Employee employee)
         {
             _context.Entry(employee).State = EntityState.Modified;
