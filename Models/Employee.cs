@@ -41,6 +41,9 @@ namespace HR_system.Models
         [Required(ErrorMessage = "Please select a department")]
         public int DepartmentId { get; set; }
 
+        [Required]
+        public String PasswordHash { get; set; } = string.Empty;
+
         [ForeignKey("DepartmentId")]
         public Department? Department { get; set; }
 

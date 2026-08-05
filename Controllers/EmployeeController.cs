@@ -1,43 +1,55 @@
 ﻿using HR_system.Interfaces;
 using HR_system.Models;
 using HR_system.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+
 namespace HR_system.Controllers
 {
+    // Only Admin and HR can manage employees — a plain "Employee" role
+    // should not be able to create/edit/delete other employees.
+    [Authorize(Roles = "Admin,HR")]
     public class EmployeeController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IRoleRepository _roleRepository;
-        private readonly IWebHostEnvironment _webHostEnvironment; //// needed to find wwwroot's real disk path
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        // constructor injection of the repositories and web host environment
+        // PasswordHasher<Employee> is the same built-in hasher used in AccountController
+        // for login verification. Using the SAME generic type (<Employee>) here
+        // ensures consistency between how passwords are hashed and how they're checked.
+        private readonly PasswordHasher<Employee> _passwordHasher = new();
+
         public EmployeeController(
-           IEmployeeRepository employeeRepository,
-           IDepartmentRepository departmentRepository,
-           IRoleRepository roleRepository,
-           IWebHostEnvironment webHostEnvironment)
+            IEmployeeRepository employeeRepository,
+            IDepartmentRepository departmentRepository,
+            IRoleRepository roleRepository,
+            IWebHostEnvironment webHostEnvironment)
         {
             _employeeRepository = employeeRepository;
             _departmentRepository = departmentRepository;
             _roleRepository = roleRepository;
             _webHostEnvironment = webHostEnvironment;
         }
+
+        // GET: /Employee?searchTerm=ali&pageNumber=2
         public async Task<IActionResult> Index(string? searchTerm, int pageNumber = 1)
         {
-            int pageSize = 10; // show 10 employees per page
+            int pageSize = 10;
 
             var (employees, totalCount) = await _employeeRepository.GetAllAsync(searchTerm, pageNumber, pageSize);
 
-            // We pass paging info to the View using ViewBag —
-            // a quick way to send small extra values without creating a ViewModel for it.
             ViewBag.SearchTerm = searchTerm;
             ViewBag.CurrentPage = pageNumber;
             ViewBag.TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
             return View(employees);
         }
+
+        // Builds the Department/Role dropdown option lists for the Create/Edit forms
         private async Task PopulateDropdowns(EmployeeViewModel model)
         {
             var departments = await _departmentRepository.GetAllAsync();
@@ -51,23 +63,38 @@ namespace HR_system.Controllers
                 .Select(r => new SelectListItem { Value = r.Id.ToString(), Text = r.Name })
                 .ToList();
         }
+
+        // GET: /Employee/Create
         public async Task<IActionResult> Create()
         {
             var model = new EmployeeViewModel();
             await PopulateDropdowns(model);
             return View(model);
         }
+
+        // POST: /Employee/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(EmployeeViewModel model)
         {
+            // On CREATE, a password is mandatory. The ViewModel itself keeps
+            // Password as optional (string?) because Edit reuses the same class
+            // without requiring a new password — so we enforce "required on Create"
+            // manually here instead of with a [Required] attribute.
+            if (string.IsNullOrWhiteSpace(model.Password))
+            {
+                ModelState.AddModelError(nameof(model.Password), "Password is required");
+            }
+
             if (!ModelState.IsValid)
             {
-                await PopulateDropdowns(model); // must re-populate — dropdowns are lost on postback
+                // Dropdown lists are NOT part of the submitted form data,
+                // so they're always empty on postback — we must refill them
+                // before returning the view, or the dropdowns will render blank.
+                await PopulateDropdowns(model);
                 return View(model);
             }
 
-            // Map the ViewModel fields into a real Employee entity
             var employee = new Employee
             {
                 FirstName = model.FirstName,
@@ -86,7 +113,12 @@ namespace HR_system.Controllers
                 CreatedDate = DateTime.Now
             };
 
-            // Handle photo upload, if one was provided
+            // HashPassword takes the plain-text password typed by the admin and
+            // returns a one-way, salted hash. The "employee" object passed first
+            // isn't read from — it's just required by the method signature for
+            // internal type consistency. The plain password is NEVER stored anywhere.
+            employee.PasswordHash = _passwordHasher.HashPassword(employee, model.Password!);
+
             if (model.PhotoFile != null && model.PhotoFile.Length > 0)
             {
                 employee.EmployeePhoto = await SavePhotoAsync(model.PhotoFile);
@@ -96,35 +128,29 @@ namespace HR_system.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Handles saving an uploaded photo to wwwroot/uploads/employees
-        // and returns the relative path to store in the database.
+        // Saves the uploaded photo to wwwroot/uploads/employees and returns
+        // the web-accessible relative path to store in the database.
         private async Task<string> SavePhotoAsync(IFormFile file)
         {
-            // wwwroot is the ONLY folder that's publicly accessible via URL,
-            // so uploaded files that need to be shown in <img> tags must go here.
             string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "employees");
 
-            // Create the folder if it doesn't exist yet (first upload ever)
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
             }
 
-            // Generate a unique file name so two employees uploading "photo.jpg"
-            // don't overwrite each other's files.
             string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
             string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-            // Copy the uploaded file's bytes to disk
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(fileStream);
             }
 
-            // Store only the WEB-ACCESSIBLE relative path in the database,
-            // e.g. "/uploads/employees/abc123.jpg" — this is what <img src="..."> will use.
             return "/uploads/employees/" + uniqueFileName;
         }
+
+        // GET: /Employee/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             var employee = await _employeeRepository.GetByIdAsync(id);
@@ -133,7 +159,6 @@ namespace HR_system.Controllers
                 return NotFound();
             }
 
-            // Map the Employee entity back into a ViewModel for the form
             var model = new EmployeeViewModel
             {
                 Id = employee.id,
@@ -151,11 +176,16 @@ namespace HR_system.Controllers
                 Salary = employee.Salary,
                 Status = employee.Status,
                 ExistingPhotoPath = employee.EmployeePhoto
+                // Password / ConfirmPassword deliberately left null/empty here —
+                // we NEVER send an existing password hash back into a form field.
+                // Leaving them blank on the Edit screen means "keep current password."
             };
 
             await PopulateDropdowns(model);
             return View(model);
         }
+
+        // POST: /Employee/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EmployeeViewModel model)
@@ -165,6 +195,11 @@ namespace HR_system.Controllers
                 return NotFound();
             }
 
+            // On EDIT, password is OPTIONAL. If the admin leaves both Password
+            // and ConfirmPassword blank, [Compare] passes trivially (both null),
+            // and ModelState.IsValid stays true — meaning "no password change requested."
+            // If they type something in Password but it's under 6 chars or doesn't
+            // match ConfirmPassword, validation still catches that correctly.
             if (!ModelState.IsValid)
             {
                 await PopulateDropdowns(model);
@@ -177,7 +212,6 @@ namespace HR_system.Controllers
                 return NotFound();
             }
 
-            // Update every field from the ViewModel
             employee.FirstName = model.FirstName;
             employee.LastName = model.LastName;
             employee.Email = model.Email;
@@ -192,8 +226,15 @@ namespace HR_system.Controllers
             employee.Salary = model.Salary;
             employee.Status = model.Status;
 
-            // Only replace the photo if the user actually uploaded a new one —
-            // otherwise, keep the existing photo path untouched.
+            // Only re-hash and overwrite PasswordHash if the admin actually typed
+            // a new password. Otherwise, the employee's existing password stays valid.
+            if (!string.IsNullOrWhiteSpace(model.Password))
+            {
+                employee.PasswordHash = _passwordHasher.HashPassword(employee, model.Password);
+            }
+
+            // Only replace the photo if a new one was uploaded —
+            // otherwise keep the existing EmployeePhoto path untouched.
             if (model.PhotoFile != null && model.PhotoFile.Length > 0)
             {
                 employee.EmployeePhoto = await SavePhotoAsync(model.PhotoFile);
@@ -222,8 +263,5 @@ namespace HR_system.Controllers
             await _employeeRepository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
-
-
-
     }
 }
