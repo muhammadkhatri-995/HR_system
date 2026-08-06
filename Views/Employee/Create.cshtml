@@ -14,8 +14,7 @@
     <form asp-action="Create" method="post" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        @* Live photo preview box — shows the selected image BEFORE upload,
-           using plain JavaScript (FileReader), no server round-trip needed. *@
+        @* Live photo preview box — shows the selected image BEFORE upload *@
         <div class="photo-preview-box" id="photoPreviewBox">
             <span id="photoPlaceholderText">No Photo</span>
             <img id="photoPreviewImg" src="#" alt="Preview" style="display:none;" />
@@ -59,8 +58,6 @@
 
             <div class="form-group">
                 <label asp-for="Gender" class="form-label"></label>
-                @* asp-items generates <option> tags from a list of SelectListItem.
-                   We build this list manually since Gender isn't stored in its own DB table. *@
                 <select asp-for="Gender" class="form-control">
                     <option value="">-- Select Gender --</option>
                     <option value="Male">Male</option>
@@ -84,8 +81,6 @@
 
             <div class="form-group">
                 <label asp-for="DepartmentId" class="form-label">Department</label>
-                @* asp-items pulls the Value/Text pairs from model.Departments,
-                   which the Controller populated via PopulateDropdowns() *@
                 <select asp-for="DepartmentId" asp-items="Model.Departments" class="form-control">
                     <option value="">-- Select Department --</option>
                 </select>
@@ -114,6 +109,21 @@
                 </select>
             </div>
 
+            @* ===== PASSWORD FIELDS ===== *@
+            @* asp-for="Password" automatically renders type="password" because
+               EmployeeViewModel.Password has [DataType(DataType.Password)] on it. *@
+            <div class="form-group">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ConfirmPassword" class="form-label"></label>
+                <input asp-for="ConfirmPassword" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+
             <div class="form-group form-group-full">
                 <label asp-for="Address" class="form-label"></label>
                 <textarea asp-for="Address" class="form-control"></textarea>
@@ -128,14 +138,10 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
         // Shows a live preview of the selected photo before the form is submitted.
-        // FileReader is a built-in browser API that reads a local file's contents
-        // into memory (here, as a Base64 image URL) without uploading it yet.
         function previewPhoto(input) {
             const preview = document.getElementById('photoPreviewImg');
             const placeholder = document.getElementById('photoPlaceholderText');

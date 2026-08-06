@@ -1,8 +1,10 @@
 ﻿using HR_system.Interfaces;
 using HR_system.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace HR_system.Controllers
 {
+    [Authorize(Roles = "Admin,HR")]
     public class DepartmentController : Controller
     {
         private readonly IDepartmentRepository _departmentRepository;

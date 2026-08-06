@@ -35,9 +35,7 @@ namespace HR_system.Controllers
                 return View(model);
             }
 
-            // Find the employee by email. We need a method that searches
-            // by email specifically — GetByIdAsync only works by Id, so
-            // we'll add a new repository method for this (Step 7 below).
+            // Find the employee by email.
             var employee = await _employeeRepository.GetEmployeeByEmailAsync(model.Email);
 
             if (employee == null)
@@ -50,9 +48,22 @@ namespace HR_system.Controllers
             }
 
             // VerifyHashedPassword compares the plain-text password the user typed
-            // against the stored hash. It returns an enum result, not just true/false,
-            // because it can also tell us "this hash needs upgrading" in advanced scenarios.
-            var result = _passwordHasher.VerifyHashedPassword(employee, employee.PasswordHash, model.Password);
+            // against the stored hash. We wrap it in try/catch because if this
+            // particular employee's PasswordHash was never properly hashed
+            // (e.g. blank, plain text, or set directly in the database),
+            // Convert.FromBase64String() throws a FormatException instead of
+            // just returning "Failed" — we want to treat both cases the same way.
+            PasswordVerificationResult result;
+
+            try
+            {
+                result = _passwordHasher.VerifyHashedPassword(employee, employee.PasswordHash, model.Password);
+            }
+            catch (FormatException)
+            {
+                ModelState.AddModelError(string.Empty, "Invalid email or password");
+                return View(model);
+            }
 
             if (result == PasswordVerificationResult.Failed)
             {
@@ -67,6 +78,7 @@ namespace HR_system.Controllers
             // on every page via User.Identity / User.Claims, without hitting the database again.
             var claims = new List<Claim>
             {
+                // FIX: "Id" with a capital I — matches the Employee model's property name exactly.
                 new Claim(ClaimTypes.NameIdentifier, employee.id.ToString()),
                 new Claim(ClaimTypes.Name, $"{employee.FirstName} {employee.LastName}"),
                 new Claim(ClaimTypes.Email, employee.Email),
