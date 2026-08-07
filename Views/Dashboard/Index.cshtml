@@ -1,0 +1,102 @@
+﻿@model HR_system.ViewModels.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2>Dashboard</h2>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Total Employees</div>
+        <div class="stat-value">@Model.TotalEmployees</div>
+    </div>
+
+    <div class="stat-card stat-active">
+        <div class="stat-label">Active Employees</div>
+        <div class="stat-value">@Model.ActiveEmployees</div>
+    </div>
+
+    <div class="stat-card stat-inactive">
+        <div class="stat-label">Inactive Employees</div>
+        <div class="stat-value">@Model.InactiveEmployees</div>
+    </div>
+
+    <div class="stat-card stat-new">
+        <div class="stat-label">New This Month</div>
+        <div class="stat-value">@Model.NewEmployeesThisMonth</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-label">Departments</div>
+        <div class="stat-value">@Model.TotalDepartments</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-label">Roles</div>
+        <div class="stat-value">@Model.TotalRoles</div>
+    </div>
+</div>
+
+<div class="dashboard-columns">
+    <div class="dashboard-panel">
+        <h4>Employees by Department</h4>
+
+        @if (!Model.EmployeesByDepartment.Any())
+        {
+            <p style="color:#6b7280;">No data yet.</p>
+        }
+        else
+        {
+            @* Find the highest count so we can scale every bar relative to it —
+               otherwise a department with 3 employees and one with 30 would
+               look almost the same width. *@
+            var maxCount = Model.EmployeesByDepartment.Max(d => d.Count);
+
+            @foreach (var dept in Model.EmployeesByDepartment)
+            {
+                var widthPercent = maxCount == 0 ? 0 : (dept.Count * 100 / maxCount);
+
+                <div class="bar-chart-row">
+                    <div class="bar-chart-label">@dept.DepartmentName</div>
+                    <div class="bar-chart-track">
+                        <div class="bar-chart-fill" style="width:@(widthPercent)%;">
+                            @dept.Count
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <div class="dashboard-panel">
+        <h4>Recent Employees</h4>
+
+        @if (!Model.RecentEmployees.Any())
+        {
+            <p style="color:#6b7280;">No employees yet.</p>
+        }
+        else
+        {
+            @foreach (var emp in Model.RecentEmployees)
+            {
+                <div class="recent-employee-row">
+                    <div class="recent-avatar">
+                        @if (!string.IsNullOrEmpty(emp.EmployeePhoto))
+                        {
+                            <img src="@emp.EmployeePhoto" alt="@emp.FirstName" />
+                        }
+                        else
+                        {
+                            @emp.FirstName.Substring(0, 1)
+                        }
+                    </div>
+                    <div class="recent-employee-info">
+                        <div class="name">@emp.FirstName @emp.LastName</div>
+                        <div class="meta">@(emp.Department?.Name ?? "No Department") · joined @emp.CreatedDate.ToShortDateString()</div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

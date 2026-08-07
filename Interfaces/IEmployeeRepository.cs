@@ -1,4 +1,5 @@
 ﻿using HR_system.Models;
+using HR_system.ViewModels;
 
 namespace HR_system.Interfaces
 {
@@ -11,5 +12,9 @@ namespace HR_system.Interfaces
         Task UpdateAsync(Employee employee);
         Task DeleteAsync(int id);
         Task<Employee?> GetEmployeeByEmailAsync(string email);  
+
+        Task<DashboardViewModel> GetDashboardDataAsync();
     }
+
+    
 }

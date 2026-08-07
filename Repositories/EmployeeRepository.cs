@@ -1,6 +1,7 @@
 ﻿using HR_system.Data;
 using HR_system.Interfaces;
 using HR_system.Models;
+using HR_system.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace HR_system.Repositories
@@ -75,6 +76,31 @@ namespace HR_system.Repositories
                 _context.Employees.Remove(employee);
                 await _context.SaveChangesAsync();
             }
+        }
+        public async Task<DashboardViewModel> GetDashboardDataAsync()
+        {
+            var totalEmployees = await _context.Employees.CountAsync();
+            var activeEmployees = await _context.Employees.CountAsync(e => e.Status == "Active"
+            );
+            var inactiveEmployees = totalEmployees - activeEmployees;
+            var totalDepartments = await _context.Departments.CountAsync();
+            var totalRoles = await _context.Roles.CountAsync();
+            var newEmployeesThisMonth = await _context.Employees
+                .CountAsync(e => e.CreatedDate >= DateTime.UtcNow.AddDays(-30));
+            var recentEmployees = await _context.Employees
+                .OrderByDescending(e => e.CreatedDate)
+                .Take(5)
+                .ToListAsync();
+            return new DashboardViewModel
+            {
+                TotalEmployees = totalEmployees,
+                ActiveEmployees = activeEmployees,
+                InactiveEmployees = inactiveEmployees,
+                TotalDepartments = totalDepartments,
+                TotalRoles = totalRoles,
+                NewEmployeesThisMonth = newEmployeesThisMonth,
+                RecentEmployees = recentEmployees
+            };
         }
     }
 }
