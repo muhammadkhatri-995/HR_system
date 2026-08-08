@@ -16,5 +16,7 @@ namespace HR_system.Data
 
         public DbSet<Employee> Employees { get; set; }
 
+        // public DbSet<Attendence> Attendences { get; set; }
+        public DbSet<Attendence> Attendances { get; set; }
     }
 }

@@ -1,0 +1,154 @@
+﻿@model IEnumerable<HR_system.Models.Attendence>
+@using HR_system.Models
+
+@{
+    ViewData["Title"] = "Attendance";
+    var todayRecord = ViewBag.TodayRecord as Attendence;
+    bool isManager = ViewBag.IsManager;
+}
+
+<h2>Attendance</h2>
+
+@* ===== SECTION 1: Punch Clock (everyone sees this) ===== *@
+<div class="punch-container" style="margin-bottom:40px;">
+    @if (todayRecord == null)
+    {
+        <div class="punch-card">
+            <p class="punch-status">You haven't checked in today.</p>
+            <form asp-controller="Attendance" asp-action="CheckIn" method="post">
+                <button type="submit" class="btn-punch btn-punch-in">Check In</button>
+            </form>
+        </div>
+    }
+    else if (todayRecord.CheckOutTime == null)
+    {
+        <div class="punch-card">
+            <p class="punch-status">Checked in at <strong>@todayRecord.CheckInTime?.ToString(@"hh\:mm")</strong></p>
+            <div class="live-clock" id="liveClock">00:00:00</div>
+            <p class="punch-subtext">Time worked so far</p>
+            <form asp-controller="Attendance" asp-action="CheckOut" method="post">
+                <button type="submit" class="btn-punch btn-punch-out">Check Out</button>
+            </form>
+        </div>
+        <span id="checkInSeconds" data-seconds="@todayRecord.CheckInTime.Value.TotalSeconds" style="display:none;"></span>
+    }
+    else
+    {
+        <div class="punch-card">
+            <p class="punch-status">✅ You checked out today.</p>
+            <div class="punch-summary">
+                <div><span>Check In</span><strong>@todayRecord.CheckInTime?.ToString(@"hh\:mm")</strong></div>
+                <div><span>Check Out</span><strong>@todayRecord.CheckOutTime?.ToString(@"hh\:mm")</strong></div>
+                <div><span>Total Hours</span><strong>@todayRecord.TotalWorkingHours?.ToString(@"hh\:mm")</strong></div>
+            </div>
+        </div>
+    }
+</div>
+
+@* ===== SECTION 2: HR Management table (only for Admin/HR) ===== *@
+@if (isManager)
+{
+    <hr />
+    <h3>All Attendance Records</h3>
+
+    <div class="employee-toolbar">
+        <form method="get" asp-action="Index" class="employee-search-form">
+            <select name="employeeId" class="form-control" onchange="this.form.submit()">
+                <option value="">All Employees</option>
+                @foreach (var item in (List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.Employees)
+                {
+                    if (ViewBag.SelectedEmployeeId != null && item.Value == ViewBag.SelectedEmployeeId.ToString())
+                    {
+                        <option value="@item.Value" selected>@item.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                }
+            </select>
+
+            <select name="month" class="form-control" onchange="this.form.submit()">
+                @for (int m = 1; m <= 12; m++)
+                {
+                    if (m == (int)ViewBag.SelectedMonth)
+                    {
+                        <option value="@m" selected>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(m)</option>
+                    }
+                    else
+                    {
+                        <option value="@m">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(m)</option>
+                    }
+                }
+            </select>
+        </form>
+
+        <a asp-action="Create" class="btn-add-employee">+ Mark Attendance</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Date</th>
+                <th>Check In</th>
+                <th>Check Out</th>
+                <th>Total Hours</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@(item.Employee != null ? $"{item.Employee.FirstName} {item.Employee.LastName}" : "Unknown")</td>
+                    <td>@item.Date.ToShortDateString()</td>
+                    <td>@(item.CheckInTime?.ToString(@"hh\:mm") ?? "-")</td>
+                    <td>@(item.CheckOutTime?.ToString(@"hh\:mm") ?? "-")</td>
+                    <td>@(item.TotalWorkingHours?.ToString(@"hh\:mm") ?? "-")</td>
+                    <td>
+                        <span class="status-badge @(item.Status == "Present" ? "status-active" : "status-inactive")">
+                            @item.Status
+                        </span>
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@section Scripts {
+    <script>
+        const checkInEl = document.getElementById('checkInSeconds');
+
+        if (checkInEl) {
+            const checkInSeconds = parseFloat(checkInEl.dataset.seconds);
+
+            function updateLiveClock() {
+                const now = new Date();
+                const nowSeconds = (now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds();
+                let elapsed = nowSeconds - checkInSeconds;
+                if (elapsed < 0) elapsed = 0;
+
+                const hours = Math.floor(elapsed / 3600);
+                const minutes = Math.floor((elapsed % 3600) / 60);
+                const seconds = Math.floor(elapsed % 60);
+
+                const formatted =
+                    String(hours).padStart(2, '0') + ':' +
+                    String(minutes).padStart(2, '0') + ':' +
+                    String(seconds).padStart(2, '0');
+
+                document.getElementById('liveClock').textContent = formatted;
+            }
+
+            updateLiveClock();
+            setInterval(updateLiveClock, 1000);
+        }
+    </script>
+}

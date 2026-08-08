@@ -147,3 +147,79 @@
     font-size: 12px;
     color: #6b7280;
 }
+
+.punch-container {
+    max-width: 480px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.punch-card {
+    background: white;
+    border-radius: 16px;
+    padding: 40px 30px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.punch-status {
+    font-size: 15px;
+    color: #374151;
+    margin-bottom: 20px;
+}
+
+.live-clock {
+    font-size: 48px;
+    font-weight: 700;
+    color: #4a6cf7;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 2px;
+    margin: 10px 0;
+}
+
+.punch-subtext {
+    font-size: 13px;
+    color: #9ca3af;
+    margin-bottom: 25px;
+}
+
+.btn-punch {
+    padding: 14px 40px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-punch-in {
+    background: #1a8a4a;
+    color: white;
+}
+
+.btn-punch-out {
+    background: #c0392b;
+    color: white;
+}
+
+.punch-summary {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+    .punch-summary div {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .punch-summary span {
+        font-size: 12px;
+        color: #9ca3af;
+        text-transform: uppercase;
+    }
+
+    .punch-summary strong {
+        font-size: 18px;
+        color: #1a1a2e;
+    }
