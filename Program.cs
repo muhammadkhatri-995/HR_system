@@ -15,6 +15,8 @@ builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
+builder.Services.AddScoped<ILeaveRepository, LeaveRepository>();
+builder.Services.AddScoped<IAttendanceRequestRepository, AttendanceRequestRepository>();
 
 // ----- AUTHENTICATION SETUP (new) -----
 

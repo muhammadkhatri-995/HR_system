@@ -1,0 +1,125 @@
+﻿@using HR_system.Models
+
+@{
+    ViewData["Title"] = "Requests";
+    bool isManager = ViewBag.IsManager;
+    var leaves = (IEnumerable<Leave>)ViewBag.Leaves;
+    var attendanceRequests = (IEnumerable<AttendanceRequest>)ViewBag.AttendanceRequests;
+}
+
+<h2>@(isManager ? "All Requests" : "My Requests")
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+</h2>
+
+<div class="employee-toolbar">
+    <a asp-action="Apply" class="btn-add-employee">+ New Request</a>
+</div>
+
+<h4 class="mt-3">Leave Requests</h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            @if (isManager)
+            {
+                <th>Employee</th>
+            }
+            <th>Type</th>
+            <th>Dates</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!leaves.Any())
+        {
+            <tr><td colspan="6" style="color:#6b7280;">No leave requests.</td></tr>
+        }
+        @foreach (var item in leaves)
+        {
+            <tr>
+                @if (isManager)
+                {
+                    <td>@(item.Employee != null ? $"{item.Employee.FirstName} {item.Employee.LastName}" : "Unknown")</td>
+                }
+                <td>@item.LeaveType</td>
+                <td>@item.StartDate.ToShortDateString() – @item.EndDate.ToShortDateString()</td>
+                <td>@item.Reason</td>
+                <td>
+                    <span class="status-badge @(item.Status == "Approved" ? "status-active" : item.Status == "Rejected" ? "status-inactive" : "")"
+                          style="@(item.Status == "Pending" ? "background:#fff4d6;color:#b8860b;" : "")">
+                        @item.Status
+                    </span>
+                </td>
+                <td>
+                    @if (isManager && item.Status == "Pending")
+                    {
+                        <form asp-action="Approve" asp-route-id="@item.Id" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                        </form>
+                        <form asp-action="Reject" asp-route-id="@item.Id" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4 class="mt-4">Attendance Correction Requests</h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            @if (isManager)
+            {
+                <th>Employee</th>
+            }
+            <th>Date</th>
+            <th>Requested Check In</th>
+            <th>Requested Check Out</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!attendanceRequests.Any())
+        {
+            <tr><td colspan="7" style="color:#6b7280;">No attendance correction requests.</td></tr>
+        }
+        @foreach (var item in attendanceRequests)
+        {
+            <tr>
+                @if (isManager)
+                {
+                    <td>@(item.Employee != null ? $"{item.Employee.FirstName} {item.Employee.LastName}" : "Unknown")</td>
+                }
+                <td>@item.Date.ToShortDateString()</td>
+                <td>@(item.RequestedCheckIn?.ToString(@"hh\:mm") ?? "-")</td>
+                <td>@(item.RequestedCheckOut?.ToString(@"hh\:mm") ?? "-")</td>
+                <td>@item.Reason</td>
+                <td>
+                    <span class="status-badge @(item.Status == "Approved" ? "status-active" : item.Status == "Rejected" ? "status-inactive" : "")"
+                          style="@(item.Status == "Pending" ? "background:#fff4d6;color:#b8860b;" : "")">
+                        @item.Status
+                    </span>
+                </td>
+                <td>
+                    @if (isManager && item.Status == "Pending")
+                    {
+                        <form asp-action="ApproveAttendanceRequest" asp-route-id="@item.Id" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                        </form>
+                        <form asp-action="RejectAttendanceRequest" asp-route-id="@item.Id" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
