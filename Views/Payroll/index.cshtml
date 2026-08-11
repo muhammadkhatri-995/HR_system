@@ -1,0 +1,77 @@
+﻿@model IEnumerable<HR_system.Models.PayRoll>
+
+@{
+    ViewData["Title"] = "Payroll";
+    bool isManager = ViewBag.IsManager;
+}
+
+<h2>@(isManager ? "Payroll Records" : "My Payslips")</h2>
+
+<div class="employee-toolbar">
+    @if (isManager)
+    {
+        <form method="get" asp-action="Index" class="employee-search-form">
+            <select name="employeeId" class="form-control" onchange="this.form.submit()">
+                <option value="">All Employees</option>
+                @foreach (var item in (List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.Employees)
+                {
+                    if (ViewBag.SelectedEmployeeId != null && item.Value == ViewBag.SelectedEmployeeId.ToString())
+                    {
+                        <option value="@item.Value" selected>@item.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                }
+            </select>
+        </form>
+        <a asp-action="Create" class="btn-add-employee">+ Process Payroll</a>
+    }
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            @if (isManager)
+            {
+                <th>Employee</th>
+            }
+            <th>Basic Salary</th>
+            <th>Bonus</th>
+            <th>Deduction</th>
+            <th>Net Salary</th>
+            <th>Pay Date</th>
+            @if (isManager)
+            {
+                <th></th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr><td colspan="7" style="color:#6b7280;">No payroll records yet.</td></tr>
+        }
+        @foreach (var item in Model)
+        {
+            <tr>
+                @if (isManager)
+                {
+                    <td>@(item.Employee != null ? $"{item.Employee.FirstName} {item.Employee.LastName}" : "Unknown")</td>
+                }
+                <td>@item.BasicSalary.ToString("N2")</td>
+                <td>@item.Bonus.ToString("N2")</td>
+                <td>@item.Deduction.ToString("N2")</td>
+                <td><strong>@item.NetSalary.ToString("N2")</strong></td>
+                <td>@item.PayDate.ToShortDateString()</td>
+                @if (isManager)
+                {
+                    <td>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

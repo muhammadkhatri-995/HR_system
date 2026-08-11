@@ -1,0 +1,53 @@
+﻿@model HR_system.ViewModels.PayrollViewModel
+
+@{
+    ViewData["Title"] = "Process Payroll";
+}
+
+<h2>Process Payroll</h2>
+
+<div class="employee-form-container">
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label asp-for="EmployeeId" class="form-label">Employee</label>
+                <select asp-for="EmployeeId" asp-items="Model.Employees" class="form-control">
+                    <option value="">-- Select Employee --</option>
+                </select>
+                <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                <small style="color:#6b7280;">Basic salary is pulled automatically from the employee's record.</small>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PayDate" class="form-label"></label>
+                <input asp-for="PayDate" class="form-control" />
+                <span asp-validation-for="PayDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Bonus" class="form-label"></label>
+                <input asp-for="Bonus" class="form-control" />
+                <span asp-validation-for="Bonus" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Deduction" class="form-label"></label>
+                <input asp-for="Deduction" class="form-control" />
+                <span asp-validation-for="Deduction" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mt-3" style="text-align:center;">
+            <button type="submit" class="btn-add-employee">Process Payroll</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

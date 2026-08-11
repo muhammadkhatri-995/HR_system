@@ -20,6 +20,8 @@ namespace HR_system.Data
         public DbSet<Attendence> Attendances { get; set; }
 
         public DbSet<Leave> Leaves { get; set; }
-        public DbSet<AttendanceRequest> AttendanceRequests { get; set; }    
+        public DbSet<AttendanceRequest> AttendanceRequests { get; set; } 
+        
+        public DbSet<PayRoll> PayRolls { get; set; }
     }
 }

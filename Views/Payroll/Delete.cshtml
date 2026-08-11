@@ -1,0 +1,28 @@
+﻿@model HR_system.Models.PayRoll
+
+@{
+    ViewData["Title"] = "Delete Payroll Record";
+}
+
+<h2>Delete Payroll Record</h2>
+
+<div class="employee-form-container">
+    <p>Are you sure you want to delete this payroll record? This should only be done to correct a genuine mistake.</p>
+
+    <dl class="row">
+        <dt class="col-sm-3">Employee</dt>
+        <dd class="col-sm-9">@(Model.Employee != null ? $"{Model.Employee.FirstName} {Model.Employee.LastName}" : "Unknown")</dd>
+
+        <dt class="col-sm-3">Net Salary</dt>
+        <dd class="col-sm-9">@Model.NetSalary.ToString("N2")</dd>
+
+        <dt class="col-sm-3">Pay Date</dt>
+        <dd class="col-sm-9">@Model.PayDate.ToShortDateString()</dd>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
