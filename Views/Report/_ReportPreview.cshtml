@@ -1,0 +1,92 @@
+﻿@using HR_system.Models
+@{
+    string reportType = ViewBag.ReportType;
+}
+
+@if (reportType == "Employees")
+{
+    var employees = (List<Employee>)Model;
+    <table class="table table-striped">
+        <thead><tr><th>Name</th><th>Email</th><th>Department</th><th>Status</th></tr></thead>
+        <tbody>
+            @foreach (var e in employees)
+            {
+                <tr>
+                    <td>@e.FirstName @e.LastName</td>
+                    <td>@e.Email</td>
+                    <td>@(e.Department?.Name ?? "-")</td>
+                    <td>@e.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (reportType == "Payroll")
+{
+    var payrolls = (List<PayRoll>)Model;
+    <table class="table table-striped">
+        <thead><tr><th>Employee</th><th>Net Salary</th><th>Pay Date</th></tr></thead>
+        <tbody>
+            @foreach (var p in payrolls)
+            {
+                <tr>
+                    <td>@(p.Employee != null ? $"{p.Employee.FirstName} {p.Employee.LastName}" : "-")</td>
+                    <td>@p.NetSalary.ToString("N2")</td>
+                    <td>@p.PayDate.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (reportType == "Attendance")
+{
+    var records = (List<Attendence>)Model;
+    <table class="table table-striped">
+        <thead><tr><th>Employee</th><th>Date</th><th>Check In</th><th>Check Out</th></tr></thead>
+        <tbody>
+            @foreach (var a in records)
+            {
+                <tr>
+                    <td>@(a.Employee != null ? $"{a.Employee.FirstName} {a.Employee.LastName}" : "-")</td>
+                    <td>@a.Date.ToShortDateString()</td>
+                    <td>@(a.CheckInTime?.ToString(@"hh\:mm") ?? "-")</td>
+                    <td>@(a.CheckOutTime?.ToString(@"hh\:mm") ?? "-")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (reportType == "Leave")
+{
+    var leaves = (List<Leave>)Model;
+    <table class="table table-striped">
+        <thead><tr><th>Employee</th><th>Type</th><th>Dates</th><th>Status</th></tr></thead>
+        <tbody>
+            @foreach (var l in leaves)
+            {
+                <tr>
+                    <td>@(l.Employee != null ? $"{l.Employee.FirstName} {l.Employee.LastName}" : "-")</td>
+                    <td>@l.LeaveType</td>
+                    <td>@l.StartDate.ToShortDateString() - @l.EndDate.ToShortDateString()</td>
+                    <td>@l.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (reportType == "Departments")
+{
+    var departments = (List<Department>)Model;
+    <table class="table table-striped">
+        <thead><tr><th>Name</th><th>Description</th></tr></thead>
+        <tbody>
+            @foreach (var d in departments)
+            {
+                <tr>
+                    <td>@d.Name</td>
+                    <td>@d.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

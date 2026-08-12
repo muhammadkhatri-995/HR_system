@@ -1,0 +1,83 @@
+﻿@model HR_system.ViewModels.ReportFilterViewModel
+
+@{
+    ViewData["Title"] = "Reports";
+}
+
+<h2>Reports</h2>
+
+<div class="employee-form-container">
+    <form id="reportForm" method="get" asp-action="Index">
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="form-label">Report Type</label>
+                <select asp-for="ReportType" class="form-control" id="reportTypeSelect">
+                    <option value="Employees">Employees</option>
+                    <option value="Departments">Departments</option>
+                    <option value="Attendance">Attendance</option>
+                    <option value="Leave">Leave</option>
+                    <option value="Payroll">Payroll</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Department (optional)</label>
+                <select asp-for="DepartmentId" asp-items="Model.Departments" class="form-control">
+                    <option value="">-- All --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Employee (optional)</label>
+                <select asp-for="EmployeeId" asp-items="Model.Employees" class="form-control">
+                    <option value="">-- All --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">From Date</label>
+                <input asp-for="FromDate" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">To Date</label>
+                <input asp-for="ToDate" class="form-control" />
+            </div>
+        </div>
+
+        <div class="mt-3" style="text-align:center;">
+            <button type="button" class="btn-add-employee" onclick="loadPreview()">Preview</button>
+            <button type="button" class="btn btn-secondary" onclick="exportReport('ExportExcel')">Export Excel</button>
+            <button type="button" class="btn btn-secondary" onclick="exportReport('ExportPdf')">Export PDF</button>
+        </div>
+    </form>
+
+    <div id="previewArea" class="mt-4"></div>
+</div>
+
+@section Scripts {
+    <script>
+        // Loads the on-screen preview via AJAX, without a full page reload —
+        // reuses the exact same filter values as export, so preview always
+        // matches what gets exported.
+        function loadPreview() {
+            const form = document.getElementById('reportForm');
+            const params = new URLSearchParams(new FormData(form)).toString();
+
+            fetch('/Report/Preview?' + params)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('previewArea').innerHTML = html;
+                });
+        }
+
+        // Exports by simply navigating the browser to the export URL —
+        // the browser handles the file download automatically because
+        // of the Content-Type/Content-Disposition headers the server sends.
+        function exportReport(action) {
+            const form = document.getElementById('reportForm');
+            const params = new URLSearchParams(new FormData(form)).toString();
+            window.location.href = '/Report/' + action + '?' + params;
+        }
+    </script>
+}
