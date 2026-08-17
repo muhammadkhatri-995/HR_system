@@ -55,6 +55,9 @@
                             <a class="nav-link text-dark" asp-controller="Report" asp-action="Index">Reports</a>
                         </li>
                         <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Profile" asp-action="Index">Hi, @User.Identity.Name</a>
+                            </li>
     @if (User.Identity != null && User.Identity.IsAuthenticated)
     {
         <li class="nav-item">
