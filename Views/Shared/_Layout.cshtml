@@ -3,96 +3,600 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - HR_system</title>
+
+    <title>@ViewData["Title"] - Kinetic HR</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HR_system.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/employee.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    @* <li class="nav-item">
-        <a class="nav-link text-dark" asp-controller="Attendance" asp-action="Index">Attendance</a>
-    </li> *@
     <link rel="stylesheet" href="~/css/dashboard.css" />
+
+    <style>
+            :root {
+                --sidebar-width: 260px;
+                --sidebar-collapsed-width: 80px;
+                --topbar-height: 70px;
+                --primary-color: #2563eb;
+                --primary-hover: #1d4ed8;
+                --primary-light: #eff6ff;
+                --text-main: #0f172a;
+                --text-muted: #64748b;
+                --bg-main: #f8fafc;
+                --border-color: #e2e8f0;
+                --transition-speed: 0.3s;
+                --transition-cubic: cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            body {
+                font-family: 'Inter', system-ui, -apple-system, sans-serif;
+                background-color: var(--bg-main);
+                color: var(--text-main);
+                overflow-x: hidden;
+                margin: 0;
+            }
+
+            /* =========================
+                       SIDEBAR
+                    ========================= */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: var(--sidebar-width);
+                height: 100vh;
+                background: #ffffff;
+                border-right: 1px solid var(--border-color);
+                z-index: 1050;
+                transition: width var(--transition-speed) var(--transition-cubic), transform var(--transition-speed) var(--transition-cubic);
+                display: flex;
+                flex-direction: column;
+                box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02);
+            }
+
+            .sidebar-header {
+                height: var(--topbar-height);
+                display: flex;
+                align-items: center;
+                padding: 0 24px;
+                font-size: 1.15rem;
+                font-weight: 700;
+                color: var(--text-main);
+                border-bottom: 1px solid var(--border-color);
+                letter-spacing: -0.02em;
+                white-space: nowrap;
+            }
+
+                .sidebar-header i {
+                    font-size: 1.35rem;
+                    margin-right: 12px;
+                    color: var(--primary-color);
+                    transition: transform 0.3s ease;
+                }
+
+                .sidebar-header:hover i {
+                    transform: scale(1.1) rotate(-5deg);
+                }
+
+            .sidebar-menu-wrapper {
+                flex: 1;
+                overflow-y: auto;
+                overflow-x: hidden;
+                padding: 16px 12px;
+            }
+
+                /* Custom Scrollbar */
+                .sidebar-menu-wrapper::-webkit-scrollbar {
+                    width: 4px;
+                }
+
+                .sidebar-menu-wrapper::-webkit-scrollbar-thumb {
+                    background: #cbd5e1;
+                    border-radius: 4px;
+                }
+
+            .sidebar-menu {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+                .sidebar-menu li {
+                    margin-bottom: 4px;
+                    position: relative;
+                }
+
+                .sidebar-menu a {
+                    display: flex;
+                    align-items: center;
+                    padding: 11px 16px;
+                    color: var(--text-muted);
+                    text-decoration: none;
+                    border-radius: 8px;
+                    font-weight: 500;
+                    font-size: 0.925rem;
+                    transition: all 0.2s var(--transition-cubic);
+                    white-space: nowrap;
+                    position: relative;
+                }
+
+                    .sidebar-menu a i {
+                        width: 24px;
+                        font-size: 1.15rem;
+                        margin-right: 12px;
+                        color: #94a3b8;
+                        transition: color 0.2s ease, transform 0.2s ease;
+                        display: inline-flex;
+                        justify-content: center;
+                    }
+
+                    /* Hover Effects */
+                    .sidebar-menu a:hover {
+                        background: #f1f5f9;
+                        color: var(--text-main);
+                        transform: translateX(3px);
+                    }
+
+                        .sidebar-menu a:hover i {
+                            color: var(--primary-color);
+                            transform: scale(1.1);
+                        }
+
+                    /* Active Link */
+                    .sidebar-menu a.active {
+                        background: var(--primary-light);
+                        color: var(--primary-color);
+                        font-weight: 600;
+                    }
+
+                        .sidebar-menu a.active i {
+                            color: var(--primary-color);
+                        }
+
+                        .sidebar-menu a.active::before {
+                            content: '';
+                            position: absolute;
+                            left: -12px;
+                            top: 15%;
+                            height: 70%;
+                            width: 4px;
+                            background: var(--primary-color);
+                            border-radius: 0 4px 4px 0;
+                            animation: fadeIn 0.3s ease;
+                        }
+
+            /* =========================
+                       MAIN CONTENT & TOPBAR
+                    ========================= */
+            .main-content {
+                margin-left: var(--sidebar-width);
+                min-height: 100vh;
+                background: var(--bg-main);
+                transition: margin-left var(--transition-speed) var(--transition-cubic);
+                display: flex;
+                flex-direction: column;
+            }
+
+            .topbar {
+                height: var(--topbar-height);
+                background: rgba(255, 255, 255, 0.85);
+                backdrop-filter: blur(12px);
+                border-bottom: 1px solid var(--border-color);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 28px;
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+            }
+
+            .menu-btn, #collapseBtn {
+                border: 1px solid var(--border-color);
+                background: #ffffff;
+                color: var(--text-muted);
+                border-radius: 8px;
+                padding: 6px 10px;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s ease;
+            }
+
+                .menu-btn:hover, #collapseBtn:hover {
+                    background: #f1f5f9;
+                    color: var(--primary-color);
+                    border-color: #cbd5e1;
+                }
+
+            .menu-btn {
+                font-size: 1.25rem;
+            }
+
+            /* User Area */
+            .user-area {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+            }
+
+            .user-badge {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 6px 12px;
+                background: #f1f5f9;
+                border-radius: 30px;
+                font-weight: 500;
+                font-size: 0.875rem;
+                color: var(--text-main);
+                transition: background 0.2s ease;
+            }
+
+                .user-badge i {
+                    font-size: 1.1rem;
+                    color: var(--primary-color);
+                }
+
+            .logout-btn {
+                border: none;
+                background: transparent;
+                color: var(--text-muted);
+                cursor: pointer;
+                padding: 6px 12px;
+                font-weight: 500;
+                font-size: 0.875rem;
+                border-radius: 6px;
+                transition: all 0.2s ease;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+                .logout-btn:hover {
+                    background: #fef2f2;
+                    color: #dc2626;
+                }
+
+            /* Overlay */
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(15, 23, 42, 0.3);
+                backdrop-filter: blur(2px);
+                z-index: 1040;
+                opacity: 0;
+                transition: opacity var(--transition-speed) ease;
+            }
+
+                .sidebar-overlay.show {
+                    display: block;
+                    opacity: 1;
+                }
+
+            /* =========================
+                       COLLAPSED STATE (Desktop)
+                    ========================= */
+            body.sidebar-collapsed .sidebar {
+                width: var(--sidebar-collapsed-width);
+            }
+
+            body.sidebar-collapsed .main-content {
+                margin-left: var(--sidebar-collapsed-width);
+            }
+
+            body.sidebar-collapsed .sidebar-header span,
+            body.sidebar-collapsed .sidebar-menu a span {
+                opacity: 0;
+                visibility: hidden;
+                width: 0;
+                pointer-events: none;
+            }
+
+            body.sidebar-collapsed .sidebar-header {
+                padding: 0;
+                justify-content: center;
+            }
+
+                body.sidebar-collapsed .sidebar-header i {
+                    margin: 0;
+                }
+
+            body.sidebar-collapsed .sidebar-menu a {
+                justify-content: center;
+                padding: 12px 0;
+                transform: none !important;
+            }
+
+                body.sidebar-collapsed .sidebar-menu a i {
+                    margin: 0;
+                }
+
+                body.sidebar-collapsed .sidebar-menu a.active::before {
+                    left: 0;
+                }
+
+                /* Tooltip behavior when collapsed */
+                body.sidebar-collapsed .sidebar-menu a:hover::after {
+                    content: attr(data-title);
+                    position: absolute;
+                    left: calc(var(--sidebar-collapsed-width) - 10px);
+                    background: #0f172a;
+                    color: #ffffff;
+                    padding: 6px 12px;
+                    border-radius: 6px;
+                    font-size: 0.8rem;
+                    white-space: nowrap;
+                    z-index: 1060;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                    animation: fadeIn 0.2s ease forwards;
+                }
+
+            /* =========================
+                       MOBILE ADAPTATION
+                    ========================= */
+            @@media (max-width: 768px) {
+                .sidebar {
+                    transform: translateX(-100%);
+                    width: var(--sidebar-width) !important;
+                }
+
+                    .sidebar.show {
+                        transform: translateX(0);
+                    }
+
+                .main-content {
+                    margin-left: 0 !important;
+                }
+
+                .user-badge span {
+                    display: none;
+                }
+
+                .user-badge {
+                    padding: 6px;
+                    background: transparent;
+                }
+
+                body.sidebar-collapsed .sidebar-header span,
+                body.sidebar-collapsed .sidebar-menu a span {
+                    opacity: 1;
+                    visibility: visible;
+                    width: auto;
+                }
+
+                body.sidebar-collapsed .sidebar-menu a {
+                    justify-content: flex-start;
+                    padding: 11px 16px;
+                }
+
+                    body.sidebar-collapsed .sidebar-menu a i {
+                        margin-right: 12px;
+                    }
+            }
+
+            @@keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(2px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+    </style>
 </head>
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Kinetic HR</a> 
-                @* <a class="navbar-brand d-flex align-items-center gap-2" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img src="~/images/logo.png" alt="Kinetic HR Logo" style="height: 36px; width: auto;" />
-                    <span>Kinetic HR</span>
-                </a> *@
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <i class="bi bi-people-fill"></i>
+            <span>Kinetic HR</span>
+        </div>
+
+        <div class="sidebar-menu-wrapper">
+            <ul class="sidebar-menu">
+                <li>
+                    <a asp-controller="Home" asp-action="Index" data-title="Home">
+                        <i class="bi bi-house"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Department" asp-action="Index" data-title="Departments">
+                        <i class="bi bi-building"></i>
+                        <span>Departments</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Role" asp-action="Index" data-title="Roles">
+                        <i class="bi bi-person-badge"></i>
+                        <span>Roles</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Employee" asp-action="Index" data-title="Employees">
+                        <i class="bi bi-people"></i>
+                        <span>Employees</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Dashboard" asp-action="Index" data-title="Dashboard">
+                        <i class="bi bi-speedometer2"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Attendance" asp-action="Index" data-title="Attendance">
+                        <i class="bi bi-calendar-check"></i>
+                        <span>Attendance</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Leave" asp-action="Index" data-title="Requests">
+                        <i class="bi bi-envelope-paper"></i>
+                        <span>Requests</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Payroll" asp-action="Index" data-title="Payroll">
+                        <i class="bi bi-cash-stack"></i>
+                        <span>Payroll</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Report" asp-action="Index" data-title="Reports">
+                        <i class="bi bi-file-earmark-bar-graph"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Profile" asp-action="Index" data-title="Your Profile">
+                        <i class="bi bi-person-circle"></i>
+                        <span>Your Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- MOBILE OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+            <div class="d-flex align-items-center gap-2">
+                <!-- Mobile Hamburger -->
+                <button class="menu-btn d-md-none" id="menuBtn" aria-label="Toggle menu">
+                    <i class="bi bi-list"></i>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                       
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Department" asp-action="Index">Departments</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Role" asp-action="Index">Roles</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Employee" asp-action="Index">Employees</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Attendance" asp-action="Index">Attendance</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Leave" asp-action="Index">Requests</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Payroll" asp-action="Index">Payroll</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Report" asp-action="Index">Reports</a>
-                        </li>
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Profile" asp-action="Index">Hi, @User.Identity.Name</a>
-                            </li>
-    @if (User.Identity != null && User.Identity.IsAuthenticated)
-    {
-        <li class="nav-item">
-            <span class="nav-link text-dark">Hi, @User.Identity.Name</span>
-        </li>
-        <li class="nav-item">
-            <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-link nav-link" style="border:none;">Logout</button>
-            </form>
-        </li>
-    }
-    else
-    {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
-        </li>
-    }
-</ul>
-                        
-                    </ul>
-                </div>
+
+                <!-- Desktop Collapse -->
+                <button id="collapseBtn" class="d-none d-md-inline-flex" aria-label="Collapse sidebar">
+                    <i class="bi bi-list"></i>
+                </button>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+            <!-- USER AREA -->
+            <div class="user-area">
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <div class="user-badge">
+                        <i class="bi bi-person-circle"></i>
+                        <span>Hi, @User.Identity.Name</span>
+                    </div>
+
+                    <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
+                        <button type="submit" class="logout-btn">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span class="d-none d-sm-inline">Logout</span>
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-sm rounded-2 px-3 fw-medium">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                    </a>
+                }
+            </div>
+        </header>
+
+        <!-- PAGE CONTENT -->
+        <div class="container-fluid p-4">
+            <main role="main">
+                <div id="notificationContainer">
+                    @await Html.PartialAsync("_Notifications")
+                </div>
+                @RenderBody()
+            </main>
+        </div>
     </div>
 
-   
+    <!-- SCRIPTS -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const sidebar = document.getElementById("sidebar");
+        const menuBtn = document.getElementById("menuBtn");
+        const overlay = document.getElementById("sidebarOverlay");
+        const collapseBtn = document.getElementById("collapseBtn");
+
+        // Mobile Menu Toggle
+        if (menuBtn) {
+        menuBtn.addEventListener("click", function () {
+        sidebar.classList.toggle("show");
+        overlay.classList.toggle("show");
+        });
+        }
+
+        // Close sidebar when clicking overlay
+        if (overlay) {
+        overlay.addEventListener("click", function () {
+        sidebar.classList.remove("show");
+        overlay.classList.remove("show");
+        });
+        }
+
+        // Desktop Sidebar Collapse
+        if (collapseBtn) {
+        collapseBtn.addEventListener("click", function () {
+        document.body.classList.toggle("sidebar-collapsed");
+        });
+        }
+
+        // Active Menu Link Detection
+        const currentPath = window.location.pathname.toLowerCase();
+        document.querySelectorAll(".sidebar-menu a").forEach(function (link) {
+        const href = link.getAttribute("href");
+        if (href && (currentPath === href.toLowerCase() || (href !== '/' && currentPath.startsWith(href.toLowerCase())))) {
+        link.classList.add("active");
+        }
+
+        // Close Mobile Sidebar on Link Click
+        link.addEventListener("click", function () {
+        if (window.innerWidth <= 768) {
+        sidebar.classList.remove("show");
+        overlay.classList.remove("show");
+        }
+        });
+        });
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+        const toasts = document.querySelectorAll('.notification-toast');
+        toasts.forEach(function (toast) {
+        setTimeout(function () {
+        toast.style.transition = 'opacity 0.3s';
+        toast.style.opacity = '0';
+        setTimeout(function () { toast.remove(); }, 300);
+        }, 4000);
+        });
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

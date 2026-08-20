@@ -1,0 +1,28 @@
+﻿@using HR_system.Helpers
+
+@if (TempData[NotificationHelper.SuccessKey] != null)
+{
+    <div class="notification-toast notification-success">
+        <span class="notification-icon">✅</span>
+        <span>@TempData[NotificationHelper.SuccessKey]</span>
+        <button type="button" class="notification-close" onclick="this.parentElement.remove()">×</button>
+    </div>
+}
+
+@if (TempData[NotificationHelper.ErrorKey] != null)
+{
+    <div class="notification-toast notification-error">
+        <span class="notification-icon">⛔</span>
+        <span>@TempData[NotificationHelper.ErrorKey]</span>
+        <button type="button" class="notification-close" onclick="this.parentElement.remove()">×</button>
+    </div>
+}
+
+@if (TempData[NotificationHelper.InfoKey] != null)
+{
+    <div class="notification-toast notification-info">
+        <span class="notification-icon">ℹ️</span>
+        <span>@TempData[NotificationHelper.InfoKey]</span>
+        <button type="button" class="notification-close" onclick="this.parentElement.remove()">×</button>
+    </div>
+}

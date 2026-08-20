@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HR_system.Controllers
 {
     [Authorize(Roles = "Admin,HR")]
-    public class DepartmentController : Controller
+    public class DepartmentController : BaseController
     {
         private readonly IDepartmentRepository _departmentRepository;
         public DepartmentController(IDepartmentRepository departmentRepository)
@@ -25,12 +25,18 @@ namespace HR_system.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Department department)
         {
+          
+
             if (ModelState.IsValid)
             {
                 await _departmentRepository.AddAsync(department);
+                NotifySuccess("Department created successfully.");
                 return RedirectToAction(nameof(Index));
+
             }
             return View(department);
+           
+
         }
         public async Task<IActionResult> Edit(int id)
         {
@@ -52,6 +58,7 @@ namespace HR_system.Controllers
             if (ModelState.IsValid)
             {
                 await _departmentRepository.UpdateAsync(department);
+                NotifySuccess("Department updated   successfully.");
                 return RedirectToAction(nameof(Index));
             }
             return View(department);
@@ -70,6 +77,7 @@ namespace HR_system.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _departmentRepository.DeleteAsync(id);
+            NotifySuccess("Department deleted successfully.");
             return RedirectToAction(nameof(Index));
         }
     }
