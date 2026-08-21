@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HR_system.Controllers
 {
     [Authorize(Roles = "Admin,HR")]
-    public class RoleController : Controller
+    public class RoleController : BaseController
     {
         private readonly IRoleRepository _roleRepository;
         public RoleController(IRoleRepository roleRepository)
@@ -29,6 +29,8 @@ namespace HR_system.Controllers
             if (ModelState.IsValid)
             {
                 await _roleRepository.AddAsync(role);
+                NotifySuccess("Role created successfully.");
+
                 return RedirectToAction(nameof(Index));
             }
             return View(role);
@@ -60,6 +62,8 @@ namespace HR_system.Controllers
             }
 
             await _roleRepository.updateAsync(role);
+            NotifySuccess("Role updated successfully.");
+
             return RedirectToAction(nameof(Index));
         }
         // GET: /Role/Delete/5
@@ -78,6 +82,8 @@ namespace HR_system.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _roleRepository.DeleteAsync(id);
+            NotifySuccess("Role deleted successfully.");
+
             return RedirectToAction(nameof(Index));
         }
 

@@ -342,8 +342,7 @@
               "RelativeToolTip": "Views\\Profile\\ChangePassword.cshtml",
               "ViewState": "AgIAAAcAAAAAAAAAAAAYwCkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-08-17T16:29:58.021Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-17T16:29:58.021Z"
             },
             {
               "$type": "Document",
@@ -355,8 +354,7 @@
               "RelativeToolTip": "Views\\Profile\\Edit.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAE8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-08-17T16:28:59.241Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-17T16:28:59.241Z"
             },
             {
               "$type": "Document",
@@ -368,8 +366,7 @@
               "RelativeToolTip": "Views\\Profile\\Index.cshtml",
               "ViewState": "AgIAAAkAAAAAAAAAAAAuwCsAAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-08-17T16:28:34.968Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-17T16:28:34.968Z"
             },
             {
               "$type": "Document",
@@ -381,8 +378,7 @@
               "RelativeToolTip": "Controllers\\ProfileController.cs",
               "ViewState": "AgIAAKQAAAAAAAAAAAAAwCYAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-17T16:26:39.843Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-17T16:26:39.843Z"
             },
             {
               "$type": "Document",
@@ -394,8 +390,7 @@
               "RelativeToolTip": "ViewModels\\ChangePasswordViewModel.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-17T16:25:57.788Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-17T16:25:57.788Z"
             },
             {
               "$type": "Document",
@@ -407,8 +402,7 @@
               "RelativeToolTip": "ViewModels\\ProfileViewModel.cs",
               "ViewState": "AgIAAA4AAAAAAAAAAAAwwB0AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-17T16:24:49.203Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-17T16:24:49.203Z"
             },
             {
               "$type": "Document",
@@ -1273,8 +1267,7 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAABKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-31T16:44:42.127Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-31T16:44:42.127Z"
             },
             {
               "$type": "Document",

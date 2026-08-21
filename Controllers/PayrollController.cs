@@ -9,7 +9,7 @@ using System.Security.Claims;
 namespace HR_system.Controllers
 {
     [Authorize]
-    public class PayrollController : Controller
+    public class PayrollController : BaseController
     {
         private readonly IPayrollRepository _payrollRepository;
         private readonly IEmployeeRepository _employeeRepository;
@@ -76,6 +76,7 @@ namespace HR_system.Controllers
             if (!ModelState.IsValid)
             {
                 await PopulateEmployeeDropdown(model);
+                NotifySuccess("Payroll record created successfully.");
                 return View(model);
             }
 
@@ -117,6 +118,7 @@ namespace HR_system.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _payrollRepository.DeleteAsync(id);
+            NotifySuccess("Payroll record deleted successfully.");
             return RedirectToAction(nameof(Index));
         }
     }

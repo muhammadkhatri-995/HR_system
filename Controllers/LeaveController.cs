@@ -8,7 +8,7 @@ using System.Security.Claims;
 namespace HR_system.Controllers
 {
     [Authorize]
-    public class LeaveController : Controller
+    public class LeaveController : BaseController
     {
         private readonly ILeaveRepository _leaveRepository;
         private readonly IAttendanceRequestRepository _attendanceRequestRepository;
@@ -135,6 +135,7 @@ namespace HR_system.Controllers
             };
 
             await _attendanceRequestRepository.AddAsync(request);
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -148,6 +149,7 @@ namespace HR_system.Controllers
             {
                 leave.Status = "Approved";
                 await _leaveRepository.UpdateAsync(leave);
+                NotifySuccess("Request approved successfully.");
             }
             return RedirectToAction(nameof(Index));
         }
@@ -162,60 +164,12 @@ namespace HR_system.Controllers
             {
                 leave.Status = "Rejected";
                 await _leaveRepository.UpdateAsync(leave);
+                NotifySuccess("Request rejected.");
             }
             return RedirectToAction(nameof(Index));
         }
 
-        //[Authorize(Roles = "Admin,HR")]
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> ApproveAttendanceRequest(int id)
-        //{
-        //    var request = await _attendanceRequestRepository.GetByIdAsync(id);
-        //    if (request == null)
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-
-        //    var allForEmployee = await _attendanceRepository.GetAllAsync(request.EmployeeId, null, null);
-        //    var existingAttendance = allForEmployee.FirstOrDefault(a => a.Date.Date == request.Date.Date);
-
-        //    if (existingAttendance != null)
-        //    {
-        //        if (request.RequestedCheckIn.HasValue)
-        //            existingAttendance.CheckInTime = request.RequestedCheckIn;
-
-        //        if (request.RequestedCheckOut.HasValue)
-        //            existingAttendance.CheckOutTime = request.RequestedCheckOut;
-
-        //        if (existingAttendance.CheckInTime.HasValue && existingAttendance.CheckOutTime  .HasValue)
-        //            existingAttendance.TotalWorkingHours = existingAttendance.CheckOutTime.Value - existingAttendance.CheckInTime.Value;
-
-        //        existingAttendance.Status = "Present";
-        //        await _attendanceRepository.UpdateAsync(existingAttendance);
-        //    }
-        //    else
-        //    {
-        //        var newAttendance = new Attendence
-        //        {
-        //            EmployeeId = request.EmployeeId,
-        //            Date = request.Date,
-        //            CheckInTime = request.RequestedCheckIn,
-        //            CheckOutTime = request.RequestedCheckOut,
-        //            Status = "Present"
-        //        };
-
-        //        if (newAttendance.CheckInTime.HasValue && newAttendance.CheckOutTime.HasValue)
-        //            newAttendance.TotalWorkingHours = newAttendance.CheckOutTime.Value - newAttendance.CheckInTime  .Value;
-
-        //        await _attendanceRepository.AddAsync(newAttendance);
-        //    }
-
-        //    request.Status = "Approved";
-        //    await _attendanceRequestRepository.UpdateAsync(request);
-
-        //    return RedirectToAction(nameof(Index));
-        //}
+        
         [Authorize(Roles = "Admin,HR")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -256,6 +210,7 @@ namespace HR_system.Controllers
 
                 existingAttendance.Status = "Present";
                 await _attendanceRepository.UpdateAsync(existingAttendance);
+                NotifySuccess("Request approved successfully.");
             }
             else
             {
@@ -298,6 +253,7 @@ namespace HR_system.Controllers
             {
                 request.Status = "Rejected";
                 await _attendanceRequestRepository.UpdateAsync(request);
+                NotifySuccess("Request rejected.");
             }
             return RedirectToAction(nameof(Index));
         }

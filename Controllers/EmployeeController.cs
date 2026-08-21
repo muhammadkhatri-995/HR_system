@@ -11,7 +11,7 @@ namespace HR_system.Controllers
     // Only Admin and HR can manage employees — a plain "Employee" role
     // should not be able to create/edit/delete other employees.
     [Authorize(Roles = "Admin,HR")]
-    public class EmployeeController : Controller
+    public class EmployeeController : BaseController
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IDepartmentRepository _departmentRepository;
@@ -68,6 +68,7 @@ namespace HR_system.Controllers
         public async Task<IActionResult> Create()
         {
             var model = new EmployeeViewModel();
+            NotifySuccess("Employee created successfully.");
             await PopulateDropdowns(model);
             return View(model);
         }
@@ -182,6 +183,7 @@ namespace HR_system.Controllers
             };
 
             await PopulateDropdowns(model);
+           
             return View(model);
         }
 
@@ -241,6 +243,7 @@ namespace HR_system.Controllers
             }
 
             await _employeeRepository.UpdateAsync(employee);
+            NotifySuccess(" Employee Updated successfully.");
             return RedirectToAction(nameof(Index));
         }
 
@@ -261,6 +264,7 @@ namespace HR_system.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _employeeRepository.DeleteAsync(id);
+            NotifySuccess("Employee deleted successfully.");
             return RedirectToAction(nameof(Index));
         }
     }

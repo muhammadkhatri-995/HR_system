@@ -8,7 +8,7 @@ using System.Security.Claims;
 namespace HR_system.Controllers
 {
     [Authorize] // any logged-in employee, any role
-    public class ProfileController : Controller
+    public class ProfileController : BaseController
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -104,8 +104,10 @@ namespace HR_system.Controllers
             }
 
             await _employeeRepository.UpdateAsync(employee);
+            NotifySuccess("Profile updated successfully.");
 
-            TempData["SuccessMessage"] = "Profile updated successfully.";
+
+          //  TempData["SuccessMessage"] = "Profile updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -168,8 +170,10 @@ namespace HR_system.Controllers
 
             employee.PasswordHash = _passwordHasher.HashPassword(employee, model.NewPassword);
             await _employeeRepository.UpdateAsync(employee);
+            NotifySuccess("Password changed successfully.");
 
-            TempData["SuccessMessage"] = "Password changed successfully. Please log in again next time with your new password.";
+
+            //TempData["SuccessMessage"] = "Password changed successfully. Please log in again next time with your new password.";
             return RedirectToAction(nameof(Index));
         }
     }
