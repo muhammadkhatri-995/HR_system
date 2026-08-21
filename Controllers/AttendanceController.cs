@@ -16,7 +16,7 @@ namespace HR_system.Controllers
     {
         private readonly IAttendanceRepository _attendanceRepository;
         private readonly IEmployeeRepository _employeeRepository;
-
+       // private readonly IAuditService _auditService;
         public AttendanceController(
             IAttendanceRepository attendanceRepository,
             IEmployeeRepository employeeRepository)
@@ -80,6 +80,7 @@ namespace HR_system.Controllers
                     Status = "Present"
                 };
                 await _attendanceRepository.AddAsync(attendance);
+                
             }
 
             return RedirectToAction(nameof(Index));

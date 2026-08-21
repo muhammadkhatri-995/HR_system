@@ -1,16 +1,21 @@
 ﻿using HR_system.Interfaces;
 using HR_system.Models;
+using HR_system.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 namespace HR_system.Controllers
 {
     [Authorize(Roles = "Admin,HR")]
     public class DepartmentController : BaseController
     {
         private readonly IDepartmentRepository _departmentRepository;
-        public DepartmentController(IDepartmentRepository departmentRepository)
+        private readonly IAuditService _auditService;
+        public DepartmentController(IDepartmentRepository departmentRepository , IAuditService auditService)
         {
             _departmentRepository = departmentRepository;
+            _auditService = auditService;
+
         }
         public async Task<IActionResult> Index()
         {
@@ -31,6 +36,7 @@ namespace HR_system.Controllers
             {
                 await _departmentRepository.AddAsync(department);
                 NotifySuccess("Department created successfully.");
+                await _auditService.LogAsync("Create", "Department", $"Created department '{department.Name}'");
                 return RedirectToAction(nameof(Index));
 
             }
@@ -59,6 +65,7 @@ namespace HR_system.Controllers
             {
                 await _departmentRepository.UpdateAsync(department);
                 NotifySuccess("Department updated   successfully.");
+                await _auditService.LogAsync("Update", "Department", $"Updated department '{department.Name}'");
                 return RedirectToAction(nameof(Index));
             }
             return View(department);
@@ -74,10 +81,11 @@ namespace HR_system.Controllers
         }
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, Department department)
         {
             await _departmentRepository.DeleteAsync(id);
             NotifySuccess("Department deleted successfully.");
+            await _auditService.LogAsync("Delete", "Department", $"Deleted department '{department.Name}'");
             return RedirectToAction(nameof(Index));
         }
     }

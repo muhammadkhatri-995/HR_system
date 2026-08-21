@@ -1,0 +1,149 @@
+﻿@model IEnumerable<HR_system.Models.AuditLogs>
+
+@{
+    ViewData["Title"] = "Audit Logs";
+}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>Audit Logs</h2>
+            
+            <p class="text-muted">
+                Total Logs: <strong>@Model.Count()</strong>
+            </p>
+        </div>
+    </div>
+
+    <div class="employee-toolbar mb-3">
+        <form method="get" asp-action="Index" class="employee-search-form">
+
+            <select name="module"
+                    class="form-control"
+                    onchange="this.form.submit()">
+
+                <option value="">All Modules</option>
+
+                <option value="Department"
+                        selected="@(ViewBag.SelectedModule == "Department" ? "selected" : null)">
+                    Department
+                </option>
+
+                <option value="Role"
+                        selected="@(ViewBag.SelectedModule == "Role" ? "selected" : null)">
+                    Role
+                </option>
+
+                <option value="Employee"
+                        selected="@(ViewBag.SelectedModule == "Employee" ? "selected" : null)">
+                    Employee
+                </option>
+
+                <option value="Payroll"
+                        selected="@(ViewBag.SelectedModule == "Payroll" ? "selected" : null)">
+                    Payroll
+                </option>
+
+                <option value="Leave"
+                        selected="@(ViewBag.SelectedModule == "Leave" ? "selected" : null)">
+                    Leave
+                </option>
+
+            </select>
+
+            <select name="action"
+                    class="form-control"
+                    onchange="this.form.submit()">
+
+                <option value="">All Actions</option>
+
+                <option value="Create"
+                        selected="@(ViewBag.SelectedAction == "Create" ? "selected" : null)">
+                    Create
+                </option>
+
+                <option value="Update"
+                        selected="@(ViewBag.SelectedAction == "Update" ? "selected" : null)">
+                    Update
+                </option>
+
+                <option value="Delete"
+                        selected="@(ViewBag.SelectedAction == "Delete" ? "selected" : null)">
+                    Delete
+                </option>
+
+            </select>
+
+        </form>
+    </div>
+
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No audit logs found.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+
+            <table class="table table-striped table-hover">
+
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Action</th>
+                        <th>Module</th>
+                        <th>Details</th>
+                        <th>Timestamp</th>
+                        <th>IP Address</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var log in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                @log.UserName
+                            </td>
+
+                            <td>
+                                <span class="status-badge @(log.Action == "Delete" ? "status-inactive" : "status-active")"> 
+
+                                    @log.Action
+
+                                </span>
+                            </td>
+
+                            <td>
+                                @log.Module
+                            </td>
+
+                            <td>
+                                @log.Details
+                            </td>
+
+                            <td>
+                                @log.Timestamp.ToString("g")
+                            </td>
+
+                            <td>
+                                @log.IpAddress
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+
+</div>

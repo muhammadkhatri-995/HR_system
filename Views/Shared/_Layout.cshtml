@@ -412,12 +412,18 @@
 
         <div class="sidebar-menu-wrapper">
             <ul class="sidebar-menu">
-                <li>
-                    <a asp-controller="Home" asp-action="Index" data-title="Home">
-                        <i class="bi bi-house"></i>
-                        <span>Home</span>
-                    </a>
-                </li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a asp-controller="AuditLog"
+                           asp-action="Index"
+                           data-title="Audit Logs">
+                            <i class="bi bi-journal-text"></i>
+                            <span>Audit Logs</span>
+                        </a>
+                    </li>
+                
+
                 <li>
                     <a asp-controller="Department" asp-action="Index" data-title="Departments">
                         <i class="bi bi-building"></i>
@@ -430,12 +436,27 @@
                         <span>Roles</span>
                     </a>
                 </li>
+                
                 <li>
                     <a asp-controller="Employee" asp-action="Index" data-title="Employees">
                         <i class="bi bi-people"></i>
                         <span>Employees</span>
                     </a>
                 </li>
+                    <li>
+                        <a asp-controller="Payroll" asp-action="Index" data-title="Payroll">
+                            <i class="bi bi-cash-stack"></i>
+                            <span>Payroll</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Report" asp-action="Index" data-title="Reports">
+                            <i class="bi bi-file-earmark-bar-graph"></i>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+                }
                 <li>
                     <a asp-controller="Dashboard" asp-action="Index" data-title="Dashboard">
                         <i class="bi bi-speedometer2"></i>
@@ -454,24 +475,14 @@
                         <span>Requests</span>
                     </a>
                 </li>
-                <li>
-                    <a asp-controller="Payroll" asp-action="Index" data-title="Payroll">
-                        <i class="bi bi-cash-stack"></i>
-                        <span>Payroll</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="Report" asp-action="Index" data-title="Reports">
-                        <i class="bi bi-file-earmark-bar-graph"></i>
-                        <span>Reports</span>
-                    </a>
-                </li>
+            
                 <li>
                     <a asp-controller="Profile" asp-action="Index" data-title="Your Profile">
                         <i class="bi bi-person-circle"></i>
                         <span>Your Profile</span>
                     </a>
                 </li>
+              
             </ul>
         </div>
     </aside>

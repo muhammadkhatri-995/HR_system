@@ -23,5 +23,7 @@ namespace HR_system.Data
         public DbSet<AttendanceRequest> AttendanceRequests { get; set; } 
         
         public DbSet<PayRoll> PayRolls { get; set; }
+
+        public DbSet<AuditLogs> AuditLogs { get; set; }
     }
 }
