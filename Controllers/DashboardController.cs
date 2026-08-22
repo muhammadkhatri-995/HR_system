@@ -1,37 +1,41 @@
 ﻿using HR_system.Interfaces;
-using HR_system.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HR_system.Controllers
 {
     [Authorize]
     public class DashboardController : Controller
     {
-        private readonly IEmployeeRepository _employeeRepository;
-        private readonly IAuditService _auditService;
+        private readonly IDashboardService _dashboardService;
 
-        public DashboardController(
-            IEmployeeRepository employeeRepository,
-            IAuditService auditService)
+        public DashboardController(IDashboardService dashboardService)
         {
-            _employeeRepository = employeeRepository;
-            _auditService = auditService;
+            _dashboardService = dashboardService;
+        }
+
+        private int GetCurrentEmployeeId()
+        {
+            var idClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(idClaim!);
         }
 
         public async Task<IActionResult> Index()
         {
-            // Get dashboard data
-            var dashboardData = await _employeeRepository.GetDashboardDataAsync();
+            bool isManager = User.IsInRole("Admin") || User.IsInRole("HR");
 
-            // Create audit log
-            await _auditService.LogAsync(
-                "Dashboard",
-                "Viewed",
-                "User opened the dashboard"
-            );
+            if (isManager)
+            {
+                var fullData = await _dashboardService.GetDashboardDataAsync(GetCurrentEmployeeId());
+                return View("Index", fullData);
+            }
 
-            return View(dashboardData);
+            // A plain Employee gets a completely different View and a
+            // completely different, narrower ViewModel — they physically
+            // cannot receive company-wide data through this code path.
+            var myData = await _dashboardService.GetMyDashboardDataAsync(GetCurrentEmployeeId());
+            return View("MyDashboard", myData);
         }
     }
 }

@@ -9,19 +9,31 @@ namespace HR_system.Controllers
     public class RoleController : BaseController
     {
         private readonly IRoleRepository _roleRepository;
-        public RoleController(IRoleRepository roleRepository)
+        private readonly IAuditService _auditService;
+
+        public RoleController(
+            IRoleRepository roleRepository,
+            IAuditService auditService)
         {
             _roleRepository = roleRepository;
+            _auditService = auditService;
         }
+
+        // GET: /Role
         public async Task<IActionResult> Index()
         {
             var roles = await _roleRepository.GetAllRolesAsync();
+
             return View(roles);
         }
+
+        // GET: /Role/Create
         public IActionResult Create()
         {
             return View();
         }
+
+        // POST: /Role/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Role role)
@@ -29,28 +41,41 @@ namespace HR_system.Controllers
             if (ModelState.IsValid)
             {
                 await _roleRepository.AddAsync(role);
+
+                // Audit Log
+                await _auditService.LogAsync(
+                    "Role",
+                    "Create",
+                    $"Role '{role.Name}' created successfully."
+                );
+
                 NotifySuccess("Role created successfully.");
 
                 return RedirectToAction(nameof(Index));
             }
+
             return View(role);
         }
+
         // GET: /Role/Edit/5
-        // Loads one role by Id and shows it in a pre-filled form.
         public async Task<IActionResult> Edit(int id)
         {
             var role = await _roleRepository.GetRoleByIdAsync(id);
+
             if (role == null)
             {
-                return NotFound(); // shows a 404 page if the Id doesn't exist
+                return NotFound();
             }
+
             return View(role);
         }
+
+        // POST: /Role/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Role role)
         {
-            // Safety check: the Id in the URL must match the Id in the submitted form.
+            // Safety check
             if (id != role.Id)
             {
                 return NotFound();
@@ -62,31 +87,57 @@ namespace HR_system.Controllers
             }
 
             await _roleRepository.updateAsync(role);
+
+            // Audit Log
+            await _auditService.LogAsync(
+                "Role",
+                "Update",
+                $"Role '{role.Name}' (ID: {role.Id}) updated successfully."
+            );
+
             NotifySuccess("Role updated successfully.");
 
             return RedirectToAction(nameof(Index));
         }
+
         // GET: /Role/Delete/5
-        // Shows a confirmation page before actually deleting.
         public async Task<IActionResult> Delete(int id)
         {
             var role = await _roleRepository.GetRoleByIdAsync(id);
+
             if (role == null)
             {
                 return NotFound();
             }
+
             return View(role);
         }
+
+        // POST: /Role/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            // Get role first so we can record its name in the audit log
+            var role = await _roleRepository.GetRoleByIdAsync(id);
+
+            if (role == null)
+            {
+                return NotFound();
+            }
+
             await _roleRepository.DeleteAsync(id);
+
+            // Audit Log
+            await _auditService.LogAsync(
+                "Role",
+                "Delete",
+                $"Role '{role.Name}' (ID: {role.Id}) deleted successfully."
+            );
+
             NotifySuccess("Role deleted successfully.");
 
             return RedirectToAction(nameof(Index));
         }
-
-
     }
 }

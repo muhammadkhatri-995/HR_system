@@ -12,14 +12,18 @@ namespace HR_system.Controllers
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IAuditService _auditService;
+
         private readonly PasswordHasher<Models.Employee> _passwordHasher = new();
 
         public ProfileController(
             IEmployeeRepository employeeRepository,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment,
+            IAuditService auditService)
         {
             _employeeRepository = employeeRepository;
             _webHostEnvironment = webHostEnvironment;
+            _auditService = auditService;
         }
 
         private int GetCurrentEmployeeId()
@@ -28,20 +32,31 @@ namespace HR_system.Controllers
             return int.Parse(idClaim!);
         }
 
+        // =====================================================
+        // PROFILE
+        // =====================================================
+
         // GET: /Profile
         public async Task<IActionResult> Index()
         {
-            var employee = await _employeeRepository.GetByIdAsync(GetCurrentEmployeeId());
-            if (employee == null) return NotFound();
+            var employee =
+                await _employeeRepository.GetByIdAsync(
+                    GetCurrentEmployeeId());
+
+            if (employee == null)
+                return NotFound();
 
             var model = new ProfileViewModel
             {
                 Id = employee.id,
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
-                DepartmentName = employee.Department?.Name ?? "Unassigned",
-                RoleName = employee.Role?.Name ?? "Employee",
-                ExistingPhotoPath = employee.EmployeePhoto,
+                DepartmentName =
+                    employee.Department?.Name ?? "Unassigned",
+                RoleName =
+                    employee.Role?.Name ?? "Employee",
+                ExistingPhotoPath =
+                    employee.EmployeePhoto,
                 Email = employee.Email,
                 Phone = employee.Phone,
                 Address = employee.Address
@@ -50,20 +65,31 @@ namespace HR_system.Controllers
             return View(model);
         }
 
+        // =====================================================
+        // EDIT PROFILE
+        // =====================================================
+
         // GET: /Profile/Edit
         public async Task<IActionResult> Edit()
         {
-            var employee = await _employeeRepository.GetByIdAsync(GetCurrentEmployeeId());
-            if (employee == null) return NotFound();
+            var employee =
+                await _employeeRepository.GetByIdAsync(
+                    GetCurrentEmployeeId());
+
+            if (employee == null)
+                return NotFound();
 
             var model = new ProfileViewModel
             {
                 Id = employee.id,
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
-                DepartmentName = employee.Department?.Name ?? "Unassigned",
-                RoleName = employee.Role?.Name ?? "Employee",
-                ExistingPhotoPath = employee.EmployeePhoto,
+                DepartmentName =
+                    employee.Department?.Name ?? "Unassigned",
+                RoleName =
+                    employee.Role?.Name ?? "Employee",
+                ExistingPhotoPath =
+                    employee.EmployeePhoto,
                 Email = employee.Email,
                 Phone = employee.Phone,
                 Address = employee.Address
@@ -75,61 +101,110 @@ namespace HR_system.Controllers
         // POST: /Profile/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ProfileViewModel model)
+        public async Task<IActionResult> Edit(
+            ProfileViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            // SECURITY: always re-fetch the REAL employee record from the
-            // database using the ID from the logged-in user's cookie —
-            // never trust model.Id from the submitted form. Otherwise a
-            // malicious user could edit model.Id in the browser dev tools
-            // and update SOMEONE ELSE's profile instead of their own.
-            var employee = await _employeeRepository.GetByIdAsync(GetCurrentEmployeeId());
-            if (employee == null) return NotFound();
+            // SECURITY:
+            // Always get the employee from the logged-in user's
+            // authentication claim instead of trusting model.Id.
+            var employee =
+                await _employeeRepository.GetByIdAsync(
+                    GetCurrentEmployeeId());
 
-            // Only update the fields this form is actually allowed to touch.
-            // Salary, DepartmentId, RoleId, Status are NEVER assigned here —
-            // they simply don't exist on ProfileViewModel, so there's no way
-            // for this code to accidentally change them.
+            if (employee == null)
+                return NotFound();
+
+            // Only profile fields are allowed to be changed.
             employee.Email = model.Email;
             employee.Phone = model.Phone;
             employee.Address = model.Address;
 
-            if (model.PhotoFile != null && model.PhotoFile.Length > 0)
+            bool photoUpdated = false;
+
+            if (model.PhotoFile != null &&
+                model.PhotoFile.Length > 0)
             {
-                employee.EmployeePhoto = await SavePhotoAsync(model.PhotoFile);
+                employee.EmployeePhoto =
+                    await SavePhotoAsync(model.PhotoFile);
+
+                photoUpdated = true;
             }
 
             await _employeeRepository.UpdateAsync(employee);
+
+            // =====================================================
+            // AUDIT LOG
+            // =====================================================
+
+            string changes =
+                $"Employee ID {employee.id} updated profile. " +
+                $"Email: {employee.Email}, " +
+                $"Phone: {employee.Phone}, " +
+                $"Address: {employee.Address}.";
+
+            if (photoUpdated)
+            {
+                changes += " Profile photo was also updated.";
+            }
+
+            await _auditService.LogAsync(
+                "Profile",
+                "Update",
+                changes
+            );
+
             NotifySuccess("Profile updated successfully.");
 
-
-          //  TempData["SuccessMessage"] = "Profile updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<string> SavePhotoAsync(Microsoft.AspNetCore.Http.IFormFile file)
+        // =====================================================
+        // SAVE PHOTO
+        // =====================================================
+
+        private async Task<string> SavePhotoAsync(
+            Microsoft.AspNetCore.Http.IFormFile file)
         {
-            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "employees");
+            string uploadsFolder =
+                Path.Combine(
+                    _webHostEnvironment.WebRootPath,
+                    "uploads",
+                    "employees");
 
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
             }
 
-            string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            string uniqueFileName =
+                Guid.NewGuid().ToString() +
+                Path.GetExtension(file.FileName);
 
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            string filePath =
+                Path.Combine(
+                    uploadsFolder,
+                    uniqueFileName);
+
+            using (var fileStream =
+                   new FileStream(
+                       filePath,
+                       FileMode.Create))
             {
                 await file.CopyToAsync(fileStream);
             }
 
-            return "/uploads/employees/" + uniqueFileName;
+            return "/uploads/employees/" +
+                   uniqueFileName;
         }
+
+        // =====================================================
+        // CHANGE PASSWORD
+        // =====================================================
 
         // GET: /Profile/ChangePassword
         public IActionResult ChangePassword()
@@ -140,40 +215,73 @@ namespace HR_system.Controllers
         // POST: /Profile/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        public async Task<IActionResult> ChangePassword(
+            ChangePasswordViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            var employee = await _employeeRepository.GetByIdAsync(GetCurrentEmployeeId());
-            if (employee == null) return NotFound();
+            var employee =
+                await _employeeRepository.GetByIdAsync(
+                    GetCurrentEmployeeId());
 
-            // Verify they actually know their CURRENT password before allowing the change.
+            if (employee == null)
+                return NotFound();
+
+            // Verify current password
             PasswordVerificationResult result;
+
             try
             {
-                result = _passwordHasher.VerifyHashedPassword(employee, employee.PasswordHash, model.CurrentPassword);
+                result =
+                    _passwordHasher.VerifyHashedPassword(
+                        employee,
+                        employee.PasswordHash,
+                        model.CurrentPassword);
             }
             catch (FormatException)
             {
-                ModelState.AddModelError(nameof(model.CurrentPassword), "Current password is incorrect");
+                ModelState.AddModelError(
+                    nameof(model.CurrentPassword),
+                    "Current password is incorrect");
+
                 return View(model);
             }
 
             if (result == PasswordVerificationResult.Failed)
             {
-                ModelState.AddModelError(nameof(model.CurrentPassword), "Current password is incorrect");
+                ModelState.AddModelError(
+                    nameof(model.CurrentPassword),
+                    "Current password is incorrect");
+
                 return View(model);
             }
 
-            employee.PasswordHash = _passwordHasher.HashPassword(employee, model.NewPassword);
+            // Create new password hash
+            employee.PasswordHash =
+                _passwordHasher.HashPassword(
+                    employee,
+                    model.NewPassword);
+
             await _employeeRepository.UpdateAsync(employee);
+
+            // =====================================================
+            // AUDIT LOG
+            // =====================================================
+
+            // IMPORTANT:
+            // Never store CurrentPassword or NewPassword
+            // inside the audit log.
+            await _auditService.LogAsync(
+                "Profile",
+                "ChangePassword",
+                $"Employee ID {employee.id} successfully changed their password."
+            );
+
             NotifySuccess("Password changed successfully.");
 
-
-            //TempData["SuccessMessage"] = "Password changed successfully. Please log in again next time with your new password.";
             return RedirectToAction(nameof(Index));
         }
     }

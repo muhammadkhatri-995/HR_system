@@ -2,70 +2,116 @@
 
 @{
     ViewData["Title"] = "Dashboard";
+
+    // Calculated ONCE at the top so it's safely in scope everywhere
+    // below — including inside the script blocks further down the page.
+    var totalLeaves = Model.PendingLeaves + Model.ApprovedLeaves + Model.RejectedLeaves;
 }
-
-<h2>Dashboard</h2>
-
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-label">Total Employees</div>
-        <div class="stat-value">@Model.TotalEmployees</div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+}
+<div class="my-profile-banner mb-4">
+    <div class="my-avatar-large">
+        @if (!string.IsNullOrEmpty(Model.CurrentUserPhoto))
+        {
+            <img src="@Model.CurrentUserPhoto" alt="@Model.CurrentUserName" />
+        }
+        else
+        {
+            @(Model.CurrentUserName.Length > 0 ? Model.CurrentUserName.Substring(0, 1) : "A")
+        }
     </div>
 
-    <div class="stat-card stat-active">
-        <div class="stat-label">Active Employees</div>
-        <div class="stat-value">@Model.ActiveEmployees</div>
+    <div class="my-banner-info">
+        <div class="my-greeting">Welcome back, @Model.CurrentUserName.Split(' ')[0] 👋</div>
+        <div class="my-name">@Model.CurrentUserName</div>
+        <div class="my-meta">@Model.CurrentUserRole</div>
+        <span class="status-badge-glow status-active">
+            <span class="status-dot"></span> @DateTime.Now.ToString("dddd, MMMM d")
+        </span>
     </div>
 
-    <div class="stat-card stat-inactive">
-        <div class="stat-label">Inactive Employees</div>
-        <div class="stat-value">@Model.InactiveEmployees</div>
-    </div>
-
-    <div class="stat-card stat-new">
-        <div class="stat-label">New This Month</div>
-        <div class="stat-value">@Model.NewEmployeesThisMonth</div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-label">Departments</div>
-        <div class="stat-value">@Model.TotalDepartments</div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-label">Roles</div>
-        <div class="stat-value">@Model.TotalRoles</div>
+    <div class="my-punch-status">
+        <span class="punch-pill punch-pill-active">
+            <span class="pulse-dot"></span> @Model.TotalEmployees employees · @Model.ActiveEmployees active
+        </span>
+        <a asp-controller="Employee" asp-action="Index" class="btn-add-employee mt-2">View Employees</a>
     </div>
 </div>
 
+<div class="dashboard-header">
+    <h2>Dashboard</h2>
+    <p class="dashboard-subtitle">Welcome back — here's what's happening today.</p>
+</div>
+
+@* ===== Stat Cards ===== *@
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon" style="background:#eef2ff; color:#4a6cf7;">👥</div>
+        <div>
+            <div class="stat-label">Total Employees</div>
+            <div class="stat-value">@Model.TotalEmployees</div>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon" style="background:#e7f8ee; color:#1a8a4a;">✅</div>
+        <div>
+            <div class="stat-label">Active</div>
+            <div class="stat-value">@Model.ActiveEmployees</div>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon" style="background:#fdeaea; color:#c0392b;">⛔</div>
+        <div>
+            <div class="stat-label">Inactive</div>
+            <div class="stat-value">@Model.InactiveEmployees</div>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon" style="background:#fff4d6; color:#b8860b;">🆕</div>
+        <div>
+            <div class="stat-label">New This Month</div>
+            <div class="stat-value">@Model.NewEmployeesThisMonth</div>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon" style="background:#eef2ff; color:#4a6cf7;">🏢</div>
+        <div>
+            <div class="stat-label">Departments</div>
+            <div class="stat-value">@Model.TotalDepartments</div>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon" style="background:#eef2ff; color:#4a6cf7;">🎯</div>
+        <div>
+            <div class="stat-label">Roles</div>
+            <div class="stat-value">@Model.TotalRoles</div>
+        </div>
+    </div>
+</div>
+
+@* ===== Row 1: Department chart + Recent Employees (now proper cards) ===== *@
 <div class="dashboard-columns">
     <div class="dashboard-panel">
         <h4>Employees by Department</h4>
 
-        @if (!Model.EmployeesByDepartment.Any())
+        @if (Model.EmployeesByDepartment.Any())
         {
-            <p style="color:#6b7280;">No data yet.</p>
+            <div class="chart-container">
+                <canvas id="deptChart"></canvas>
+            </div>
         }
         else
         {
-            @* Find the highest count so we can scale every bar relative to it —
-               otherwise a department with 3 employees and one with 30 would
-               look almost the same width. *@
-            var maxCount = Model.EmployeesByDepartment.Max(d => d.Count);
-
-            @foreach (var dept in Model.EmployeesByDepartment)
-            {
-                var widthPercent = maxCount == 0 ? 0 : (dept.Count * 100 / maxCount);
-
-                <div class="bar-chart-row">
-                    <div class="bar-chart-label">@dept.DepartmentName</div>
-                    <div class="bar-chart-track">
-                        <div class="bar-chart-fill" style="width:@(widthPercent)%;">
-                            @dept.Count
-                        </div>
-                    </div>
-                </div>
-            }
+            <div class="empty-chart-state">
+                <i class="bi bi-pie-chart"></i>
+                <p>No data yet.</p>
+            </div>
         }
     </div>
 
@@ -78,25 +124,379 @@
         }
         else
         {
-            @foreach (var emp in Model.RecentEmployees)
-            {
-                <div class="recent-employee-row">
-                    <div class="recent-avatar">
-                        @if (!string.IsNullOrEmpty(emp.EmployeePhoto))
-                        {
-                            <img src="@emp.EmployeePhoto" alt="@emp.FirstName" />
-                        }
-                        else
-                        {
-                            @emp.FirstName.Substring(0, 1)
-                        }
+            <div class="recent-employee-cards">
+                @foreach (var emp in Model.RecentEmployees)
+                {
+                    <div class="recent-emp-card">
+                        <div class="recent-emp-avatar">
+                            @if (!string.IsNullOrEmpty(emp.EmployeePhoto))
+                            {
+                                <img src="@emp.EmployeePhoto" alt="@emp.FirstName" />
+                            }
+                            else
+                            {
+                                @emp.FirstName.Substring(0, 1)
+                            }
+                        </div>
+                        <div class="recent-emp-info">
+                            <div class="recent-emp-name">@emp.FirstName @emp.LastName</div>
+                            <div class="recent-emp-role">@(emp.Role?.Name ?? "No Role")</div>
+                            <div class="recent-emp-dept-badge">@(emp.Department?.Name ?? "Unassigned")</div>
+                        </div>
+                        <div class="recent-emp-date">
+                            Joined<br /><strong>@emp.CreatedDate.ToString("MMM d")</strong>
+                        </div>
                     </div>
-                    <div class="recent-employee-info">
-                        <div class="name">@emp.FirstName @emp.LastName</div>
-                        <div class="meta">@(emp.Department?.Name ?? "No Department") · joined @emp.CreatedDate.ToShortDateString()</div>
-                    </div>
-                </div>
-            }
+                }
+            </div>
         }
     </div>
 </div>
+
+@* ===== Row 2: Attendance Trend + Leave Statistics ===== *@
+<div class="dashboard-columns mt-4">
+
+    <div class="dashboard-panel">
+        <h4>Monthly Attendance Trend</h4>
+
+        @if (Model.MonthlyAttendanceTrend?.Any() == true)
+        {
+            <div class="chart-container">
+                <canvas id="attendanceTrendChart"></canvas>
+            </div>
+        }
+        else
+        {
+            <div class="empty-chart-state">
+                <i class="bi bi-calendar-x"></i>
+                <p>No attendance data yet this month.</p>
+            </div>
+        }
+    </div>
+
+    <div class="dashboard-panel">
+        <h4>Leave Statistics</h4>
+
+        @if (totalLeaves > 0)
+        {
+            <div class="chart-container">
+                <canvas id="leaveStatsChart"></canvas>
+            </div>
+        }
+        else
+        {
+            <div class="empty-chart-state">
+                <i class="bi bi-calendar2-x"></i>
+                <p>No leave requests yet.</p>
+            </div>
+        }
+    </div>
+
+</div>
+
+@* ===== Row 3: Payroll Summary ===== *@
+<div class="dashboard-panel mt-4">
+    <h4>Payroll Summary (Last 6 Months)</h4>
+
+    @if (Model.PayrollLast6Months?.Any() == true)
+    {
+        <div class="chart-container payroll-chart-container">
+            <canvas id="payrollChart"></canvas>
+        </div>
+    }
+    else
+    {
+        <div class="empty-chart-state">
+            <i class="bi bi-cash-stack"></i>
+            <p>No payroll records yet.</p>
+        </div>
+    }
+</div>
+
+@section Scripts {
+
+    @* ===== Department doughnut chart (Module 6) ===== *@
+    @if (Model.EmployeesByDepartment.Any())
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const deptLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.EmployeesByDepartment.Select(d => d.DepartmentName)));
+                const deptCounts = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.EmployeesByDepartment.Select(d => d.Count)));
+
+                const canvas = document.getElementById('deptChart');
+                if (!canvas) return;
+
+                new Chart(canvas, {
+                    type: 'doughnut',
+                    data: {
+                        labels: deptLabels,
+                        datasets: [{
+                            data: deptCounts,
+                            backgroundColor: ['#4a6cf7', '#1a8a4a', '#f39c12', '#c0392b', '#8e44ad', '#16a085'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom' }
+                        }
+                    }
+                });
+            });
+        </script>
+    }
+
+    @* ===== Monthly Attendance Trend (line chart) ===== *@
+    @if (Model.MonthlyAttendanceTrend?.Any() == true)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+
+                const attendanceLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyAttendanceTrend.Select(x => x.Label)));
+                const attendanceCounts = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyAttendanceTrend.Select(x => x.PresentCount)));
+
+                const canvas = document.getElementById("attendanceTrendChart");
+                if (!canvas) return;
+
+                new Chart(canvas, {
+                    type: "line",
+                    data: {
+                        labels: attendanceLabels,
+                        datasets: [{
+                            label: "Present",
+                            data: attendanceCounts,
+                            borderColor: "#4a6cf7",
+                            backgroundColor: "rgba(74, 108, 247, 0.10)",
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            fill: true,
+                            tension: 0.35
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: { intersect: false, mode: "index" },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: true }
+                        },
+                        scales: {
+                            x: { grid: { display: false } },
+                            y: { beginAtZero: true, ticks: { precision: 0, stepSize: 1 } }
+                        }
+                    }
+                });
+            });
+        </script>
+    }
+
+    @* ===== Leave Statistics (doughnut chart) ===== *@
+    @if (totalLeaves > 0)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+
+                const canvas = document.getElementById("leaveStatsChart");
+                if (!canvas) return;
+
+                new Chart(canvas, {
+                    type: "doughnut",
+                    data: {
+                        labels: ["Pending", "Approved", "Rejected"],
+                        datasets: [{
+                            data: [@Model.PendingLeaves, @Model.ApprovedLeaves, @Model.RejectedLeaves],
+                            backgroundColor: ["#f39c12", "#1a8a4a", "#c0392b"],
+                            borderWidth: 0,
+                            hoverOffset: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: "65%",
+                        plugins: {
+                            legend: {
+                                position: "bottom",
+                                labels: { usePointStyle: true, padding: 20 }
+                            },
+                            tooltip: { enabled: true }
+                        }
+                    }
+                });
+            });
+        </script>
+    }
+
+    @* ===== Payroll Summary (bar chart) ===== *@
+    @if (Model.PayrollLast6Months?.Any() == true)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+
+                const payrollLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.PayrollLast6Months.Select(x => x.MonthLabel)));
+                const payrollTotals = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.PayrollLast6Months.Select(x => x.TotalNetSalary)));
+
+                const canvas = document.getElementById("payrollChart");
+                if (!canvas) return;
+
+                new Chart(canvas, {
+                    type: "bar",
+                    data: {
+                        labels: payrollLabels,
+                        datasets: [{
+                            label: "Total Net Salary",
+                            data: payrollTotals,
+                            backgroundColor: "#4a6cf7",
+                            borderRadius: 6,
+                            borderSkipped: false,
+                            maxBarThickness: 45
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        return " " + Number(context.raw).toLocaleString();
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { grid: { display: false } },
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function (value) {
+                                        return Number(value).toLocaleString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        </script>
+    }
+
+}
+
+<style>
+    .chart-container {
+        position: relative;
+        width: 100%;
+        height: 280px;
+    }
+
+    .payroll-chart-container {
+        height: 300px;
+    }
+
+    .empty-chart-state {
+        min-height: 220px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #6b7280;
+    }
+
+        .empty-chart-state i {
+            font-size: 32px;
+            margin-bottom: 10px;
+            opacity: 0.6;
+        }
+
+        .empty-chart-state p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+    /* ===== Recent Employees — card list ===== */
+    .recent-employee-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .recent-emp-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: #f9fafb;
+        border-radius: 10px;
+        padding: 12px 14px;
+        transition: background 0.2s;
+    }
+
+        .recent-emp-card:hover {
+            background: #f0f2f5;
+        }
+
+    .recent-emp-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #eef2ff;
+        color: #4a6cf7;
+        font-weight: 700;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+        .recent-emp-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .recent-emp-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .recent-emp-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1a1a2e;
+    }
+
+    .recent-emp-role {
+        font-size: 12px;
+        color: #4a6cf7;
+    }
+
+    .recent-emp-dept-badge {
+        display: inline-block;
+        font-size: 11px;
+        color: #6b7280;
+        background: #eef0f3;
+        padding: 2px 8px;
+        border-radius: 20px;
+        margin-top: 3px;
+    }
+
+    .recent-emp-date {
+        font-size: 11px;
+        color: #9ca3af;
+        text-align: right;
+        flex-shrink: 0;
+    }
+
+        .recent-emp-date strong {
+            color: #374151;
+            font-size: 12px;
+        }
+</style>

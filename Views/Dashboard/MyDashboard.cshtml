@@ -1,0 +1,424 @@
+﻿@model HR_system.ViewModels.MyDashboardViewModel
+
+@{
+    ViewData["Title"] = "My Dashboard";
+}
+
+<div class="my-dash-fade-in">
+
+    @* ===== Gradient welcome banner ===== *@
+    <div class="my-profile-banner">
+        <div class="my-avatar-large">
+            @if (!string.IsNullOrEmpty(Model.PhotoPath))
+            {
+                <img src="@Model.PhotoPath" alt="@Model.FullName" />
+            }
+            else
+            {
+                @Model.FullName.Substring(0, 1)
+            }
+        </div>
+
+        <div class="my-banner-info">
+            <div class="my-greeting">Welcome back, @Model.FullName.Split(' ')[0] 👋</div>
+            <div class="my-name">@Model.FullName</div>
+            <div class="my-meta">@Model.RoleName · @Model.DepartmentName</div>
+            <span class="status-badge-glow @(Model.Status == "Active" ? "status-active" : "status-inactive")">
+                <span class="status-dot"></span> @Model.Status
+            </span>
+        </div>
+
+        <div class="my-punch-status">
+            @if (!Model.CheckedInToday)
+            {
+                <span class="punch-pill punch-pill-warn">⏰ Not checked in today</span>
+            }
+            else if (!Model.CheckedOutToday)
+            {
+                <span class="punch-pill punch-pill-active"><span class="pulse-dot"></span> Checked in — working now</span>
+            }
+            else
+            {
+                <span class="punch-pill punch-pill-done">✅ Checked out today</span>
+            }
+            <a asp-controller="Attendance" asp-action="Index" class="btn-add-employee mt-2">Go to Attendance</a>
+        </div>
+    </div>
+
+    @* ===== Animated stat cards ===== *@
+    <div class="stats-grid mt-4">
+        <div class="stat-card stat-card-animated" style="--delay:0s;">
+            <div class="stat-icon" style="background:#e7f8ee; color:#1a8a4a;">✅</div>
+            <div>
+                <div class="stat-label">Days Present (This Month)</div>
+                <div class="stat-value counter" data-target="@Model.DaysPresentThisMonth">0</div>
+            </div>
+        </div>
+
+        <div class="stat-card stat-card-animated" style="--delay:0.1s;">
+            <div class="stat-icon" style="background:#fdeaea; color:#c0392b;">⛔</div>
+            <div>
+                <div class="stat-label">Days Absent (This Month)</div>
+                <div class="stat-value counter" data-target="@Model.DaysAbsentThisMonth">0</div>
+            </div>
+        </div>
+
+        <div class="stat-card stat-card-animated" style="--delay:0.2s;">
+            <div class="stat-icon" style="background:#fff4d6; color:#b8860b;">⏳</div>
+            <div>
+                <div class="stat-label">Pending Leave Requests</div>
+                <div class="stat-value counter" data-target="@Model.MyPendingLeaves">0</div>
+            </div>
+        </div>
+
+        <div class="stat-card stat-card-animated" style="--delay:0.3s;">
+            <div class="stat-icon" style="background:#eef2ff; color:#4a6cf7;">💰</div>
+            <div>
+                <div class="stat-label">Last Net Salary</div>
+                <div class="stat-value">@(Model.LastNetSalary?.ToString("N0") ?? "-")</div>
+            </div>
+        </div>
+    </div>
+
+    @* ===== Leave overview + Payslip panels ===== *@
+    <div class="dashboard-columns mt-4">
+        <div class="dashboard-panel my-dash-panel">
+            <h4>My Leave Overview</h4>
+            <div class="leave-mini-stats">
+                <div class="leave-stat-row">
+                    <span class="dot" style="background:#f39c12;"></span>
+                    <span>Pending</span>
+                    <strong>@Model.MyPendingLeaves</strong>
+                </div>
+                <div class="leave-progress-track">
+                    <div class="leave-progress-fill" style="width:@(GetPercent(Model.MyPendingLeaves, Model.MyPendingLeaves + Model.MyApprovedLeaves + Model.MyRejectedLeaves))%; background:#f39c12;"></div>
+                </div>
+
+                <div class="leave-stat-row">
+                    <span class="dot" style="background:#1a8a4a;"></span>
+                    <span>Approved</span>
+                    <strong>@Model.MyApprovedLeaves</strong>
+                </div>
+                <div class="leave-progress-track">
+                    <div class="leave-progress-fill" style="width:@(GetPercent(Model.MyApprovedLeaves, Model.MyPendingLeaves + Model.MyApprovedLeaves + Model.MyRejectedLeaves))%; background:#1a8a4a;"></div>
+                </div>
+
+                <div class="leave-stat-row">
+                    <span class="dot" style="background:#c0392b;"></span>
+                    <span>Rejected</span>
+                    <strong>@Model.MyRejectedLeaves</strong>
+                </div>
+                <div class="leave-progress-track">
+                    <div class="leave-progress-fill" style="width:@(GetPercent(Model.MyRejectedLeaves, Model.MyPendingLeaves + Model.MyApprovedLeaves + Model.MyRejectedLeaves))%; background:#c0392b;"></div>
+                </div>
+            </div>
+            <a asp-controller="Leave" asp-action="Index" class="btn btn-secondary mt-3">View My Requests →</a>
+        </div>
+
+        <div class="dashboard-panel my-dash-panel payslip-panel">
+            <h4>My Last Payslip</h4>
+            @if (Model.LastNetSalary.HasValue)
+            {
+                <div class="payslip-amount">@Model.LastNetSalary.Value.ToString("N2")</div>
+                <p class="payslip-date">Paid on @Model.LastPayDate?.ToShortDateString()</p>
+            }
+            else
+            {
+                <p style="color:#6b7280;">No payroll records yet.</p>
+            }
+            <a asp-controller="Payroll" asp-action="Index" class="btn btn-secondary mt-3">View All Payslips →</a>
+        </div>
+    </div>
+
+</div>
+
+@functions {
+    // Small helper used only for the leave progress bars above —
+    // avoids division-by-zero when an employee has zero leave requests total.
+    public int GetPercent(int part, int total)
+    {
+        if (total == 0) return 0;
+        return (int)((part * 100.0) / total);
+    }
+}
+
+@section Scripts {
+    <script>
+        // Animate each stat number counting up from 0 to its real value
+        // on page load — small touch that makes the dashboard feel alive
+        // instead of static numbers just appearing.
+        document.addEventListener("DOMContentLoaded", function () {
+            const counters = document.querySelectorAll('.counter');
+
+            counters.forEach(function (counter) {
+                const target = parseInt(counter.dataset.target, 10) || 0;
+                const duration = 800; // ms
+                const stepTime = 20;
+                const steps = duration / stepTime;
+                const increment = target / steps;
+                let current = 0;
+
+                const timer = setInterval(function () {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current);
+                    }
+                }, stepTime);
+            });
+        });
+    </script>
+}
+
+<style>
+    /* ===== Page-level fade-in ===== */
+    .my-dash-fade-in {
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ===== Gradient welcome banner ===== */
+    .my-profile-banner {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        background: linear-gradient(135deg, #4a6cf7 0%, #7b93f9 55%, #a78bfa 100%);
+        border-radius: 18px;
+        padding: 28px;
+        box-shadow: 0 8px 24px rgba(74, 108, 247, 0.25);
+        flex-wrap: wrap;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+        /* subtle decorative glow circles */
+        .my-profile-banner::before {
+            content: "";
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 50%;
+        }
+
+        .my-profile-banner::after {
+            content: "";
+            position: absolute;
+            bottom: -80px;
+            right: 100px;
+            width: 160px;
+            height: 160px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+        }
+
+    .my-avatar-large {
+        width: 76px;
+        height: 76px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.25);
+        color: white;
+        font-weight: 700;
+        font-size: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        flex-shrink: 0;
+        border: 3px solid rgba(255,255,255,0.5);
+        z-index: 1;
+    }
+
+        .my-avatar-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .my-banner-info {
+        z-index: 1;
+    }
+
+    .my-greeting {
+        font-size: 13px;
+        opacity: 0.9;
+        margin-bottom: 2px;
+    }
+
+    .my-name {
+        font-size: 22px;
+        font-weight: 700;
+    }
+
+    .my-meta {
+        font-size: 13px;
+        opacity: 0.9;
+        margin: 2px 0 8px 0;
+    }
+
+    .status-badge-glow {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        background: rgba(255,255,255,0.2);
+    }
+
+    .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #4ade80;
+        display: inline-block;
+    }
+
+    .my-punch-status {
+        margin-left: auto;
+        text-align: center;
+        z-index: 1;
+    }
+
+    .punch-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        background: rgba(255,255,255,0.9);
+        color: #374151;
+    }
+
+    .punch-pill-warn {
+        color: #b8860b;
+    }
+
+    .punch-pill-active {
+        color: #1a8a4a;
+    }
+
+    .punch-pill-done {
+        color: #4a6cf7;
+    }
+
+    /* small pulsing dot for "currently working" state */
+    .pulse-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #1a8a4a;
+        display: inline-block;
+        animation: pulse 1.4s infinite;
+    }
+
+    @@keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(26, 138, 74, 0.5);
+        }
+
+        70% {
+            box-shadow: 0 0 0 8px rgba(26, 138, 74, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(26, 138, 74, 0);
+        }
+    }
+
+    /* ===== Stat cards: staggered entrance + hover lift ===== */
+    .stat-card-animated {
+        opacity: 0;
+        animation: fadeInUp 0.5s ease-out forwards;
+        animation-delay: var(--delay, 0s);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .stat-card-animated:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(0,0,0,0.1);
+        }
+
+    /* ===== Leave overview panel ===== */
+    .my-dash-panel {
+        transition: box-shadow 0.2s ease;
+    }
+
+        .my-dash-panel:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+
+    .leave-stat-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #374151;
+        margin-bottom: 4px;
+    }
+
+        .leave-stat-row strong {
+            margin-left: auto;
+        }
+
+        .leave-stat-row .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+    .leave-progress-track {
+        height: 6px;
+        background: #f0f2f5;
+        border-radius: 6px;
+        overflow: hidden;
+        margin-bottom: 14px;
+    }
+
+    .leave-progress-fill {
+        height: 100%;
+        border-radius: 6px;
+        transition: width 0.8s ease-out;
+    }
+
+    /* ===== Payslip panel ===== */
+    .payslip-panel {
+        text-align: center;
+        background: linear-gradient(135deg, #fdfdff 0%, #f3f5ff 100%);
+    }
+
+    .payslip-amount {
+        font-size: 34px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #4a6cf7, #7b93f9);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-top: 6px;
+    }
+
+    .payslip-date {
+        color: #6b7280;
+        font-size: 13px;
+        margin-top: 2px;
+    }
+</style>
