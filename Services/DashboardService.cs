@@ -14,14 +14,12 @@ namespace HR_system.Services
             _context = context;
         }
 
-        // FIX 1: added the missing "int currentEmployeeId" parameter —
-        // the method body already needed it, it just wasn't declared.
         public async Task<DashboardViewModel> GetDashboardDataAsync(int currentEmployeeId)
         {
             var dashboard = new DashboardViewModel();
 
-            // FIX 2: e.Id (capital I) — matches the Employee model's real
-            // property name. "e.id" doesn't exist and won't compile.
+            // FIXED: e.Id (capital I) — this was still lowercase "e.id" before,
+            // which would not compile since Employee.Id is capitalized.
             var currentUser = await _context.Employees
                 .Include(e => e.Role)
                 .FirstOrDefaultAsync(e => e.id == currentEmployeeId);
@@ -33,7 +31,7 @@ namespace HR_system.Services
                 dashboard.CurrentUserPhoto = currentUser.EmployeePhoto;
             }
 
-            // ----- Existing stats (unchanged from Module 6) -----
+            // ----- Existing stats -----
             dashboard.TotalEmployees = await _context.Employees.CountAsync();
             dashboard.ActiveEmployees = await _context.Employees.CountAsync(e => e.Status == "Active");
             dashboard.InactiveEmployees = await _context.Employees.CountAsync(e => e.Status == "Inactive");
@@ -98,10 +96,11 @@ namespace HR_system.Services
 
         public async Task<MyDashboardViewModel> GetMyDashboardDataAsync(int employeeId)
         {
+            // FIXED: e.Id (capital I) — same issue as above.
             var employee = await _context.Employees
                 .Include(e => e.Department)
                 .Include(e => e.Role)
-                .FirstOrDefaultAsync(e => e.id == employeeId); // FIX: e.Id, not e.id
+                .FirstOrDefaultAsync(e => e.id == employeeId);
 
             var model = new MyDashboardViewModel();
 
@@ -143,6 +142,44 @@ namespace HR_system.Services
             var todayAttendance = myAttendanceThisMonth.FirstOrDefault(a => a.Date.Date == DateTime.Today);
             model.CheckedInToday = todayAttendance?.CheckInTime != null;
             model.CheckedOutToday = todayAttendance?.CheckOutTime != null;
+
+            // ----- NEW: Monthly Performance chart data -----
+            // Reuses myAttendanceThisMonth (already fetched above) — no extra query needed.
+            model.MonthlyPerformance = myAttendanceThisMonth
+                .OrderBy(a => a.Date)
+                .Select(a =>
+                {
+                    var point = new AttendancePerformancePoint
+                    {
+                        Label = a.Date.ToString("MMM d")
+                    };
+
+                    if (a.CheckInTime.HasValue && a.CheckOutTime.HasValue)
+                    {
+                        // Both times exist — a completed day.
+                        var worked = a.CheckOutTime.Value - a.CheckInTime.Value;
+                        point.HoursWorked = Math.Round(worked.TotalHours, 2);
+
+                        // Your rule: 9+ hours = Complete (green), under 9 = Incomplete (orange)
+                        point.Status = point.HoursWorked >= 9 ? "Complete" : "Incomplete";
+                    }
+                    else if (a.CheckInTime.HasValue && !a.CheckOutTime.HasValue)
+                    {
+                        // Checked in, never checked out — still working (purple).
+                        var elapsed = DateTime.Now.TimeOfDay - a.CheckInTime.Value;
+                        point.HoursWorked = elapsed.TotalHours > 0 ? Math.Round(elapsed.TotalHours, 2) : 0;
+                        point.Status = "InProgress";
+                    }
+                    else
+                    {
+                        // No check-in recorded at all (e.g. an Absent row).
+                        point.HoursWorked = 0;
+                        point.Status = "Incomplete";
+                    }
+
+                    return point;
+                })
+                .ToList();
 
             return model;
         }

@@ -45,6 +45,31 @@
         </div>
     </div>
 
+    @* ===== My Attendance Performance chart — now correctly OUTSIDE the banner ===== *@
+    <div class="dashboard-panel mt-4">
+        <h4>My Attendance Performance (This Month)</h4>
+
+        <div class="performance-legend">
+            <span><span class="legend-dot" style="background:#1a8a4a;"></span> 9+ hours (Complete)</span>
+            <span><span class="legend-dot" style="background:#f39c12;"></span> Checked out early</span>
+            <span><span class="legend-dot" style="background:#8e44ad;"></span> Still working (no check-out)</span>
+        </div>
+
+        @if (Model.MonthlyPerformance.Any())
+        {
+            <div class="chart-container">
+                <canvas id="performanceChart"></canvas>
+            </div>
+        }
+        else
+        {
+            <div class="empty-chart-state">
+                <i class="bi bi-bar-chart"></i>
+                <p>No attendance data yet this month.</p>
+            </div>
+        }
+    </div>
+
     @* ===== Animated stat cards ===== *@
     <div class="stats-grid mt-4">
         <div class="stat-card stat-card-animated" style="--delay:0s;">
@@ -144,15 +169,13 @@
 
 @section Scripts {
     <script>
-        // Animate each stat number counting up from 0 to its real value
-        // on page load — small touch that makes the dashboard feel alive
-        // instead of static numbers just appearing.
+        // Animate each stat number counting up from 0 to its real value on page load.
         document.addEventListener("DOMContentLoaded", function () {
             const counters = document.querySelectorAll('.counter');
 
             counters.forEach(function (counter) {
                 const target = parseInt(counter.dataset.target, 10) || 0;
-                const duration = 800; // ms
+                const duration = 800;
                 const stepTime = 20;
                 const steps = duration / stepTime;
                 const increment = target / steps;
@@ -170,6 +193,68 @@
             });
         });
     </script>
+
+    @* ===== Attendance Performance chart — moved INSIDE Scripts section
+       so it runs after Chart.js has actually loaded ===== *@
+    @if (Model.MonthlyPerformance.Any())
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const perfLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyPerformance.Select(p => p.Label)));
+                const perfHours = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyPerformance.Select(p => p.HoursWorked)));
+                const perfStatus = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyPerformance.Select(p => p.Status)));
+
+                function colorForStatus(status) {
+                    if (status === "Complete") return "#1a8a4a";
+                    if (status === "InProgress") return "#8e44ad";
+                    return "#f39c12";
+                }
+
+                const perfCanvas = document.getElementById('performanceChart');
+                if (!perfCanvas) return;
+
+                new Chart(perfCanvas, {
+                    type: 'bar',
+                    data: {
+                        labels: perfLabels,
+                        datasets: [{
+                            label: 'Hours Worked',
+                            data: perfHours,
+                            backgroundColor: perfStatus.map(colorForStatus),
+                            borderRadius: 6,
+                            maxBarThickness: 30
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        const status = perfStatus[context.dataIndex];
+                                        const statusText = status === "Complete" ? "Complete day"
+                                            : status === "InProgress" ? "Still working"
+                                            : "Checked out early";
+                                        return context.raw + " hrs — " + statusText;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { grid: { display: false } },
+                            y: {
+                                beginAtZero: true,
+                                suggestedMax: 10,
+                                title: { display: true, text: 'Hours' }
+                            }
+                        }
+                    }
+                });
+            });
+        </script>
+    }
 }
 
 <style>
@@ -205,7 +290,6 @@
         overflow: hidden;
     }
 
-        /* subtle decorative glow circles */
         .my-profile-banner::before {
             content: "";
             position: absolute;
@@ -231,6 +315,8 @@
     .my-avatar-large {
         width: 76px;
         height: 76px;
+        min-width: 76px;
+        min-height: 76px;
         border-radius: 50%;
         background: rgba(255,255,255,0.25);
         color: white;
@@ -249,6 +335,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
         }
 
     .my-banner-info {
@@ -321,7 +408,6 @@
         color: #4a6cf7;
     }
 
-    /* small pulsing dot for "currently working" state */
     .pulse-dot {
         width: 8px;
         height: 8px;
@@ -356,6 +442,52 @@
         .stat-card-animated:hover {
             transform: translateY(-4px);
             box-shadow: 0 10px 24px rgba(0,0,0,0.1);
+        }
+
+    /* ===== Performance chart panel ===== */
+    .performance-legend {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        font-size: 12px;
+        color: #6b7280;
+        margin-bottom: 14px;
+    }
+
+        .performance-legend .legend-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+    .chart-container {
+        position: relative;
+        width: 100%;
+        height: 260px;
+    }
+
+    .empty-chart-state {
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #6b7280;
+    }
+
+        .empty-chart-state i {
+            font-size: 32px;
+            margin-bottom: 10px;
+            opacity: 0.6;
+        }
+
+        .empty-chart-state p {
+            margin: 0;
+            font-size: 14px;
         }
 
     /* ===== Leave overview panel ===== */

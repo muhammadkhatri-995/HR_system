@@ -77,6 +77,7 @@ using Microsoft.EntityFrameworkCore;
 
 
 QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -91,10 +92,12 @@ builder.Services.AddControllersWithViews();
 // 2. DATABASE
 // =====================================================
 
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    options.UseSqlServer(
+//        builder.Configuration.GetConnectionString("DefaultConnection")
+//    ));
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")
-    ));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 // =====================================================

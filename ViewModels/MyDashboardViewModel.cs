@@ -25,5 +25,12 @@
 
         public bool CheckedInToday { get; set; }
         public bool CheckedOutToday { get; set; }
+        public List<AttendancePerformancePoint> MonthlyPerformance { get; set; } = new();
+    }
+    public class AttendancePerformancePoint
+    {
+        public string Label { get; set; } = string.Empty;   // e.g. "Aug 1"
+        public double HoursWorked { get; set; }              // decimal hours, e.g. 8.5
+        public string Status { get; set; } = string.Empty;   // "Complete", "Incomplete", "InProgress"
     }
 }
