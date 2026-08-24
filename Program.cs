@@ -1,3 +1,4 @@
+using System.IO;
 using HR_system.Data;
 using HR_system.Interfaces;
 using HR_system.Services;
@@ -6,7 +7,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.DataProtection;
-using System.IO;
 
 QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -71,7 +71,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.ExpireTimeSpan = TimeSpan.FromHours(8);
     options.SlidingExpiration = true;
 
-    // Render Reverse Proxy Cookie Settings
     options.Cookie.SameSite = SameSiteMode.Lax;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.Name = "KineticHRAuthCookie";
@@ -82,7 +81,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 // =====================================================
 var app = builder.Build();
 
-// Enable Forwarded Headers (Proxy Pipeline)
 app.UseForwardedHeaders();
 
 app.Use((context, next) =>
