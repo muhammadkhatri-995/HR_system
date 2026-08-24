@@ -14,7 +14,7 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var builder = WebApplication.CreateBuilder(args);
 
 // =====================================================
-// 1. DATA PROTECTION & KEYS PERSISTENCE (Fixes Deserialization Crash)
+// 1. DATA PROTECTION & KEYS PERSISTENCE
 // =====================================================
 var keysFolder = Path.Combine(builder.Environment.ContentRootPath, "temp-keys");
 builder.Services.AddDataProtection()
@@ -29,8 +29,8 @@ builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "X-XSRF-TOKEN";
     options.Cookie.Name = ".AspNetCore.Antiforgery.KineticHR";
-    options.Cookie.SameSite = SameSiteMode.Lax;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Unspecified;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
 });
 
 // =====================================================
@@ -68,7 +68,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 });
 
 // =====================================================
-// 7. AUTHENTICATION & COOKIE FIXES
+// 7. AUTHENTICATION & COOKIE FIXES (FIXED HERE)
 // =====================================================
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 .AddCookie(options =>
@@ -78,9 +78,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.ExpireTimeSpan = TimeSpan.FromHours(8);
     options.SlidingExpiration = true;
 
-    // Render Reverse Proxy Cookie Settings
-    options.Cookie.SameSite = SameSiteMode.Lax;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    // Proxy fix: Unspecified and SameAsRequest allow Render SSL proxy to hold auth cookie
+    options.Cookie.SameSite = SameSiteMode.Unspecified;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
     options.Cookie.Name = "KineticHRAuthCookie";
 });
 
@@ -89,10 +89,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 // =====================================================
 var app = builder.Build();
 
-// Enable Forwarded Headers (Proxy Pipeline)
+// Enable Forwarded Headers (MUST be absolute top of pipeline)
 app.UseForwardedHeaders();
 
-// Enforce HTTPS Scheme internally for Reverse Proxy
 app.Use((context, next) =>
 {
     context.Request.Scheme = "https";
@@ -109,24 +108,19 @@ if (!app.Environment.IsDevelopment())
 }
 
 // =====================================================
-// 10. HTTPS (Disabled internally as Render handles SSL)
-// =====================================================
-// app.UseHttpsRedirection();
-
-// =====================================================
-// 11. STATIC FILES & ROUTING
+// 10. STATIC FILES & ROUTING
 // =====================================================
 app.UseStaticFiles();
 app.UseRouting();
 
 // =====================================================
-// 12. AUTHENTICATION & AUTHORIZATION
+// 11. AUTHENTICATION & AUTHORIZATION
 // =====================================================
 app.UseAuthentication();
 app.UseAuthorization();
 
 // =====================================================
-// 13. DEFAULT ROUTE
+// 12. DEFAULT ROUTE
 // =====================================================
 app.MapControllerRoute(
     name: "default",
@@ -144,6 +138,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 // =====================================================
-// 14. START APPLICATION
+// 13. START APPLICATION
 // =====================================================
 app.Run();

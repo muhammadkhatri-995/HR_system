@@ -20,22 +20,25 @@ namespace HR_system.Controllers
         }
 
         // GET: /Account/Login
-        public IActionResult Login()
+        public IActionResult Login(string? returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
         // POST: /Account/Login
         [HttpPost]
-        [IgnoreAntiforgeryToken] // <-- Render reverse-proxy Bad Request 400 fix
-        public async Task<IActionResult> Login(LoginViewModel model)
+        [IgnoreAntiforgeryToken] // Render reverse-proxy Bad Request 400 fix
+        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
+
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            // Find the employee by email.
+            // Find the employee by email
             var employee = await _employeeRepository.GetEmployeeByEmailAsync(model.Email);
 
             if (employee == null)
@@ -62,7 +65,7 @@ namespace HR_system.Controllers
                 return View(model);
             }
 
-            // Build the identity (claims) for logged-in user
+            // Build identity claims
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, employee.id.ToString()),
@@ -73,17 +76,24 @@ namespace HR_system.Controllers
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-            // Added persistent authentication properties for proxy compatibility
+            // Persistent properties for proxy cookies
             var authProperties = new AuthenticationProperties
             {
                 IsPersistent = true,
                 ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8)
             };
 
+            // Write cookie to response
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
+
+            // ReturnUrl redirect handling (Fixes loop)
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return LocalRedirect(returnUrl);
+            }
 
             return RedirectToAction("Index", "Dashboard");
         }
