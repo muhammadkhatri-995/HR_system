@@ -27,7 +27,7 @@ namespace HR_system.Controllers
 
         // POST: /Account/Login
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [IgnoreAntiforgeryToken] // <-- Render reverse-proxy Bad Request 400 fix
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
@@ -40,19 +40,10 @@ namespace HR_system.Controllers
 
             if (employee == null)
             {
-                // Deliberately vague error message — never reveal whether
-                // the EMAIL or the PASSWORD was wrong. This prevents
-                // attackers from "probing" which emails exist in the system.
                 ModelState.AddModelError(string.Empty, "Invalid email or password");
                 return View(model);
             }
 
-            // VerifyHashedPassword compares the plain-text password the user typed
-            // against the stored hash. We wrap it in try/catch because if this
-            // particular employee's PasswordHash was never properly hashed
-            // (e.g. blank, plain text, or set directly in the database),
-            // Convert.FromBase64String() throws a FormatException instead of
-            // just returning "Failed" — we want to treat both cases the same way.
             PasswordVerificationResult result;
 
             try
@@ -71,25 +62,17 @@ namespace HR_system.Controllers
                 return View(model);
             }
 
-            // ----- Build the identity (claims) for this logged-in user -----
-
-            // Claims are little pieces of information about the user that get
-            // packed into the encrypted login cookie. We can read these back
-            // on every page via User.Identity / User.Claims, without hitting the database again.
+            // Build the identity (claims) for logged-in user
             var claims = new List<Claim>
             {
-                // FIX: "Id" with a capital I — matches the Employee model's property name exactly.
                 new Claim(ClaimTypes.NameIdentifier, employee.id.ToString()),
                 new Claim(ClaimTypes.Name, $"{employee.FirstName} {employee.LastName}"),
                 new Claim(ClaimTypes.Email, employee.Email),
-                // employee.Role comes from .Include(e => e.Role) in the Repository.
-                // This Role claim is what [Authorize(Roles = "Admin")] checks later.
                 new Claim(ClaimTypes.Role, employee.Role?.Name ?? "Employee")
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-            // This actually writes the encrypted cookie to the browser.
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity));
@@ -99,10 +82,9 @@ namespace HR_system.Controllers
 
         // POST: /Account/Logout
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> Logout()
         {
-            // Removes the login cookie, ending the session.
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Account");
         }
