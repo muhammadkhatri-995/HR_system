@@ -5,6 +5,8 @@ using HR_system.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.DataProtection;
+using System.IO;
 
 QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -12,24 +14,33 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var builder = WebApplication.CreateBuilder(args);
 
 // =====================================================
-// 1. MVC SERVICES & ANTIFORGERY
+// 1. DATA PROTECTION & KEYS PERSISTENCE (Fixes Deserialization Crash)
+// =====================================================
+var keysFolder = Path.Combine(builder.Environment.ContentRootPath, "temp-keys");
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(keysFolder));
+
+// =====================================================
+// 2. MVC SERVICES & ANTIFORGERY
 // =====================================================
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddAntiforgery(options =>
 {
+    options.HeaderName = "X-XSRF-TOKEN";
+    options.Cookie.Name = ".AspNetCore.Antiforgery.KineticHR";
     options.Cookie.SameSite = SameSiteMode.Lax;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
 // =====================================================
-// 2. DATABASE (PostgreSQL / Neon)
+// 3. DATABASE (PostgreSQL / Neon)
 // =====================================================
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // =====================================================
-// 3. REPOSITORIES & SERVICES
+// 4. REPOSITORIES & SERVICES
 // =====================================================
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
@@ -41,13 +52,13 @@ builder.Services.AddScoped<IPayrollRepository, PayrollRepository>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 // =====================================================
-// 4. AUDIT LOG SERVICE
+// 5. AUDIT LOG SERVICE
 // =====================================================
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IAuditService, AuditService>();
 
 // =====================================================
-// 5. FORWARDED HEADERS (Render / Reverse Proxy Fix)
+// 6. FORWARDED HEADERS (Render / Reverse Proxy Fix)
 // =====================================================
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
@@ -57,7 +68,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 });
 
 // =====================================================
-// 6. AUTHENTICATION & COOKIE FIXES
+// 7. AUTHENTICATION & COOKIE FIXES
 // =====================================================
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 .AddCookie(options =>
@@ -74,7 +85,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 });
 
 // =====================================================
-// 7. BUILD APPLICATION
+// 8. BUILD APPLICATION
 // =====================================================
 var app = builder.Build();
 
@@ -89,7 +100,7 @@ app.Use((context, next) =>
 });
 
 // =====================================================
-// 8. ERROR HANDLING
+// 9. ERROR HANDLING
 // =====================================================
 if (!app.Environment.IsDevelopment())
 {
@@ -98,24 +109,24 @@ if (!app.Environment.IsDevelopment())
 }
 
 // =====================================================
-// 9. HTTPS (Disabled internally as Render handles SSL)
+// 10. HTTPS (Disabled internally as Render handles SSL)
 // =====================================================
 // app.UseHttpsRedirection();
 
 // =====================================================
-// 10. STATIC FILES & ROUTING
+// 11. STATIC FILES & ROUTING
 // =====================================================
 app.UseStaticFiles();
 app.UseRouting();
 
 // =====================================================
-// 11. AUTHENTICATION & AUTHORIZATION
+// 12. AUTHENTICATION & AUTHORIZATION
 // =====================================================
 app.UseAuthentication();
 app.UseAuthorization();
 
 // =====================================================
-// 12. DEFAULT ROUTE
+// 13. DEFAULT ROUTE
 // =====================================================
 app.MapControllerRoute(
     name: "default",
@@ -133,6 +144,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 // =====================================================
-// 13. START APPLICATION
+// 14. START APPLICATION
 // =====================================================
 app.Run();
