@@ -208,6 +208,16 @@ app.MapControllerRoute(
     pattern: "{controller=Account}/{action=Login}/{id?}"
 );
 
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Urls.Add($"http://0.0.0.0:{port}");
+
+// 2. Automatic Database Migration (Tables auto-create ho jayenge Neon DB par)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+}
+
 
 // =====================================================
 // 13. START APPLICATION
