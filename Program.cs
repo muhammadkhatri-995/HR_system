@@ -12,9 +12,15 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var builder = WebApplication.CreateBuilder(args);
 
 // =====================================================
-// 1. MVC SERVICES
+// 1. MVC SERVICES & ANTIFORGERY
 // =====================================================
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAntiforgery(options =>
+{
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+});
 
 // =====================================================
 // 2. DATABASE (PostgreSQL / Neon)
@@ -33,15 +39,6 @@ builder.Services.AddScoped<ILeaveRepository, LeaveRepository>();
 builder.Services.AddScoped<IAttendanceRequestRepository, AttendanceRequestRepository>();
 builder.Services.AddScoped<IPayrollRepository, PayrollRepository>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
-builder.Services.AddControllersWithViews();
-
-// ===== ADD THIS BLOCK FOR ANTIFORGERY FIX =====
-builder.Services.AddAntiforgery(options =>
-{
-    options.Cookie.SameSite = SameSiteMode.Lax;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-});
-// ==============================================
 
 // =====================================================
 // 4. AUDIT LOG SERVICE
@@ -70,9 +67,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.ExpireTimeSpan = TimeSpan.FromHours(8);
     options.SlidingExpiration = true;
 
-    // HTTP 400 Bad Request Fix for Reverse Proxy
+    // Render Reverse Proxy Cookie Settings
     options.Cookie.SameSite = SameSiteMode.Lax;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.Name = "KineticHRAuthCookie";
 });
 
 // =====================================================
@@ -80,8 +78,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 // =====================================================
 var app = builder.Build();
 
-// Enable Forwarded Headers (MUST be early in pipeline)
+// Enable Forwarded Headers (Proxy Pipeline)
 app.UseForwardedHeaders();
+
+// Enforce HTTPS Scheme internally for Reverse Proxy
+app.Use((context, next) =>
+{
+    context.Request.Scheme = "https";
+    return next();
+});
 
 // =====================================================
 // 8. ERROR HANDLING
@@ -93,7 +98,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 // =====================================================
-// 9. HTTPS (Disabled for internal container routing)
+// 9. HTTPS (Disabled internally as Render handles SSL)
 // =====================================================
 // app.UseHttpsRedirection();
 
@@ -120,7 +125,7 @@ app.MapControllerRoute(
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://0.0.0.0:{port}");
 
-// Automatic Database Migration (Neon DB Auto-Setup)
+// Automatic Database Migration
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
