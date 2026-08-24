@@ -24,14 +24,7 @@ builder.Services.AddDataProtection()
 // 2. MVC SERVICES & ANTIFORGERY
 // =====================================================
 builder.Services.AddControllersWithViews();
-
-builder.Services.AddAntiforgery(options =>
-{
-    options.HeaderName = "X-XSRF-TOKEN";
-    options.Cookie.Name = ".AspNetCore.Antiforgery.KineticHR";
-    options.Cookie.SameSite = SameSiteMode.Unspecified;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-});
+builder.Services.AddAntiforgery();
 
 // =====================================================
 // 3. DATABASE (PostgreSQL / Neon)

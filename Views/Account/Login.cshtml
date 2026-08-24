@@ -389,7 +389,7 @@
 
                 <!-- Form Body -->
                 <div class="card-body p-4 pt-3">
-                    <form asp-controller="Account" asp-action="Login" method="post" novalidate>
+                    <form asp-controller="Account" asp-action="Login" method="post" asp-antiforgery="false" novalidate>
 
                         @* Anti-Forgery Token Fix for HTTP 400 *@
                         @Html.AntiForgeryToken()
