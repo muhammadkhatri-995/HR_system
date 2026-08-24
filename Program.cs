@@ -33,6 +33,15 @@ builder.Services.AddScoped<ILeaveRepository, LeaveRepository>();
 builder.Services.AddScoped<IAttendanceRequestRepository, AttendanceRequestRepository>();
 builder.Services.AddScoped<IPayrollRepository, PayrollRepository>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddControllersWithViews();
+
+// ===== ADD THIS BLOCK FOR ANTIFORGERY FIX =====
+builder.Services.AddAntiforgery(options =>
+{
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+});
+// ==============================================
 
 // =====================================================
 // 4. AUDIT LOG SERVICE
