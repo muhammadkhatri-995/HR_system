@@ -61,7 +61,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 });
 
 // =====================================================
-// 7. AUTHENTICATION & COOKIE FIXES (FIXED HERE)
+// 7. AUTHENTICATION & COOKIE FIXES
 // =====================================================
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 .AddCookie(options =>
@@ -71,9 +71,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.ExpireTimeSpan = TimeSpan.FromHours(8);
     options.SlidingExpiration = true;
 
-    // Proxy fix: Unspecified and SameAsRequest allow Render SSL proxy to hold auth cookie
-    options.Cookie.SameSite = SameSiteMode.Unspecified;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    // Render Reverse Proxy Cookie Settings
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.Name = "KineticHRAuthCookie";
 });
 
@@ -82,7 +82,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 // =====================================================
 var app = builder.Build();
 
-// Enable Forwarded Headers (MUST be absolute top of pipeline)
+// Enable Forwarded Headers (Proxy Pipeline)
 app.UseForwardedHeaders();
 
 app.Use((context, next) =>

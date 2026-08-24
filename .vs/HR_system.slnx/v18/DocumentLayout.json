@@ -3,20 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\DELL\\Desktop\\HR_system\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\attendance\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:views\\attendance\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\attendance\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:views\\attendance\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\viewmodels\\loginviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -45,10 +53,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\attendance\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -105,10 +109,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\controllers\\attendancecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:controllers\\attendancecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|solutionrelative:controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F0A2D466-ABC4-62B3-6508-2DBFE2BDE276}|HR_system.csproj|c:\\users\\dell\\desktop\\hr_system\\views\\auditlog\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -394,11 +394,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 93,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "Dockerfile",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Dockerfile",
               "RelativeDocumentMoniker": "Dockerfile",
@@ -411,7 +411,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "MyDashboard.cshtml",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Dashboard\\MyDashboard.cshtml",
               "RelativeDocumentMoniker": "Views\\Dashboard\\MyDashboard.cshtml",
@@ -423,7 +423,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "MyDashboardViewModel.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\ViewModels\\MyDashboardViewModel.cs",
               "RelativeDocumentMoniker": "ViewModels\\MyDashboardViewModel.cs",
@@ -435,7 +435,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "DashboardService.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Services\\DashboardService.cs",
               "RelativeDocumentMoniker": "Services\\DashboardService.cs",
@@ -447,7 +447,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "IDashboardService.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Interfaces\\IDashboardService.cs",
               "RelativeDocumentMoniker": "Interfaces\\IDashboardService.cs",
@@ -627,7 +627,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 23,
               "Title": "ProfileController.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Controllers\\ProfileController.cs",
               "RelativeDocumentMoniker": "Controllers\\ProfileController.cs",
@@ -687,7 +687,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "ReportController.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Controllers\\ReportController.cs",
               "RelativeDocumentMoniker": "Controllers\\ReportController.cs",
@@ -747,7 +747,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 24,
               "Title": "PayrollController.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Controllers\\PayrollController.cs",
               "RelativeDocumentMoniker": "Controllers\\PayrollController.cs",
@@ -831,7 +831,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 25,
               "Title": "LeaveController.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Controllers\\LeaveController.cs",
               "RelativeDocumentMoniker": "Controllers\\LeaveController.cs",
@@ -939,7 +939,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "Edit.cshtml",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Attendance\\Edit.cshtml",
               "RelativeDocumentMoniker": "Views\\Attendance\\Edit.cshtml",
@@ -951,7 +951,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "Create.cshtml",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Attendance\\Create.cshtml",
               "RelativeDocumentMoniker": "Views\\Attendance\\Create.cshtml",
@@ -988,7 +988,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 26,
               "Title": "AttendanceController.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Controllers\\AttendanceController.cs",
               "RelativeDocumentMoniker": "Controllers\\AttendanceController.cs",
@@ -1036,7 +1036,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Dashboard\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Dashboard\\Index.cshtml",
@@ -1048,7 +1048,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "dashboard.css",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\wwwroot\\css\\dashboard.css",
               "RelativeDocumentMoniker": "wwwroot\\css\\dashboard.css",
@@ -1060,19 +1060,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 2,
               "Title": "DashboardController.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Controllers\\DashboardController.cs",
               "RelativeDocumentMoniker": "Controllers\\DashboardController.cs",
               "ToolTip": "C:\\Users\\DELL\\Desktop\\HR_system\\Controllers\\DashboardController.cs",
               "RelativeToolTip": "Controllers\\DashboardController.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAmwB8AAAANAAAAAAAAAA==",
+              "ViewState": "AgIAABYAAAAAAAAAAAAYwDYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-07T16:43:58.775Z"
+              "WhenOpened": "2026-08-07T16:43:58.775Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "DashboardViewModel.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\ViewModels\\DashboardViewModel.cs",
               "RelativeDocumentMoniker": "ViewModels\\DashboardViewModel.cs",
@@ -1120,32 +1121,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "Login.cshtml",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Account\\Login.cshtml",
               "RelativeDocumentMoniker": "Views\\Account\\Login.cshtml",
               "ToolTip": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Account\\Login.cshtml",
               "RelativeToolTip": "Views\\Account\\Login.cshtml",
-              "ViewState": "AgIAAPgAAAAAAAAAAAAcwO0AAAAYAAAAAAAAAA==",
+              "ViewState": "AgIAAHYBAAAAAAAAAAAewIcBAABrAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-08-05T17:05:19.504Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 3,
               "Title": "AccountController.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Controllers\\AccountController.cs",
               "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
               "ToolTip": "C:\\Users\\DELL\\Desktop\\HR_system\\Controllers\\AccountController.cs",
               "RelativeToolTip": "Controllers\\AccountController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGAAAAA3AAAAAAAAAA==",
+              "ViewState": "AgIAAFMAAAAAAAAAAAAYwHMAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-05T16:55:40.167Z"
+              "WhenOpened": "2026-08-05T16:55:40.167Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "LoginViewModel.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\ViewModels\\LoginViewModel.cs",
               "RelativeDocumentMoniker": "ViewModels\\LoginViewModel.cs",
@@ -1241,7 +1243,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "EmployeeController.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Controllers\\EmployeeController.cs",
               "RelativeDocumentMoniker": "Controllers\\EmployeeController.cs",
@@ -1253,7 +1255,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "EmployeeRepository.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Repositories\\EmployeeRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\EmployeeRepository.cs",
@@ -1349,7 +1351,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "RoleController.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Controllers\\RoleController.cs",
               "RelativeDocumentMoniker": "Controllers\\RoleController.cs",
@@ -1445,7 +1447,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
@@ -1469,7 +1471,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "DepartmentController.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Controllers\\DepartmentController.cs",
               "RelativeDocumentMoniker": "Controllers\\DepartmentController.cs",
@@ -1517,20 +1519,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\DELL\\Desktop\\HR_system\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAMcAAAAAAAAAAAAYwNcAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAABoAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-31T16:44:42.127Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 11,
               "Title": "ApplicationDbContext.cs",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\Data\\ApplicationDbContext.cs",
               "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
@@ -1542,7 +1544,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\DELL\\Desktop\\HR_system\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
