@@ -15,26 +15,40 @@ namespace HR_system.Controllers
             _dashboardService = dashboardService;
         }
 
-        private int GetCurrentEmployeeId()
+        private int? GetCurrentEmployeeId()
         {
-            var idClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return int.Parse(idClaim!);
+            // NameIdentifier, 'sub', aur 'id' sab check karein taake proxy claim drop na ho
+            var idClaim = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                       ?? User.FindFirstValue("sub")
+                       ?? User.FindFirstValue("id");
+
+            if (int.TryParse(idClaim, out int employeeId))
+            {
+                return employeeId;
+            }
+
+            return null;
         }
 
         public async Task<IActionResult> Index()
         {
+            var empId = GetCurrentEmployeeId();
+
+            // Agar identity claim lose ho gaya ho, to safely login par bhej dein crash hone ke bajaye
+            if (!empId.HasValue)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             bool isManager = User.IsInRole("Admin") || User.IsInRole("HR");
 
             if (isManager)
             {
-                var fullData = await _dashboardService.GetDashboardDataAsync(GetCurrentEmployeeId());
+                var fullData = await _dashboardService.GetDashboardDataAsync(empId.Value);
                 return View("Index", fullData);
             }
 
-            // A plain Employee gets a completely different View and a
-            // completely different, narrower ViewModel — they physically
-            // cannot receive company-wide data through this code path.
-            var myData = await _dashboardService.GetMyDashboardDataAsync(GetCurrentEmployeeId());
+            var myData = await _dashboardService.GetMyDashboardDataAsync(empId.Value);
             return View("MyDashboard", myData);
         }
     }
