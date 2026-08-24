@@ -171,7 +171,7 @@ if (!app.Environment.IsDevelopment())
 // 8. HTTPS
 // =====================================================
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 
 // =====================================================
