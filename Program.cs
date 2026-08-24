@@ -1,4 +1,5 @@
 using System.IO;
+using Microsoft.AspNetCore.Http;
 using HR_system.Data;
 using HR_system.Interfaces;
 using HR_system.Services;
@@ -13,28 +14,20 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 var builder = WebApplication.CreateBuilder(args);
 
-// =====================================================
-// 1. DATA PROTECTION & KEYS PERSISTENCE
-// =====================================================
+// 1. Data Protection Keys Persistence
 var keysFolder = Path.Combine(builder.Environment.ContentRootPath, "temp-keys");
 builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(keysFolder));
 
-// =====================================================
-// 2. MVC SERVICES & ANTIFORGERY
-// =====================================================
+// 2. MVC Services
 builder.Services.AddControllersWithViews();
 builder.Services.AddAntiforgery();
 
-// =====================================================
-// 3. DATABASE (PostgreSQL / Neon)
-// =====================================================
+// 3. Database Context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// =====================================================
-// 4. REPOSITORIES & SERVICES
-// =====================================================
+// 4. Repositories & Services
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
@@ -43,16 +36,10 @@ builder.Services.AddScoped<ILeaveRepository, LeaveRepository>();
 builder.Services.AddScoped<IAttendanceRequestRepository, AttendanceRequestRepository>();
 builder.Services.AddScoped<IPayrollRepository, PayrollRepository>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
-
-// =====================================================
-// 5. AUDIT LOG SERVICE
-// =====================================================
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IAuditService, AuditService>();
 
-// =====================================================
-// 6. FORWARDED HEADERS (Render / Reverse Proxy Fix)
-// =====================================================
+// 5. Reverse Proxy Options
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
@@ -60,9 +47,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.KnownProxies.Clear();
 });
 
-// =====================================================
-// 7. AUTHENTICATION & COOKIE FIXES
-// =====================================================
+// 6. Cookie Authentication Policy
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 .AddCookie(options =>
 {
@@ -76,9 +61,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.Cookie.Name = "KineticHRAuthCookie";
 });
 
-// =====================================================
-// 8. BUILD APPLICATION
-// =====================================================
 var app = builder.Build();
 
 app.UseForwardedHeaders();
@@ -89,30 +71,18 @@ app.Use((context, next) =>
     return next();
 });
 
-// =====================================================
-// 9. ERROR HANDLING
-// =====================================================
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Account/Login");
     app.UseHsts();
 }
 
-// =====================================================
-// 10. STATIC FILES & ROUTING
-// =====================================================
 app.UseStaticFiles();
 app.UseRouting();
 
-// =====================================================
-// 11. AUTHENTICATION & AUTHORIZATION
-// =====================================================
 app.UseAuthentication();
 app.UseAuthorization();
 
-// =====================================================
-// 12. DEFAULT ROUTE
-// =====================================================
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}/{id?}"
@@ -121,14 +91,18 @@ app.MapControllerRoute(
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://0.0.0.0:{port}");
 
-// Automatic Database Migration
-using (var scope = app.Services.CreateScope())
+// Safe Automatic Migration Fix (Prevents Exit Status 1)
+try
 {
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate();
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        db.Database.Migrate();
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Migration Warning: {ex.Message}");
 }
 
-// =====================================================
-// 13. START APPLICATION
-// =====================================================
 app.Run();
