@@ -15,7 +15,6 @@ namespace HR_system.Controllers
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IRoleRepository _roleRepository;
-        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IAuditService _auditService;
 
         private readonly PasswordHasher<Employee> _passwordHasher = new();
@@ -24,13 +23,11 @@ namespace HR_system.Controllers
             IEmployeeRepository employeeRepository,
             IDepartmentRepository departmentRepository,
             IRoleRepository roleRepository,
-            IWebHostEnvironment webHostEnvironment,
             IAuditService auditService)
         {
             _employeeRepository = employeeRepository;
             _departmentRepository = departmentRepository;
             _roleRepository = roleRepository;
-            _webHostEnvironment = webHostEnvironment;
             _auditService = auditService;
         }
 
@@ -91,6 +88,22 @@ namespace HR_system.Controllers
             return View(model);
         }
 
+        // Helper Method: File ko Base64 string mein convert karne ke liye
+        private async Task<string?> ConvertPhotoToBase64Async(IFormFile file)
+        {
+            if (file == null || file.Length == 0) return null;
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                byte[] fileBytes = memoryStream.ToArray();
+                string base64String = Convert.ToBase64String(fileBytes);
+
+                // Direct HTML render string (e.g. data:image/png;base64,iVBORw...)
+                return $"data:{file.ContentType};base64,{base64String}";
+            }
+        }
+
         // POST: /Employee/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -102,6 +115,14 @@ namespace HR_system.Controllers
                 ModelState.AddModelError(
                     nameof(model.Password),
                     "Password is required");
+            }
+
+            // Image File Size Check (2MB Limit)
+            if (model.PhotoFile != null && model.PhotoFile.Length > 2 * 1024 * 1024)
+            {
+                ModelState.AddModelError(
+                    nameof(model.PhotoFile),
+                    "Image size cannot exceed 2MB.");
             }
 
             if (!ModelState.IsValid)
@@ -134,12 +155,10 @@ namespace HR_system.Controllers
                     employee,
                     model.Password!);
 
-            // Save photo
-            if (model.PhotoFile != null &&
-                model.PhotoFile.Length > 0)
+            // Convert and save photo as Base64 String in DB
+            if (model.PhotoFile != null && model.PhotoFile.Length > 0)
             {
-                employee.EmployeePhoto =
-                    await SavePhotoAsync(model.PhotoFile);
+                employee.EmployeePhoto = await ConvertPhotoToBase64Async(model.PhotoFile);
             }
 
             await _employeeRepository.AddAsync(employee);
@@ -154,37 +173,6 @@ namespace HR_system.Controllers
             NotifySuccess("Employee created successfully.");
 
             return RedirectToAction(nameof(Index));
-        }
-
-        // Saves employee photo
-        private async Task<string> SavePhotoAsync(IFormFile file)
-        {
-            string uploadsFolder = Path.Combine(
-                _webHostEnvironment.WebRootPath,
-                "uploads",
-                "employees");
-
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
-            string uniqueFileName =
-                Guid.NewGuid().ToString() +
-                Path.GetExtension(file.FileName);
-
-            string filePath =
-                Path.Combine(
-                    uploadsFolder,
-                    uniqueFileName);
-
-            using (var fileStream =
-                   new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(fileStream);
-            }
-
-            return "/uploads/employees/" + uniqueFileName;
         }
 
         // GET: /Employee/Edit/5
@@ -234,6 +222,14 @@ namespace HR_system.Controllers
                 return NotFound();
             }
 
+            // Image File Size Check (2MB Limit)
+            if (model.PhotoFile != null && model.PhotoFile.Length > 2 * 1024 * 1024)
+            {
+                ModelState.AddModelError(
+                    nameof(model.PhotoFile),
+                    "Image size cannot exceed 2MB.");
+            }
+
             if (!ModelState.IsValid)
             {
                 await PopulateDropdowns(model);
@@ -271,12 +267,10 @@ namespace HR_system.Controllers
                         model.Password);
             }
 
-            // Replace photo only when a new photo is uploaded
-            if (model.PhotoFile != null &&
-                model.PhotoFile.Length > 0)
+            // Replace Base64 photo only when a new photo is uploaded
+            if (model.PhotoFile != null && model.PhotoFile.Length > 0)
             {
-                employee.EmployeePhoto =
-                    await SavePhotoAsync(model.PhotoFile);
+                employee.EmployeePhoto = await ConvertPhotoToBase64Async(model.PhotoFile);
             }
 
             await _employeeRepository.UpdateAsync(employee);
@@ -312,8 +306,6 @@ namespace HR_system.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            // Get employee BEFORE deleting so we can put useful
-            // information into the audit log.
             var employee =
                 await _employeeRepository.GetByIdAsync(id);
 
