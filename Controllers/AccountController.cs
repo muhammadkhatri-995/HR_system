@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace HR_system.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly PasswordHasher<Models.Employee> _passwordHasher = new();
@@ -104,6 +104,7 @@ namespace HR_system.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            NotifySuccess("Logged out successfully.");  
             return RedirectToAction("Login", "Account");
         }
 
