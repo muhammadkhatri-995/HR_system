@@ -7,120 +7,194 @@
     bool isManager = ViewBag.IsManager;
 }
 
-<h2>Attendance</h2>
+<div class="attendance-wrapper">
 
-@* ===== SECTION 1: Punch Clock (everyone sees this) ===== *@
-<div class="punch-container" style="margin-bottom:40px;">
-    @if (todayRecord == null)
+    <!-- Page Header -->
+    <div class="attendance-header mb-4">
+        <h2><i class="bi bi-clock-history text-primary me-2"></i>Attendance Management</h2>
+        <p class="text-muted small">Track daily working hours and check-in statuses.</p>
+    </div>
+
+    @* ===== SECTION 1: Punch Clock Card (Visible to Everyone) ===== *@
+    <div class="punch-clock-container mb-5">
+        @if (todayRecord == null)
+        {
+            <div class="punch-card shadow-lg">
+                <div class="punch-card-header">
+                    <div class="punch-icon-circle icon-pending">
+                        <i class="bi bi-hourglass-top"></i>
+                    </div>
+                    <h4>Not Checked In Today</h4>
+                    <p class="punch-subtext">Click below to record your start time for today.</p>
+                </div>
+                <form asp-controller="Attendance" asp-action="CheckIn" method="post" class="mt-3">
+                    <button type="submit" class="btn-punch btn-punch-in w-100">
+                        <i class="bi bi-box-arrow-in-right me-2"></i> Check In
+                    </button>
+                </form>
+            </div>
+        }
+        else if (todayRecord.CheckOutTime == null)
+        {
+            <div class="punch-card shadow-lg punch-card-active">
+                <div class="punch-card-header">
+                    <div class="punch-icon-circle icon-active">
+                        <span class="pulse-ring"></span>
+                        <i class="bi bi-play-fill ms-1"></i>
+                    </div>
+                    <p class="punch-status-label mb-1">
+                        CHECKED IN AT <strong>@todayRecord.CheckInTime?.ToString(@"hh\:mm")</strong>
+                    </p>
+                    <div class="live-clock" id="liveClock">00:00:00</div>
+                    <p class="punch-subtext mt-1">Time worked so far</p>
+                </div>
+                <form asp-controller="Attendance" asp-action="CheckOut" method="post" class="mt-3">
+                    <button type="submit" class="btn-punch btn-punch-out w-100">
+                        <i class="bi bi-box-arrow-right me-2"></i> Check Out
+                    </button>
+                </form>
+            </div>
+            <span id="checkInSeconds" data-seconds="@todayRecord.CheckInTime.Value.TotalSeconds" style="display:none;"></span>
+        }
+        else
+        {
+            <div class="punch-card shadow-lg">
+                <div class="punch-card-header text-center">
+                    <div class="punch-icon-circle icon-done">
+                        <i class="bi bi-check2-circle"></i>
+                    </div>
+                    <h4 class="fw-bold text-success">Checked Out Today</h4>
+                </div>
+
+                <div class="punch-summary-grid mt-3">
+                    <div class="summary-item">
+                        <span class="summary-label"><i class="bi bi-box-arrow-in-right me-1 text-primary"></i>Check In</span>
+                        <strong class="summary-value">@todayRecord.CheckInTime?.ToString(@"hh\:mm")</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label"><i class="bi bi-box-arrow-right me-1 text-danger"></i>Check Out</span>
+                        <strong class="summary-value">@todayRecord.CheckOutTime?.ToString(@"hh\:mm")</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label"><i class="bi bi-clock me-1 text-info"></i>Total Hours</span>
+                        <strong class="summary-value text-primary">@todayRecord.TotalWorkingHours?.ToString(@"hh\:mm")</strong>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @* ===== SECTION 2: HR Management Table (Admin/HR Only) ===== *@
+    @if (isManager)
     {
-        <div class="punch-card">
-            <p class="punch-status">You haven't checked in today.</p>
-            <form asp-controller="Attendance" asp-action="CheckIn" method="post">
-                <button type="submit" class="btn-punch btn-punch-in">Check In</button>
+        <div class="records-panel card border-0 shadow-sm rounded-4 p-4">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                <div>
+                    <h4 class="fw-bold mb-1"><i class="bi bi-card-checklist text-primary me-2"></i>All Attendance Records</h4>
+                    <p class="text-muted small mb-0">Filter and audit employee attendance data.</p>
+                </div>
+
+                <a asp-action="Create" class="btn btn-primary rounded-3 px-3 py-2 fw-semibold shadow-sm">
+                    <i class="bi bi-plus-lg me-1"></i> Mark Attendance
+                </a>
+            </div>
+
+            <!-- Search & Filters Toolbar -->
+            <form method="get" asp-action="Index" class="filter-toolbar mb-4">
+                <div class="row g-2">
+                    <div class="col-12 col-md-6 col-lg-5">
+                        <select name="employeeId" class="form-select rounded-3 shadow-none" onchange="this.form.submit()">
+                            <option value="">All Employees</option>
+                            @foreach (var item in (List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.Employees)
+                            {
+                                if (ViewBag.SelectedEmployeeId != null && item.Value == ViewBag.SelectedEmployeeId.ToString())
+                                {
+                                    <option value="@item.Value" selected>@item.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <select name="month" class="form-select rounded-3 shadow-none" onchange="this.form.submit()">
+                            @for (int m = 1; m <= 12; m++)
+                            {
+                                if (m == (int)ViewBag.SelectedMonth)
+                                {
+                                    <option value="@m" selected>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(m)</option>
+                                }
+                                else
+                                {
+                                    <option value="@m">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(m)</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
             </form>
-        </div>
-    }
-    else if (todayRecord.CheckOutTime == null)
-    {
-        <div class="punch-card">
-            <p class="punch-status">Checked in at <strong>@todayRecord.CheckInTime?.ToString(@"hh\:mm")</strong></p>
-            <div class="live-clock" id="liveClock">00:00:00</div>
-            <p class="punch-subtext">Time worked so far</p>
-            <form asp-controller="Attendance" asp-action="CheckOut" method="post">
-                <button type="submit" class="btn-punch btn-punch-out">Check Out</button>
-            </form>
-        </div>
-        <span id="checkInSeconds" data-seconds="@todayRecord.CheckInTime.Value.TotalSeconds" style="display:none;"></span>
-    }
-    else
-    {
-        <div class="punch-card">
-            <p class="punch-status">✅ You checked out today.</p>
-            <div class="punch-summary">
-                <div><span>Check In</span><strong>@todayRecord.CheckInTime?.ToString(@"hh\:mm")</strong></div>
-                <div><span>Check Out</span><strong>@todayRecord.CheckOutTime?.ToString(@"hh\:mm")</strong></div>
-                <div><span>Total Hours</span><strong>@todayRecord.TotalWorkingHours?.ToString(@"hh\:mm")</strong></div>
+
+            <!-- Attendance Data Table -->
+            <div class="table-responsive rounded-3 border border-light">
+                <table class="table align-middle table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-3">Employee</th>
+                            <th>Date</th>
+                            <th>Check In</th>
+                            <th>Check Out</th>
+                            <th>Total Hours</th>
+                            <th>Status</th>
+                            <th class="text-end pe-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center py-4 text-muted">
+                                    <i class="bi bi-inbox fs-3 d-block mb-1"></i> No records found for selected filters.
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="ps-3 fw-semibold text-dark">
+                                        @(item.Employee != null ? $"{item.Employee.FirstName} {item.Employee.LastName}" : "Unknown")
+                                    </td>
+                                    <td><i class="bi bi-calendar-event me-1 text-muted small"></i>@item.Date.ToShortDateString()</td>
+                                    <td>@(item.CheckInTime?.ToString(@"hh\:mm") ?? "-")</td>
+                                    <td>@(item.CheckOutTime?.ToString(@"hh\:mm") ?? "-")</td>
+                                    <td><span class="badge bg-light text-dark border">@(item.TotalWorkingHours?.ToString(@"hh\:mm") ?? "-")</span></td>
+                                    <td>
+                                        <span class="badge-status @(item.Status == "Present" ? "badge-present" : "badge-absent")">
+                                            @item.Status
+                                        </span>
+                                    </td>
+                                    <td class="text-end pe-3">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning me-1" title="Edit">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     }
+
 </div>
-
-@* ===== SECTION 2: HR Management table (only for Admin/HR) ===== *@
-@if (isManager)
-{
-    <hr />
-    <h3>All Attendance Records</h3>
-
-    <div class="employee-toolbar">
-        <form method="get" asp-action="Index" class="employee-search-form">
-            <select name="employeeId" class="form-control" onchange="this.form.submit()">
-                <option value="">All Employees</option>
-                @foreach (var item in (List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.Employees)
-                {
-                    if (ViewBag.SelectedEmployeeId != null && item.Value == ViewBag.SelectedEmployeeId.ToString())
-                    {
-                        <option value="@item.Value" selected>@item.Text</option>
-                    }
-                    else
-                    {
-                        <option value="@item.Value">@item.Text</option>
-                    }
-                }
-            </select>
-
-            <select name="month" class="form-control" onchange="this.form.submit()">
-                @for (int m = 1; m <= 12; m++)
-                {
-                    if (m == (int)ViewBag.SelectedMonth)
-                    {
-                        <option value="@m" selected>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(m)</option>
-                    }
-                    else
-                    {
-                        <option value="@m">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(m)</option>
-                    }
-                }
-            </select>
-        </form>
-
-        <a asp-action="Create" class="btn-add-employee">+ Mark Attendance</a>
-    </div>
-
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Employee</th>
-                <th>Date</th>
-                <th>Check In</th>
-                <th>Check Out</th>
-                <th>Total Hours</th>
-                <th>Status</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@(item.Employee != null ? $"{item.Employee.FirstName} {item.Employee.LastName}" : "Unknown")</td>
-                    <td>@item.Date.ToShortDateString()</td>
-                    <td>@(item.CheckInTime?.ToString(@"hh\:mm") ?? "-")</td>
-                    <td>@(item.CheckOutTime?.ToString(@"hh\:mm") ?? "-")</td>
-                    <td>@(item.TotalWorkingHours?.ToString(@"hh\:mm") ?? "-")</td>
-                    <td>
-                        <span class="status-badge @(item.Status == "Present" ? "status-active" : "status-inactive")">
-                            @item.Status
-                        </span>
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
 
 @section Scripts {
     <script>
@@ -152,3 +226,225 @@
         }
     </script>
 }
+
+<style>
+    /* ===== Wrapper ===== */
+    .attendance-wrapper {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    /* ===== Punch Card Center ===== */
+    .punch-clock-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .punch-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 32px;
+        width: 100%;
+        max-width: 440px;
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .punch-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 32px -8px rgba(37, 99, 235, 0.12) !important;
+        }
+
+    .punch-card-active {
+        border-color: rgba(16, 185, 129, 0.4);
+        background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
+    }
+
+    .punch-card-header {
+        text-align: center;
+    }
+
+    .punch-icon-circle {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin-bottom: 12px;
+        position: relative;
+    }
+
+    .icon-pending {
+        background: #eff6ff;
+        color: #2563eb;
+    }
+
+    .icon-active {
+        background: #ecfdf5;
+        color: #10b981;
+    }
+
+    .icon-done {
+        background: #ecfdf5;
+        color: #059669;
+    }
+
+    .pulse-ring {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 2px solid #10b981;
+        animation: pulseRing 1.8s infinite;
+    }
+
+    .punch-status-label {
+        font-size: 12px;
+        letter-spacing: 0.5px;
+        color: #059669;
+        font-weight: 600;
+    }
+
+    .live-clock {
+        font-size: 42px;
+        font-weight: 800;
+        letter-spacing: -1px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 6px 0;
+    }
+
+    .punch-subtext {
+        font-size: 13px;
+        color: #64748b;
+        margin: 0;
+    }
+
+    /* ===== Punch Buttons ===== */
+    .btn-punch {
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-weight: 700;
+        font-size: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-punch-in {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: white;
+        box-shadow: 0 6px 18px -4px rgba(37, 99, 235, 0.4);
+    }
+
+        .btn-punch-in:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-2px);
+        }
+
+    .btn-punch-out {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        box-shadow: 0 6px 18px -4px rgba(239, 68, 68, 0.4);
+    }
+
+        .btn-punch-out:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            transform: translateY(-2px);
+        }
+
+    /* ===== Summary Grid ===== */
+    .punch-summary-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        background: #f8fafc;
+        border-radius: 14px;
+        padding: 16px;
+        border: 1px solid #f1f5f9;
+    }
+
+    .summary-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .summary-label {
+        font-size: 11px;
+        color: #64748b;
+        font-weight: 600;
+        margin-bottom: 2px;
+    }
+
+    .summary-value {
+        font-size: 15px;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    /* ===== Table Badges ===== */
+    .badge-status {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .badge-present {
+        background: #ecfdf5;
+        color: #059669;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .badge-absent {
+        background: #fef2f2;
+        color: #dc2626;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    /* ===== Animations ===== */
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes pulseRing {
+        0% {
+            transform: scale(0.95);
+            opacity: 0.8;
+        }
+
+        100% {
+            transform: scale(1.35);
+            opacity: 0;
+        }
+    }
+
+    /* ===== Mobile Responsive ===== */
+    @@media (max-width: 576px) {
+        .punch-card {
+            padding: 22px;
+        }
+
+        .live-clock {
+            font-size: 34px;
+        }
+
+        .punch-summary-grid {
+            grid-template-columns: 1fr;
+            gap: 8px;
+            text-align: center;
+        }
+    }
+</style>
