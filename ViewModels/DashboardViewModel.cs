@@ -13,6 +13,9 @@
         public string CurrentUserRole { get; set; } = string.Empty;
         public string? CurrentUserPhoto { get; set; }
 
+        public int MaleEmployeesCount { get; set; }
+        public int FemaleEmployeesCount { get; set; }
+
         public List<DepartmentCount> EmployeesByDepartment { get; set; } = new();
         public List<Models.Employee> RecentEmployees { get; set; } = new();
 
