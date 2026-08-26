@@ -5,156 +5,89 @@
     Layout = "_Layout";
 }
 
-<style>
-    /* Gradient Background & Pattern */
-    .login-wrapper {
-        min-height: 85vh;
-        background: radial-gradient(circle at top right, rgba(13, 110, 253, 0.08), transparent 40%), radial-gradient(circle at bottom left, rgba(13, 110, 253, 0.05), transparent 40%);
-    }
+<div class="auth-page-wrapper">
 
-    /* Card Entrance Animation & Styling */
-    .login-card {
-        border: 1px solid rgba(255, 255, 255, 0.6) !important;
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        transform: translateY(0);
-        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        animation: slideUpFade 0.7s ease-out forwards;
-    }
+    <!-- Subtle Background Elements -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
 
-        .login-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px -15px rgba(13, 110, 253, 0.15) !important;
-        }
+    <div class="container d-flex align-items-center justify-content-center py-5 position-relative">
+        <div class="row w-100 justify-content-center">
+            <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
 
-    /* Header Styling & Icon Pulse */
-    .avatar-icon {
-        background: linear-gradient(135deg, #0d6efd, #0a58ca);
-        box-shadow: 0 8px 16px -4px rgba(13, 110, 253, 0.4);
-        transition: transform 0.3s ease;
-    }
+                <!-- Clean Corporate Light Card -->
+                <div class="auth-card shadow-sm">
 
-    .login-card:hover .avatar-icon {
-        transform: scale(1.08) rotate(-3deg);
-    }
-
-    /* Animated Form Inputs */
-    .form-floating .form-control {
-        border-color: #e2e8f0;
-        transition: all 0.25s ease;
-    }
-
-        .form-floating .form-control:focus {
-            border-color: #0d6efd;
-            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.12);
-        }
-
-    /* Interactive Button Styling */
-    .btn-login {
-        background: linear-gradient(135deg, #0d6efd, #0b5ed7);
-        border: none;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-
-        .btn-login:hover {
-            background: linear-gradient(135deg, #0b5ed7, #0a58ca);
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px -4px rgba(13, 110, 253, 0.4) !important;
-        }
-
-        .btn-login:active {
-            transform: translateY(0);
-        }
-
-    /* Entrance Keyframes */
-    @@keyframes slideUpFade {
-        from {
-            opacity: 0;
-            transform: translateY(25px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-</style>
-
-<div class="container login-wrapper d-flex align-items-center justify-content-center py-5">
-    <div class="row w-100 justify-content-center">
-        <div class="col-12 col-sm-9 col-md-7 col-lg-5 col-xl-4">
-
-            <!-- Login Card -->
-            <div class="card login-card border-0 shadow-lg rounded-4 overflow-hidden">
-
-                <!-- Header Banner -->
-                <div class="card-header border-0 bg-transparent text-center pt-4 pb-2 px-4">
-                    <div class="avatar-md avatar-icon text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 58px; height: 58px;">
-                        <i class="bi bi-person-lock fs-3"></i>
+                    <!-- Header Section -->
+                    <div class="auth-card-header text-center pt-4 pb-2 px-4">
+                        <div class="brand-badge-wrapper mb-3">
+                            <div class="brand-icon">
+                                <i class="bi bi-shield-lock-fill"></i>
+                            </div>
+                        </div>
+                        <h4 class="brand-name mb-1">Kinetic HR</h4>
+                        <p class="brand-tagline mb-0">Sign in to your workplace account</p>
                     </div>
-                    <h4 class="fw-bold text-dark mb-1">Kinetic HR</h4>
-                    <p class="text-muted small mb-0">Sign in to manage your workspace</p>
-                </div>
 
-                <!-- Form Body -->
-                <div class="card-body p-4 pt-3">
-                    <form asp-controller="Account" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" asp-antiforgery="false" novalidate>
+                    <!-- Form Body -->
+                    <div class="auth-card-body p-4 pt-3">
+                        <form asp-controller="Account" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" novalidate>
 
-                        <!-- Validation Summary Alert -->
-                        <div asp-validation-summary="ModelOnly" class="alert alert-danger border-0 shadow-sm small mb-4 rounded-3" role="alert"></div>
+                            @Html.AntiForgeryToken()
 
-                        <!-- Email Address -->
-                        <div class="form-floating mb-3">
-                            <input asp-for="Email" class="form-control rounded-3" id="loginEmail" placeholder="name@example.com" autocomplete="username" />
-                            <label asp-for="Email" for="loginEmail">
-                                <i class="bi bi-envelope me-1 text-muted"></i> Email Address
-                            </label>
-                            <span asp-validation-for="Email" class="text-danger small mt-1 d-block"></span>
-                        </div>
+                            <!-- Validation Summary -->
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger-custom border-0 small mb-4 rounded-3" role="alert"></div>
 
-                        <!-- Password -->
-                        <div class="position-relative mb-2">
-                            <div class="form-floating">
-                                <input asp-for="Password" type="password" class="form-control rounded-3" id="loginPassword" placeholder="Password" autocomplete="current-password" />
-                                <label asp-for="Password" for="loginPassword">
-                                    <i class="bi bi-key me-1 text-muted"></i> Password
+                            <!-- Email Field -->
+                            <div class="form-group-custom mb-3.5">
+                                <label class="input-label" asp-for="Email">Email Address</label>
+                                <div class="input-control-wrapper">
+                                    <i class="bi bi-envelope input-icon"></i>
+                                    <input asp-for="Email" class="form-input-custom" id="loginEmail" placeholder="name@company.com" autocomplete="username" />
+                                </div>
+                                <span asp-validation-for="Email" class="text-danger-custom"></span>
+                            </div>
+
+                            <!-- Password Field -->
+                            <div class="form-group-custom mb-3">
+                                <label class="input-label" asp-for="Password">Password</label>
+                                <div class="input-control-wrapper">
+                                    <i class="bi bi-key input-icon"></i>
+                                    <input asp-for="Password" type="password" class="form-input-custom" id="loginPassword" placeholder="••••••••" autocomplete="current-password" />
+                                    <button type="button" class="btn-toggle-pass" id="togglePasswordBtn" tabindex="-1">
+                                        <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                                    </button>
+                                </div>
+                                <span asp-validation-for="Password" class="text-danger-custom"></span>
+                            </div>
+
+                            <!-- Remember Me Checkbox -->
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <label class="checkbox-wrapper">
+                                    <input asp-for="RememberMe" type="checkbox" id="rememberMe" />
+                                    <span class="custom-checkbox"></span>
+                                    <span class="checkbox-label">Keep me logged in</span>
                                 </label>
                             </div>
-                            <button type="button" class="btn border-0 text-muted position-absolute end-0 top-50 translate-middle-y me-2" id="togglePasswordBtn" style="z-index: 5;" tabindex="-1">
-                                <i class="bi bi-eye" id="togglePasswordIcon"></i>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn-auth-submit shadow-sm">
+                                <span>Sign In</span>
+                                <i class="bi bi-arrow-right ms-2"></i>
                             </button>
-                        </div>
-                        <span asp-validation-for="Password" class="text-danger small mt-1 d-block mb-3"></span>
+                        </form>
+                    </div>
 
-                        <!-- Remember Me -->
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <div class="form-check">
-                                <input asp-for="RememberMe" class="form-check-input" type="checkbox" id="rememberMe">
-                                <label class="form-check-label text-muted small user-select-none" for="rememberMe">
-                                    Remember me
-                                </label>
-                            </div>
-                        </div>
+                    <!-- Footer Section -->
+                    <div class="auth-card-footer text-center py-3">
+                        <span class="security-text">
+                            <i class="bi bi-shield-check text-success me-1"></i> Enterprise Grade Security
+                        </span>
+                    </div>
 
-                        <!-- Submit Button -->
-                        <button type="submit" class="btn btn-primary btn-login btn-lg w-100 rounded-3 shadow-sm py-2.5 fw-semibold fs-6">
-                            <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Card Footer -->
-                <div class="card-footer bg-light bg-opacity-50 border-0 text-center py-3">
-                    <p class="text-muted fs-7 mb-0 small">
-                        <i class="bi bi-shield-check text-success me-1"></i> Secure Enterprise System
-                    </p>
                 </div>
 
             </div>
-
         </div>
     </div>
 </div>
@@ -179,3 +112,262 @@
         });
     </script>
 }
+
+<style>
+    /* ===== Light Canvas Layout ===== */
+    .auth-page-wrapper {
+        min-height: 86vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        background: radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.03), transparent 40%), radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.04), transparent 40%), #f8fafc;
+        overflow: hidden;
+    }
+
+    .bg-shape {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.6;
+        z-index: 0;
+    }
+
+    .shape-1 {
+        width: 320px;
+        height: 320px;
+        background: #dbeafe;
+        top: -60px;
+        right: -60px;
+    }
+
+    .shape-2 {
+        width: 350px;
+        height: 350px;
+        background: #e0e7ff;
+        bottom: -80px;
+        left: -80px;
+    }
+
+    /* ===== Corporate Light Card ===== */
+    .auth-card {
+        position: relative;
+        z-index: 1;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        animation: cardFadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+        .auth-card:hover {
+            box-shadow: 0 12px 30px -10px rgba(15, 23, 42, 0.08) !important;
+            border-color: #cbd5e1;
+        }
+
+    /* ===== Brand Styling ===== */
+    .brand-badge-wrapper {
+        display: inline-flex;
+        padding: 4px;
+        border-radius: 50%;
+        background: #eff6ff;
+        border: 1px solid #dbeafe;
+    }
+
+    .brand-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    }
+
+    .brand-name {
+        font-size: 22px;
+        font-weight: 700;
+        color: #0f172a;
+        letter-spacing: -0.02em;
+    }
+
+    .brand-tagline {
+        font-size: 13px;
+        color: #64748b;
+    }
+
+    /* ===== Inputs & Controls ===== */
+    .form-group-custom {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .input-label {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 6px;
+    }
+
+    .input-control-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 14px;
+        color: #94a3b8;
+        font-size: 15px;
+        transition: color 0.2s ease;
+    }
+
+    .form-input-custom {
+        width: 100%;
+        padding: 10px 42px 10px 40px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        background: #f8fafc;
+        color: #0f172a;
+        font-size: 13.5px;
+        outline: none;
+        transition: all 0.2s ease;
+    }
+
+        .form-input-custom:focus {
+            border-color: #2563eb;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+            .form-input-custom:focus + .input-icon,
+            .input-control-wrapper:focus-within .input-icon {
+                color: #2563eb;
+            }
+
+    .btn-toggle-pass {
+        position: absolute;
+        right: 12px;
+        background: none;
+        border: none;
+        color: #94a3b8;
+        font-size: 15px;
+        cursor: pointer;
+        transition: color 0.2s ease;
+    }
+
+        .btn-toggle-pass:hover {
+            color: #475569;
+        }
+
+    /* ===== Checkbox ===== */
+    .checkbox-wrapper {
+        display: inline-flex;
+        align-items: center;
+        position: relative;
+        cursor: pointer;
+        user-select: none;
+    }
+
+        .checkbox-wrapper input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+    .custom-checkbox {
+        width: 16px;
+        height: 16px;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+        margin-right: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .checkbox-wrapper input:checked ~ .custom-checkbox {
+        background-color: #2563eb;
+        border-color: #2563eb;
+    }
+
+    .checkbox-label {
+        font-size: 12.5px;
+        color: #475569;
+    }
+
+    /* ===== Submit Button ===== */
+    .btn-auth-submit {
+        width: 100%;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: 1px solid #1d4ed8;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+        .btn-auth-submit:hover {
+            background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px -4px rgba(37, 99, 235, 0.3);
+        }
+
+    /* ===== Footer & Alerts ===== */
+    .auth-card-footer {
+        border-top: 1px solid #f1f5f9;
+        background: #f8fafc;
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
+    }
+
+    .security-text {
+        font-size: 11.5px;
+        color: #64748b;
+        font-weight: 500;
+    }
+
+    .text-danger-custom {
+        font-size: 11.5px;
+        color: #dc2626;
+        margin-top: 4px;
+        display: block;
+    }
+
+    .alert-danger-custom {
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+    }
+
+    /* ===== Keyframes ===== */
+    @@keyframes cardFadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ===== Responsive ===== */
+    @@media (max-width: 576px) {
+        .auth-card {
+            padding: 8px;
+        }
+
+        .brand-name {
+            font-size: 20px;
+        }
+    }
+</style>
