@@ -4,25 +4,29 @@
     ViewData["Title"] = "My Dashboard";
 }
 
-<div class="my-dash-fade-in">
+<div class="my-dash-wrapper">
 
-    @* ===== Gradient welcome banner ===== *@
+    @* ===== Gradient Welcome Banner ===== *@
     <div class="my-profile-banner">
-        <div class="my-avatar-large">
+        <div class="my-avatar-large shadow-lg">
             @if (!string.IsNullOrEmpty(Model.PhotoPath))
             {
                 <img src="@Model.PhotoPath" alt="@Model.FullName" />
             }
             else
             {
-                @Model.FullName.Substring(0, 1)
+                <span>@(!string.IsNullOrWhiteSpace(Model.FullName) ? Model.FullName.Substring(0, 1).ToUpper() : "U")</span>
             }
         </div>
 
         <div class="my-banner-info">
-            <div class="my-greeting">Welcome back, @Model.FullName.Split(' ')[0] 👋</div>
+            <div class="my-greeting">Welcome back 👋</div>
             <div class="my-name">@Model.FullName</div>
-            <div class="my-meta">@Model.RoleName · @Model.DepartmentName</div>
+            <div class="my-meta">
+                <span class="meta-item"><i class="bi bi-person-badge"></i> @Model.RoleName</span>
+                <span class="meta-divider">•</span>
+                <span class="meta-item"><i class="bi bi-building"></i> @Model.DepartmentName</span>
+            </div>
             <span class="status-badge-glow @(Model.Status == "Active" ? "status-active" : "status-inactive")">
                 <span class="status-dot"></span> @Model.Status
             </span>
@@ -31,7 +35,7 @@
         <div class="my-punch-status">
             @if (!Model.CheckedInToday)
             {
-                <span class="punch-pill punch-pill-warn">⏰ Not checked in today</span>
+                <span class="punch-pill punch-pill-warn"><i class="bi bi-clock-history"></i> Not checked in today</span>
             }
             else if (!Model.CheckedOutToday)
             {
@@ -39,20 +43,59 @@
             }
             else
             {
-                <span class="punch-pill punch-pill-done">✅ Checked out today</span>
+                <span class="punch-pill punch-pill-done"><i class="bi bi-check-circle-fill"></i> Checked out today</span>
             }
-            <a asp-controller="Attendance" asp-action="Index" class="btn-add-employee mt-2">Go to Attendance</a>
+            <a asp-controller="Attendance" asp-action="Index" class="btn-goto-attendance mt-3">
+                Go to Attendance <i class="bi bi-arrow-right-short fs-5 ms-1"></i>
+            </a>
         </div>
     </div>
 
-    @* ===== My Attendance Performance chart — now correctly OUTSIDE the banner ===== *@
-    <div class="dashboard-panel mt-4">
-        <h4>My Attendance Performance (This Month)</h4>
+    @* ===== Animated Stat Cards ===== *@
+    <div class="stats-grid mt-4">
+        <div class="stat-card stat-card-animated" style="--delay: 0.05s;">
+            <div class="stat-icon icon-success"><i class="bi bi-calendar-check-fill"></i></div>
+            <div class="stat-details">
+                <div class="stat-label">Days Present (This Month)</div>
+                <div class="stat-value counter" data-target="@Model.DaysPresentThisMonth">0</div>
+            </div>
+        </div>
+
+        <div class="stat-card stat-card-animated" style="--delay: 0.15s;">
+            <div class="stat-icon icon-danger"><i class="bi bi-calendar-x-fill"></i></div>
+            <div class="stat-details">
+                <div class="stat-label">Days Absent (This Month)</div>
+                <div class="stat-value counter" data-target="@Model.DaysAbsentThisMonth">0</div>
+            </div>
+        </div>
+
+        <div class="stat-card stat-card-animated" style="--delay: 0.25s;">
+            <div class="stat-icon icon-warning"><i class="bi bi-hourglass-split"></i></div>
+            <div class="stat-details">
+                <div class="stat-label">Pending Leave Requests</div>
+                <div class="stat-value counter" data-target="@Model.MyPendingLeaves">0</div>
+            </div>
+        </div>
+
+        <div class="stat-card stat-card-animated" style="--delay: 0.35s;">
+            <div class="stat-icon icon-primary"><i class="bi bi-wallet2"></i></div>
+            <div class="stat-details">
+                <div class="stat-label">Last Net Salary</div>
+                <div class="stat-value">@(Model.LastNetSalary?.ToString("N0") ?? "-")</div>
+            </div>
+        </div>
+    </div>
+
+    @* ===== Attendance Performance Chart ===== *@
+    <div class="dashboard-panel mt-4 shadow-sm">
+        <div class="panel-header-custom">
+            <h4><i class="bi bi-bar-chart-line-fill me-2 text-primary"></i>My Attendance Performance (This Month)</h4>
+        </div>
 
         <div class="performance-legend">
-            <span><span class="legend-dot" style="background:#1a8a4a;"></span> 9+ hours (Complete)</span>
-            <span><span class="legend-dot" style="background:#f39c12;"></span> Checked out early</span>
-            <span><span class="legend-dot" style="background:#8e44ad;"></span> Still working (no check-out)</span>
+            <span><span class="legend-dot" style="background:#10b981;"></span> 9+ hours (Complete)</span>
+            <span><span class="legend-dot" style="background:#f59e0b;"></span> Checked out early</span>
+            <span><span class="legend-dot" style="background:#8b5cf6;"></span> Still working (no check-out)</span>
         </div>
 
         @if (Model.MonthlyPerformance.Any())
@@ -64,102 +107,85 @@
         else
         {
             <div class="empty-chart-state">
-                <i class="bi bi-bar-chart"></i>
-                <p>No attendance data yet this month.</p>
+                <i class="bi bi-graph-up-arrow"></i>
+                <p>No attendance data recorded for this month.</p>
             </div>
         }
     </div>
 
-    @* ===== Animated stat cards ===== *@
-    <div class="stats-grid mt-4">
-        <div class="stat-card stat-card-animated" style="--delay:0s;">
-            <div class="stat-icon" style="background:#e7f8ee; color:#1a8a4a;">✅</div>
-            <div>
-                <div class="stat-label">Days Present (This Month)</div>
-                <div class="stat-value counter" data-target="@Model.DaysPresentThisMonth">0</div>
-            </div>
-        </div>
-
-        <div class="stat-card stat-card-animated" style="--delay:0.1s;">
-            <div class="stat-icon" style="background:#fdeaea; color:#c0392b;">⛔</div>
-            <div>
-                <div class="stat-label">Days Absent (This Month)</div>
-                <div class="stat-value counter" data-target="@Model.DaysAbsentThisMonth">0</div>
-            </div>
-        </div>
-
-        <div class="stat-card stat-card-animated" style="--delay:0.2s;">
-            <div class="stat-icon" style="background:#fff4d6; color:#b8860b;">⏳</div>
-            <div>
-                <div class="stat-label">Pending Leave Requests</div>
-                <div class="stat-value counter" data-target="@Model.MyPendingLeaves">0</div>
-            </div>
-        </div>
-
-        <div class="stat-card stat-card-animated" style="--delay:0.3s;">
-            <div class="stat-icon" style="background:#eef2ff; color:#4a6cf7;">💰</div>
-            <div>
-                <div class="stat-label">Last Net Salary</div>
-                <div class="stat-value">@(Model.LastNetSalary?.ToString("N0") ?? "-")</div>
-            </div>
-        </div>
-    </div>
-
-    @* ===== Leave overview + Payslip panels ===== *@
+    @* ===== Leave Overview + Payslip Panels ===== *@
     <div class="dashboard-columns mt-4">
-        <div class="dashboard-panel my-dash-panel">
-            <h4>My Leave Overview</h4>
-            <div class="leave-mini-stats">
+        <!-- Leave Overview Panel -->
+        <div class="dashboard-panel my-dash-panel shadow-sm">
+            <h4><i class="bi bi-pie-chart-fill me-2 text-primary"></i>My Leave Overview</h4>
+
+            @{
+                int totalLeaves = Model.MyPendingLeaves + Model.MyApprovedLeaves + Model.MyRejectedLeaves;
+            }
+
+            <div class="leave-mini-stats mt-3">
                 <div class="leave-stat-row">
-                    <span class="dot" style="background:#f39c12;"></span>
+                    <span class="dot" style="background:#f59e0b;"></span>
                     <span>Pending</span>
                     <strong>@Model.MyPendingLeaves</strong>
                 </div>
                 <div class="leave-progress-track">
-                    <div class="leave-progress-fill" style="width:@(GetPercent(Model.MyPendingLeaves, Model.MyPendingLeaves + Model.MyApprovedLeaves + Model.MyRejectedLeaves))%; background:#f39c12;"></div>
+                    <div class="leave-progress-fill" style="width:@(GetPercent(Model.MyPendingLeaves, totalLeaves))%; background:#f59e0b;"></div>
                 </div>
 
                 <div class="leave-stat-row">
-                    <span class="dot" style="background:#1a8a4a;"></span>
+                    <span class="dot" style="background:#10b981;"></span>
                     <span>Approved</span>
                     <strong>@Model.MyApprovedLeaves</strong>
                 </div>
                 <div class="leave-progress-track">
-                    <div class="leave-progress-fill" style="width:@(GetPercent(Model.MyApprovedLeaves, Model.MyPendingLeaves + Model.MyApprovedLeaves + Model.MyRejectedLeaves))%; background:#1a8a4a;"></div>
+                    <div class="leave-progress-fill" style="width:@(GetPercent(Model.MyApprovedLeaves, totalLeaves))%; background:#10b981;"></div>
                 </div>
 
                 <div class="leave-stat-row">
-                    <span class="dot" style="background:#c0392b;"></span>
+                    <span class="dot" style="background:#ef4444;"></span>
                     <span>Rejected</span>
                     <strong>@Model.MyRejectedLeaves</strong>
                 </div>
                 <div class="leave-progress-track">
-                    <div class="leave-progress-fill" style="width:@(GetPercent(Model.MyRejectedLeaves, Model.MyPendingLeaves + Model.MyApprovedLeaves + Model.MyRejectedLeaves))%; background:#c0392b;"></div>
+                    <div class="leave-progress-fill" style="width:@(GetPercent(Model.MyRejectedLeaves, totalLeaves))%; background:#ef4444;"></div>
                 </div>
             </div>
-            <a asp-controller="Leave" asp-action="Index" class="btn btn-secondary mt-3">View My Requests →</a>
+
+            <a asp-controller="Leave" asp-action="Index" class="btn btn-outline-primary btn-panel-link w-100 mt-3">
+                View My Requests <i class="bi bi-chevron-right ms-1"></i>
+            </a>
         </div>
 
-        <div class="dashboard-panel my-dash-panel payslip-panel">
-            <h4>My Last Payslip</h4>
-            @if (Model.LastNetSalary.HasValue)
-            {
-                <div class="payslip-amount">@Model.LastNetSalary.Value.ToString("N2")</div>
-                <p class="payslip-date">Paid on @Model.LastPayDate?.ToShortDateString()</p>
-            }
-            else
-            {
-                <p style="color:#6b7280;">No payroll records yet.</p>
-            }
-            <a asp-controller="Payroll" asp-action="Index" class="btn btn-secondary mt-3">View All Payslips →</a>
+        <!-- Payslip Panel -->
+        <div class="dashboard-panel my-dash-panel payslip-panel shadow-sm">
+            <h4><i class="bi bi-receipt-cutoff me-2 text-primary"></i>My Last Payslip</h4>
+
+            <div class="payslip-card-content my-3">
+                @if (Model.LastNetSalary.HasValue)
+                {
+                    <div class="payslip-badge">Net Disbursed</div>
+                    <div class="payslip-amount">@Model.LastNetSalary.Value.ToString("N2")</div>
+                    <p class="payslip-date"><i class="bi bi-calendar-event me-1"></i> Paid on @Model.LastPayDate?.ToShortDateString()</p>
+                }
+                else
+                {
+                    <div class="empty-payslip">
+                        <i class="bi bi-credit-card-2-front fs-1 text-muted opacity-50"></i>
+                        <p class="text-muted mt-2 mb-0">No payroll records generated yet.</p>
+                    </div>
+                }
+            </div>
+
+            <a asp-controller="Payroll" asp-action="Index" class="btn btn-outline-primary btn-panel-link w-100 mt-auto">
+                View All Payslips <i class="bi bi-chevron-right ms-1"></i>
+            </a>
         </div>
     </div>
 
 </div>
 
 @functions {
-    // Small helper used only for the leave progress bars above —
-    // avoids division-by-zero when an employee has zero leave requests total.
     public int GetPercent(int part, int total)
     {
         if (total == 0) return 0;
@@ -169,14 +195,13 @@
 
 @section Scripts {
     <script>
-        // Animate each stat number counting up from 0 to its real value on page load.
         document.addEventListener("DOMContentLoaded", function () {
+            // Count-up numbers animation
             const counters = document.querySelectorAll('.counter');
-
             counters.forEach(function (counter) {
                 const target = parseInt(counter.dataset.target, 10) || 0;
-                const duration = 800;
-                const stepTime = 20;
+                const duration = 900;
+                const stepTime = 25;
                 const steps = duration / stepTime;
                 const increment = target / steps;
                 let current = 0;
@@ -194,8 +219,6 @@
         });
     </script>
 
-    @* ===== Attendance Performance chart — moved INSIDE Scripts section
-       so it runs after Chart.js has actually loaded ===== *@
     @if (Model.MonthlyPerformance.Any())
     {
         <script>
@@ -205,9 +228,9 @@
                 const perfStatus = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyPerformance.Select(p => p.Status)));
 
                 function colorForStatus(status) {
-                    if (status === "Complete") return "#1a8a4a";
-                    if (status === "InProgress") return "#8e44ad";
-                    return "#f39c12";
+                    if (status === "Complete") return "#10b981";
+                    if (status === "InProgress") return "#8b5cf6";
+                    return "#f59e0b";
                 }
 
                 const perfCanvas = document.getElementById('performanceChart');
@@ -221,8 +244,8 @@
                             label: 'Hours Worked',
                             data: perfHours,
                             backgroundColor: perfStatus.map(colorForStatus),
-                            borderRadius: 6,
-                            maxBarThickness: 30
+                            borderRadius: 8,
+                            maxBarThickness: 32
                         }]
                     },
                     options: {
@@ -231,6 +254,8 @@
                         plugins: {
                             legend: { display: false },
                             tooltip: {
+                                padding: 12,
+                                cornerRadius: 8,
                                 callbacks: {
                                     label: function (context) {
                                         const status = perfStatus[context.dataIndex];
@@ -247,6 +272,7 @@
                             y: {
                                 beginAtZero: true,
                                 suggestedMax: 10,
+                                grid: { color: 'rgba(226, 232, 240, 0.6)' },
                                 title: { display: true, text: 'Hours' }
                             }
                         }
@@ -258,33 +284,20 @@
 }
 
 <style>
-    /* ===== Page-level fade-in ===== */
-    .my-dash-fade-in {
-        animation: fadeInUp 0.5s ease-out;
+    /* ===== General Layout ===== */
+    .my-dash-wrapper {
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    @@keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(12px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* ===== Gradient welcome banner ===== */
+    /* ===== Banner Section ===== */
     .my-profile-banner {
         display: flex;
         align-items: center;
-        gap: 22px;
-        background: linear-gradient(135deg, #4a6cf7 0%, #7b93f9 55%, #a78bfa 100%);
-        border-radius: 18px;
-        padding: 28px;
-        box-shadow: 0 8px 24px rgba(74, 108, 247, 0.25);
-        flex-wrap: wrap;
+        gap: 24px;
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #4f46e5 100%);
+        border-radius: 20px;
+        padding: 32px;
+        box-shadow: 0 12px 30px -10px rgba(37, 99, 235, 0.4);
         color: white;
         position: relative;
         overflow: hidden;
@@ -293,49 +306,49 @@
         .my-profile-banner::before {
             content: "";
             position: absolute;
-            top: -60px;
-            right: -60px;
-            width: 200px;
-            height: 200px;
-            background: rgba(255,255,255,0.12);
+            top: -50px;
+            right: -50px;
+            width: 220px;
+            height: 220px;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
+            backdrop-filter: blur(10px);
         }
 
         .my-profile-banner::after {
             content: "";
             position: absolute;
-            bottom: -80px;
-            right: 100px;
-            width: 160px;
-            height: 160px;
-            background: rgba(255,255,255,0.08);
+            bottom: -70px;
+            right: 120px;
+            width: 170px;
+            height: 170px;
+            background: rgba(255, 255, 255, 0.06);
             border-radius: 50%;
         }
 
     .my-avatar-large {
-        width: 76px;
-        height: 76px;
-        min-width: 76px;
-        min-height: 76px;
+        width: 84px;
+        height: 84px;
+        min-width: 84px;
+        min-height: 84px;
         border-radius: 50%;
-        background: rgba(255,255,255,0.25);
+        background: rgba(255, 255, 255, 0.25);
         color: white;
         font-weight: 700;
-        font-size: 30px;
+        font-size: 34px;
         display: flex;
         align-items: center;
         justify-content: center;
         overflow: hidden;
-        flex-shrink: 0;
-        border: 3px solid rgba(255,255,255,0.5);
+        border: 3.5px solid rgba(255, 255, 255, 0.7);
         z-index: 1;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.15);
     }
 
         .my-avatar-large img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            display: block;
         }
 
     .my-banner-info {
@@ -344,168 +357,265 @@
 
     .my-greeting {
         font-size: 13px;
-        opacity: 0.9;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        opacity: 0.85;
+        font-weight: 600;
         margin-bottom: 2px;
     }
 
     .my-name {
-        font-size: 22px;
-        font-weight: 700;
+        font-size: 26px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
     }
 
     .my-meta {
         font-size: 13px;
         opacity: 0.9;
-        margin: 2px 0 8px 0;
+        margin: 4px 0 10px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .meta-divider {
+        opacity: 0.5;
     }
 
     .status-badge-glow {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        padding: 4px 12px;
-        border-radius: 20px;
+        padding: 5px 14px;
+        border-radius: 30px;
         font-size: 12px;
         font-weight: 600;
-        background: rgba(255,255,255,0.2);
+        background: rgba(255, 255, 255, 0.18);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .status-dot {
-        width: 7px;
-        height: 7px;
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
-        background: #4ade80;
-        display: inline-block;
+        background: #10b981;
+        box-shadow: 0 0 8px #10b981;
     }
 
     .my-punch-status {
         margin-left: auto;
-        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
         z-index: 1;
     }
 
     .punch-pill {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 7px 16px;
-        border-radius: 20px;
-        font-size: 12px;
+        gap: 8px;
+        padding: 8px 18px;
+        border-radius: 30px;
+        font-size: 13px;
         font-weight: 600;
-        background: rgba(255,255,255,0.9);
-        color: #374151;
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
 
     .punch-pill-warn {
-        color: #b8860b;
+        color: #d97706;
     }
 
     .punch-pill-active {
-        color: #1a8a4a;
+        color: #059669;
     }
 
     .punch-pill-done {
-        color: #4a6cf7;
+        color: #2563eb;
     }
 
     .pulse-dot {
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background: #1a8a4a;
+        background: #10b981;
         display: inline-block;
-        animation: pulse 1.4s infinite;
+        animation: pulse 1.5s infinite;
     }
 
-    @@keyframes pulse {
-        0% {
-            box-shadow: 0 0 0 0 rgba(26, 138, 74, 0.5);
-        }
-
-        70% {
-            box-shadow: 0 0 0 8px rgba(26, 138, 74, 0);
-        }
-
-        100% {
-            box-shadow: 0 0 0 0 rgba(26, 138, 74, 0);
-        }
+    .btn-goto-attendance {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        padding: 8px 18px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 13px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(6px);
     }
 
-    /* ===== Stat cards: staggered entrance + hover lift ===== */
+        .btn-goto-attendance:hover {
+            background: white;
+            color: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+
+    /* ===== Stat Cards ===== */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 22px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        border: 1px solid #f1f5f9;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+    }
+
     .stat-card-animated {
         opacity: 0;
         animation: fadeInUp 0.5s ease-out forwards;
         animation-delay: var(--delay, 0s);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
         .stat-card-animated:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 24px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px -6px rgba(0,0,0,0.08);
         }
 
-    /* ===== Performance chart panel ===== */
-    .performance-legend {
+    .stat-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
         display: flex;
-        gap: 20px;
-        flex-wrap: wrap;
-        font-size: 12px;
-        color: #6b7280;
-        margin-bottom: 14px;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        flex-shrink: 0;
     }
 
-        .performance-legend .legend-dot {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-right: 6px;
-            vertical-align: middle;
+    .icon-success {
+        background: #ecfdf5;
+        color: #10b981;
+    }
+
+    .icon-danger {
+        background: #fef2f2;
+        color: #ef4444;
+    }
+
+    .icon-warning {
+        background: #fffbeb;
+        color: #f59e0b;
+    }
+
+    .icon-primary {
+        background: #eff6ff;
+        color: #3b82f6;
+    }
+
+    .stat-label {
+        font-size: 12.5px;
+        color: #64748b;
+        font-weight: 600;
+        margin-bottom: 2px;
+    }
+
+    .stat-value {
+        font-size: 24px;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    /* ===== Dashboard Panels ===== */
+    .dashboard-panel {
+        background: white;
+        border-radius: 18px;
+        padding: 26px;
+        border: 1px solid #f1f5f9;
+    }
+
+        .dashboard-panel h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
         }
+
+    .performance-legend {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        font-size: 12.5px;
+        color: #64748b;
+        margin-bottom: 16px;
+    }
+
+    .legend-dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 6px;
+    }
 
     .chart-container {
         position: relative;
         width: 100%;
-        height: 260px;
+        height: 270px;
     }
 
     .empty-chart-state {
-        min-height: 200px;
+        min-height: 220px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        text-align: center;
-        color: #6b7280;
+        color: #94a3b8;
     }
 
         .empty-chart-state i {
-            font-size: 32px;
-            margin-bottom: 10px;
-            opacity: 0.6;
+            font-size: 38px;
+            margin-bottom: 8px;
         }
 
-        .empty-chart-state p {
-            margin: 0;
-            font-size: 14px;
-        }
-
-    /* ===== Leave overview panel ===== */
-    .my-dash-panel {
-        transition: box-shadow 0.2s ease;
+    /* ===== Columns Layout ===== */
+    .dashboard-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
     }
 
-        .my-dash-panel:hover {
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-        }
+    .my-dash-panel {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
 
+    /* ===== Leave Overview Progress Bars ===== */
     .leave-stat-row {
         display: flex;
         align-items: center;
         gap: 8px;
-        font-size: 14px;
-        color: #374151;
-        margin-bottom: 4px;
+        font-size: 13.5px;
+        color: #334155;
+        margin-bottom: 6px;
     }
 
         .leave-stat-row strong {
@@ -513,44 +623,126 @@
         }
 
         .leave-stat-row .dot {
-            width: 10px;
-            height: 10px;
+            width: 9px;
+            height: 9px;
             border-radius: 50%;
-            flex-shrink: 0;
         }
 
     .leave-progress-track {
-        height: 6px;
-        background: #f0f2f5;
-        border-radius: 6px;
+        height: 8px;
+        background: #f1f5f9;
+        border-radius: 10px;
         overflow: hidden;
-        margin-bottom: 14px;
+        margin-bottom: 16px;
     }
 
     .leave-progress-fill {
         height: 100%;
-        border-radius: 6px;
-        transition: width 0.8s ease-out;
+        border-radius: 10px;
+        transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* ===== Payslip panel ===== */
+    /* ===== Payslip Panel ===== */
     .payslip-panel {
         text-align: center;
-        background: linear-gradient(135deg, #fdfdff 0%, #f3f5ff 100%);
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    }
+
+    .payslip-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        background: #eff6ff;
+        color: #2563eb;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 8px;
     }
 
     .payslip-amount {
-        font-size: 34px;
+        font-size: 36px;
         font-weight: 800;
-        background: linear-gradient(135deg, #4a6cf7, #7b93f9);
+        background: linear-gradient(135deg, #2563eb, #4f46e5);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        margin-top: 6px;
     }
 
     .payslip-date {
-        color: #6b7280;
+        color: #64748b;
         font-size: 13px;
-        margin-top: 2px;
+        margin-top: 4px;
+    }
+
+    .btn-panel-link {
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 10px 16px;
+        transition: all 0.25s ease;
+    }
+
+        .btn-panel-link:hover {
+            transform: translateY(-1px);
+        }
+
+    /* ===== Keyframe Animations ===== */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(16px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+        }
+
+        70% {
+            box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+        }
+    }
+
+    @@media (max-width: 991px) {
+        .dashboard-columns {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .my-profile-banner {
+            flex-direction: column;
+            text-align: center;
+            align-items: center;
+            padding: 24px 20px;
+        }
+
+        .my-meta {
+            justify-content: center;
+        }
+
+        .my-punch-status {
+            margin-left: 0;
+            align-items: center;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-goto-attendance {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
