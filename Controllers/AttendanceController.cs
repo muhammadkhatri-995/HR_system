@@ -31,6 +31,28 @@ namespace HR_system.Controllers
             return int.Parse(idClaim!);
         }
 
+        // Server chahe kahin bhi (UTC timezone waale cloud host par) chal raha ho,
+        // yeh method hamesha Pakistan ka asal wall-clock time deta hai —
+        // taake CheckIn/CheckOut hamesha employee ke asal local time se match ho.
+        private static TimeZoneInfo GetPakistanTimeZone()
+        {
+            try
+            {
+                // Linux servers (Render/Railway) ye IANA ID samajhte hain
+                return TimeZoneInfo.FindSystemTimeZoneById("Asia/Karachi");
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                // Windows local machine ke liye fallback
+                return TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time");
+            }
+        }
+
+        private DateTime GetPakistanNow()
+        {
+            return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, GetPakistanTimeZone());
+        }
+
         // GET: /Attendance
         public async Task<IActionResult> Index(int? employeeId, int? month, int? year)
         {
@@ -81,11 +103,12 @@ namespace HR_system.Controllers
 
             if (existing == null)
             {
+                var pktNow = GetPakistanNow();
                 var attendance = new Attendence
                 {
                     EmployeeId = employeeId,
-                    Date = DateTime.Today,
-                    CheckInTime = DateTime.Now.TimeOfDay,
+                    Date = pktNow.Date,           
+                    CheckInTime = pktNow.TimeOfDay,
                     Status = "Present"
                 };
 
@@ -116,6 +139,8 @@ namespace HR_system.Controllers
                 attendance.CheckInTime != null &&
                 attendance.CheckOutTime == null)
             {
+
+                var pktNow = GetPakistanNow();
                 attendance.CheckOutTime = DateTime.Now.TimeOfDay;
 
                 attendance.TotalWorkingHours =
