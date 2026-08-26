@@ -31,19 +31,16 @@ namespace HR_system.Controllers
             return int.Parse(idClaim!);
         }
 
-        // Server chahe kahin bhi (UTC timezone waale cloud host par) chal raha ho,
-        // yeh method hamesha Pakistan ka asal wall-clock time deta hai —
-        // taake CheckIn/CheckOut hamesha employee ke asal local time se match ho.
+        // Server chahe Linux (Render) par UTC par run ho raha ho,
+        // ye method hamesha exact Pakistan (PKT) wall-clock time fetch karta hai.
         private static TimeZoneInfo GetPakistanTimeZone()
         {
             try
             {
-                // Linux servers (Render/Railway) ye IANA ID samajhte hain
                 return TimeZoneInfo.FindSystemTimeZoneById("Asia/Karachi");
             }
             catch (TimeZoneNotFoundException)
             {
-                // Windows local machine ke liye fallback
                 return TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time");
             }
         }
@@ -57,6 +54,7 @@ namespace HR_system.Controllers
         public async Task<IActionResult> Index(int? employeeId, int? month, int? year)
         {
             int currentEmployeeId = GetCurrentEmployeeId();
+            var pktNow = GetPakistanNow();
 
             ViewBag.TodayRecord =
                 await _attendanceRepository.GetTodayAttendanceForEmployeeAsync(currentEmployeeId);
@@ -81,8 +79,8 @@ namespace HR_system.Controllers
                     .ToList();
 
                 ViewBag.SelectedEmployeeId = employeeId;
-                ViewBag.SelectedMonth = month ?? DateTime.Now.Month;
-                ViewBag.SelectedYear = year ?? DateTime.Now.Year;
+                ViewBag.SelectedMonth = month ?? pktNow.Month;
+                ViewBag.SelectedYear = year ?? pktNow.Year;
 
                 return View(records);
             }
@@ -107,7 +105,7 @@ namespace HR_system.Controllers
                 var attendance = new Attendence
                 {
                     EmployeeId = employeeId,
-                    Date = pktNow.Date,           
+                    Date = pktNow.Date,
                     CheckInTime = pktNow.TimeOfDay,
                     Status = "Present"
                 };
@@ -117,7 +115,7 @@ namespace HR_system.Controllers
                 await _auditService.LogAsync(
                     "Attendance",
                     "Check In",
-                    $"Employee ID {employeeId} checked in at {DateTime.Now:hh:mm tt}."
+                    $"Employee ID {employeeId} checked in at {pktNow:hh:mm tt}."
                 );
             }
 
@@ -139,9 +137,10 @@ namespace HR_system.Controllers
                 attendance.CheckInTime != null &&
                 attendance.CheckOutTime == null)
             {
-
                 var pktNow = GetPakistanNow();
-                attendance.CheckOutTime = DateTime.Now.TimeOfDay;
+
+                // FIX: DateTime.Now.TimeOfDay ko pktNow.TimeOfDay se replace kiya gaya hai
+                attendance.CheckOutTime = pktNow.TimeOfDay;
 
                 attendance.TotalWorkingHours =
                     attendance.CheckOutTime.Value -
@@ -152,7 +151,7 @@ namespace HR_system.Controllers
                 await _auditService.LogAsync(
                     "Attendance",
                     "Check Out",
-                    $"Employee ID {employeeId} checked out at {DateTime.Now:hh:mm tt}."
+                    $"Employee ID {employeeId} checked out at {pktNow:hh:mm tt}."
                 );
             }
 
