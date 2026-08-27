@@ -24,14 +24,10 @@ namespace HR_system.Controllers
         [AllowAnonymous]
         public IActionResult Login(string? returnUrl = null)
         {
-            // FIX: Agar user already login hai to dobara Login page na dikhao, direct Dashboard par redirect kar do
+            // FIX: Agar user authenticated hai to direct Dashboard par bhejo (404 se bachne ke liye safe Index call)
             if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                if (User.IsInRole("Admin") || User.IsInRole("HR"))
-                {
-                    return RedirectToAction("Index", "Dashboard");
-                }
-                return RedirectToAction("MyDashboard", "Dashboard");
+                return RedirectToAction("Index", "Dashboard");
             }
 
             ViewData["ReturnUrl"] = returnUrl;
@@ -108,13 +104,9 @@ namespace HR_system.Controllers
                 return LocalRedirect(returnUrl);
             }
 
-            // Redirect based on Role
-            if (employee.Role?.Name == "Admin" || employee.Role?.Name == "HR")
-            {
-                return RedirectToAction("Index", "Dashboard");
-            }
-
-            return RedirectToAction("MyDashboard", "Dashboard");
+            // FIX 404: Dono Roles (Admin & Employee) ko Dashboard/Index par bhejo 
+            // DashboardController khud verify karega ke employee View dikhana hai ya Admin View.
+            return RedirectToAction("Index", "Dashboard");
         }
 
         // POST: /Account/Logout
