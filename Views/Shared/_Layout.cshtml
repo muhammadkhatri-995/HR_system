@@ -10,7 +10,7 @@
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -44,7 +44,136 @@
             }
 
             /* =========================
-                       SIDEBAR
+                       KINETIC HR LIGHT SPLASH SCREEN (3s)
+                    ========================= */
+            .kinetic-splash-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 999999;
+                opacity: 1;
+                transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease;
+            }
+
+            .kinetic-loader-content {
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+            }
+
+            .kinetic-logo-ring {
+                width: 95px;
+                height: 95px;
+                border-radius: 50%;
+                padding: 4px;
+                background: linear-gradient(135deg, #60a5fa 0%, #2563eb 50%, #1d4ed8 100%);
+                animation: spinRing 2.5s linear infinite;
+                box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+            }
+
+            .kinetic-inner-circle {
+                width: 100%;
+                height: 100%;
+                background: #ffffff;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .kinetic-icon {
+                font-size: 40px;
+                color: #2563eb;
+                animation: pulseIcon 1.5s ease-in-out infinite alternate;
+            }
+
+            .kinetic-brand-title {
+                font-size: 26px;
+                font-weight: 800;
+                color: #0f172a;
+                letter-spacing: 3px;
+                margin-bottom: 2px;
+            }
+
+                .kinetic-brand-title .highlight {
+                    color: #2563eb;
+                }
+
+            .kinetic-brand-sub {
+                font-size: 11px;
+                font-weight: 700;
+                color: #64748b;
+                letter-spacing: 2px;
+            }
+
+            .kinetic-progress-bar {
+                width: 200px;
+                height: 5px;
+                background: #e2e8f0;
+                border-radius: 10px;
+                overflow: hidden;
+                margin-top: 20px;
+            }
+
+            .kinetic-progress-fill {
+                width: 0%;
+                height: 100%;
+                background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+                animation: loadProgress 2.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            }
+
+            .kinetic-splash-overlay.fade-out {
+                opacity: 0;
+                visibility: hidden;
+            }
+
+            @@keyframes spinRing {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            @@keyframes pulseIcon {
+                0% {
+                    transform: scale(0.92);
+                    opacity: 0.85;
+                }
+
+                100% {
+                    transform: scale(1.08);
+                    opacity: 1;
+                    filter: drop-shadow(0 4px 12px rgba(37, 99, 235, 0.3));
+                }
+            }
+
+            @@keyframes loadProgress {
+                0% {
+                    width: 0%;
+                }
+
+                50% {
+                    width: 65%;
+                }
+
+                100% {
+                    width: 100%;
+                }
+            }
+
+            /* =========================
+                               SIDEBAR
                     ========================= */
             .sidebar {
                 position: fixed;
@@ -92,7 +221,6 @@
                 padding: 16px 12px;
             }
 
-                /* Custom Scrollbar */
                 .sidebar-menu-wrapper::-webkit-scrollbar {
                     width: 4px;
                 }
@@ -137,7 +265,6 @@
                         justify-content: center;
                     }
 
-                    /* Hover Effects */
                     .sidebar-menu a:hover {
                         background: #f1f5f9;
                         color: var(--text-main);
@@ -149,7 +276,6 @@
                             transform: scale(1.1);
                         }
 
-                    /* Active Link */
                     .sidebar-menu a.active {
                         background: var(--primary-light);
                         color: var(--primary-color);
@@ -173,7 +299,7 @@
                         }
 
             /* =========================
-                       MAIN CONTENT & TOPBAR
+                               MAIN CONTENT & TOPBAR
                     ========================= */
             .main-content {
                 margin-left: var(--sidebar-width);
@@ -222,7 +348,6 @@
                 font-size: 1.25rem;
             }
 
-            /* User Area */
             .user-area {
                 display: flex;
                 align-items: center;
@@ -267,7 +392,6 @@
                     color: #dc2626;
                 }
 
-            /* Overlay */
             .sidebar-overlay {
                 display: none;
                 position: fixed;
@@ -287,9 +411,6 @@
                     opacity: 1;
                 }
 
-            /* =========================
-                       COLLAPSED STATE (Desktop)
-                    ========================= */
             body.sidebar-collapsed .sidebar {
                 width: var(--sidebar-collapsed-width);
             }
@@ -329,7 +450,6 @@
                     left: 0;
                 }
 
-                /* Tooltip behavior when collapsed */
                 body.sidebar-collapsed .sidebar-menu a:hover::after {
                     content: attr(data-title);
                     position: absolute;
@@ -345,9 +465,6 @@
                     animation: fadeIn 0.2s ease forwards;
                 }
 
-            /* =========================
-                       MOBILE ADAPTATION
-                    ========================= */
             @@media (max-width: 768px) {
                 .sidebar {
                     transform: translateX(-100%);
@@ -386,6 +503,23 @@
                     body.sidebar-collapsed .sidebar-menu a i {
                         margin-right: 12px;
                     }
+
+                .kinetic-logo-ring {
+                    width: 80px;
+                    height: 80px;
+                }
+
+                .kinetic-icon {
+                    font-size: 34px;
+                }
+
+                .kinetic-brand-title {
+                    font-size: 22px;
+                }
+
+                .kinetic-progress-bar {
+                    width: 160px;
+                }
             }
 
             @@keyframes fadeIn {
@@ -403,6 +537,22 @@
 </head>
 
 <body>
+
+    <!-- KINETIC HR CORPORATE LIGHT SPLASH SCREEN -->
+    <div id="splashLoader" class="kinetic-splash-overlay">
+        <div class="kinetic-loader-content">
+            <div class="kinetic-logo-ring">
+                <div class="kinetic-inner-circle">
+                    <i class="bi bi-shield-lock-fill kinetic-icon"></i>
+                </div>
+            </div>
+            <h2 class="kinetic-brand-title mt-3">KINETIC <span class="highlight">HR</span></h2>
+            <p class="kinetic-brand-sub">ENTERPRISE WORKFORCE PORTAL</p>
+            <div class="kinetic-progress-bar">
+                <div class="kinetic-progress-fill"></div>
+            </div>
+        </div>
+    </div>
 
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
@@ -423,27 +573,26 @@
                             <span>Audit Logs</span>
                         </a>
                     </li>
-                
 
-                <li>
-                    <a asp-controller="Department" asp-action="Index" data-title="Departments">
-                        <i class="bi bi-building"></i>
-                        <span>Departments</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="Role" asp-action="Index" data-title="Roles">
-                        <i class="bi bi-person-badge"></i>
-                        <span>Roles</span>
-                    </a>
-                </li>
-                
-                <li>
-                    <a asp-controller="Employee" asp-action="Index" data-title="Employees">
-                        <i class="bi bi-people"></i>
-                        <span>Employees</span>
-                    </a>
-                </li>
+                    <li>
+                        <a asp-controller="Department" asp-action="Index" data-title="Departments">
+                            <i class="bi bi-building"></i>
+                            <span>Departments</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Role" asp-action="Index" data-title="Roles">
+                            <i class="bi bi-person-badge"></i>
+                            <span>Roles</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Employee" asp-action="Index" data-title="Employees">
+                            <i class="bi bi-people"></i>
+                            <span>Employees</span>
+                        </a>
+                    </li>
                     <li>
                         <a asp-controller="Payroll" asp-action="Index" data-title="Payroll">
                             <i class="bi bi-cash-stack"></i>
@@ -476,14 +625,14 @@
                         <span>Requests</span>
                     </a>
                 </li>
-            
+
                 <li>
                     <a asp-controller="Profile" asp-action="Index" data-title="Your Profile">
                         <i class="bi bi-person-circle"></i>
                         <span>Your Profile</span>
                     </a>
                 </li>
-              
+
             </ul>
         </div>
     </aside>
@@ -550,6 +699,21 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
+    <!-- Splash Screen Auto-Hide Script (Set to 3 Seconds) -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const loader = document.getElementById("splashLoader");
+        if (!sessionStorage.getItem("kinetic_splash_seen")) {
+        setTimeout(function () {
+        if (loader) loader.classList.add("fade-out");
+        sessionStorage.setItem("kinetic_splash_seen", "true");
+        }, 3000); // Exactly 3 seconds
+        } else {
+        if (loader) loader.style.display = "none";
+        }
+        });
+    </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
         const sidebar = document.getElementById("sidebar");
@@ -597,6 +761,7 @@
         });
         });
         });
+
         document.addEventListener('DOMContentLoaded', function () {
         const toasts = document.querySelectorAll('.notification-toast');
         toasts.forEach(function (toast) {
