@@ -20,14 +20,27 @@ namespace HR_system.Controllers
         }
 
         // GET: /Account/Login
+        [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login(string? returnUrl = null)
         {
+            // FIX: Agar user already login hai to dobara Login page na dikhao, direct Dashboard par redirect kar do
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                if (User.IsInRole("Admin") || User.IsInRole("HR"))
+                {
+                    return RedirectToAction("Index", "Dashboard");
+                }
+                return RedirectToAction("MyDashboard", "Dashboard");
+            }
+
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
         // POST: /Account/Login
         [HttpPost]
+        [AllowAnonymous]
         [IgnoreAntiforgeryToken] // Render reverse-proxy Bad Request 400 fix
         public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
@@ -95,7 +108,13 @@ namespace HR_system.Controllers
                 return LocalRedirect(returnUrl);
             }
 
-            return RedirectToAction("Index", "Dashboard");
+            // Redirect based on Role
+            if (employee.Role?.Name == "Admin" || employee.Role?.Name == "HR")
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            return RedirectToAction("MyDashboard", "Dashboard");
         }
 
         // POST: /Account/Logout
@@ -104,11 +123,12 @@ namespace HR_system.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            NotifySuccess("Logged out successfully.");  
+            NotifySuccess("Logged out successfully.");
             return RedirectToAction("Login", "Account");
         }
 
         // GET: /Account/AccessDenied
+        [HttpGet]
         public IActionResult AccessDenied()
         {
             return View();
