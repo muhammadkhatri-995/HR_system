@@ -4,58 +4,113 @@
     ViewData["Title"] = "Edit Profile";
 }
 
-<h2>Edit Profile</h2>
+<div class="edit-profile-wrapper">
 
-<div class="employee-form-container">
-    <form asp-action="Edit" method="post" enctype="multipart/form-data">
-        <input type="hidden" asp-for="Id" />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <!-- Ambient Floating Glow Orbs -->
+    <div class="edit-orb orb-1"></div>
+    <div class="edit-orb orb-2"></div>
 
-        <div class="photo-preview-box" id="photoPreviewBox">
-            @if (!string.IsNullOrEmpty(Model.ExistingPhotoPath))
-            {
-                <img id="photoPreviewImg" src="@Model.ExistingPhotoPath" alt="Current Photo" />
-            }
-            else
-            {
-                <span id="photoPlaceholderText">No Photo</span>
-                <img id="photoPreviewImg" src="#" alt="Preview" style="display:none;" />
-            }
-        </div>
+    <div class="container py-4 position-relative">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-7 col-xl-6">
 
-        <div class="form-group-full mb-3" style="text-align:center;">
-            <label asp-for="PhotoFile" class="form-label">Change Photo</label><br />
-            <input asp-for="PhotoFile" type="file" accept="image/*" onchange="previewPhoto(this)" />
-        </div>
+                <!-- Header Card -->
+                <div class="edit-header-card mb-4 shadow-sm">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="header-icon-box">
+                            <i class="bi bi-person-bounding-box"></i>
+                        </div>
+                        <div>
+                            <h3 class="card-title-custom mb-1">Edit My Profile</h3>
+                            <p class="card-subtitle-custom mb-0">Update your personal contact information and avatar.</p>
+                        </div>
+                    </div>
+                </div>
 
-        <p style="color:#6b7280; font-size:13px;">
-            Name, Department, Role, and Salary can only be changed by HR/Admin.
-        </p>
+                <!-- Form Body Card -->
+                <div class="edit-body-card shadow-sm">
+                    <form asp-action="Edit" method="post" enctype="multipart/form-data" id="editProfileForm">
+                        <input type="hidden" asp-for="Id" />
 
-        <div class="form-grid">
-            <div class="form-group">
-                <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                        <!-- Validation Summary Alert -->
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger-custom border-0 small mb-4 rounded-3" role="alert"></div>
+
+                        <!-- Image Upload Circle with Live Preview -->
+                        <div class="photo-upload-section text-center mb-4">
+                            <div class="avatar-upload-frame mx-auto shadow-sm">
+                                <div class="photo-preview-box" id="photoPreviewBox">
+                                    @if (!string.IsNullOrEmpty(Model.ExistingPhotoPath))
+                                    {
+                                        <img id="photoPreviewImg" src="@Model.ExistingPhotoPath" alt="Current Profile Photo" class="avatar-img-preview" />
+                                    }
+                                    else
+                                    {
+                                        <div id="photoPlaceholderText" class="avatar-fallback-initial">
+                                            @(!string.IsNullOrWhiteSpace(Model.FirstName) ? Model.FirstName.Substring(0, 1).ToUpper() : "U")
+                                        </div>
+                                        <img id="photoPreviewImg" src="#" alt="Preview" class="avatar-img-preview" style="display:none;" />
+                                    }
+                                </div>
+                                <label for="PhotoFileInput" class="camera-upload-btn" title="Choose Photo">
+                                    <i class="bi bi-camera-fill"></i>
+                                </label>
+                            </div>
+
+                            <input asp-for="PhotoFile" type="file" accept="image/*" id="PhotoFileInput" class="d-none" onchange="previewPhoto(this)" />
+                            <span class="upload-hint mt-2 d-block">Click the camera icon to upload a new profile photo</span>
+                        </div>
+
+                        <!-- HR Authority Info Alert -->
+                        <div class="hr-notice-badge mb-4">
+                            <i class="bi bi-info-circle-fill me-2 text-primary"></i>
+                            <span>Full Name, Department, Role, and Salary can only be modified by HR / Admin.</span>
+                        </div>
+
+                        <!-- Form Input Fields -->
+                        <div class="form-grid-wrapper">
+                            <!-- Email Input -->
+                            <div class="form-group-custom mb-3.5">
+                                <label asp-for="Email" class="input-label">Email Address</label>
+                                <div class="input-control-wrapper">
+                                    <i class="bi bi-envelope input-lead-icon"></i>
+                                    <input asp-for="Email" class="form-input-custom" placeholder="name@company.com" />
+                                </div>
+                                <span asp-validation-for="Email" class="text-danger-custom"></span>
+                            </div>
+
+                            <!-- Phone Input -->
+                            <div class="form-group-custom mb-3.5">
+                                <label asp-for="Phone" class="input-label">Phone Number</label>
+                                <div class="input-control-wrapper">
+                                    <i class="bi bi-telephone input-lead-icon"></i>
+                                    <input asp-for="Phone" class="form-input-custom" placeholder="+92 300 0000000" />
+                                </div>
+                                <span asp-validation-for="Phone" class="text-danger-custom"></span>
+                            </div>
+
+                            <!-- Address Input -->
+                            <div class="form-group-custom mb-4">
+                                <label asp-for="Address" class="input-label">Residential / Office Address</label>
+                                <textarea asp-for="Address" class="form-textarea-custom" rows="3" placeholder="Enter your current address..."></textarea>
+                                <span asp-validation-for="Address" class="text-danger-custom"></span>
+                            </div>
+                        </div>
+
+                        <!-- Form Action Buttons -->
+                        <div class="form-actions-wrapper pt-2">
+                            <button type="submit" class="btn-submit-edit shadow-sm">
+                                <i class="bi bi-check2-circle me-1.5"></i>Save Changes
+                            </button>
+                            <a asp-action="Index" class="btn-cancel-edit">Cancel</a>
+                        </div>
+
+                    </form>
+                </div>
+
             </div>
-
-            <div class="form-group">
-                <label asp-for="Phone" class="form-label"></label>
-                <input asp-for="Phone" class="form-control" />
-                <span asp-validation-for="Phone" class="text-danger"></span>
-            </div>
-
-            <div class="form-group form-group-full">
-                <label asp-for="Address" class="form-label"></label>
-                <textarea asp-for="Address" class="form-control"></textarea>
-            </div>
         </div>
+    </div>
 
-        <div class="mt-3" style="text-align:center;">
-            <button type="submit" class="btn-add-employee">Save Changes</button>
-            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-        </div>
-    </form>
 </div>
 
 @section Scripts {
@@ -78,3 +133,323 @@
         }
     </script>
 }
+
+<style>
+    /* ===== Canvas Architecture & Entrance ===== */
+    .edit-profile-wrapper {
+        position: relative;
+        animation: pageFadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        overflow: hidden;
+        min-height: 80vh;
+    }
+
+    /* ===== Background Floating Glow Orbs ===== */
+    .edit-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.35;
+        z-index: 0;
+    }
+
+    .orb-1 {
+        width: 310px;
+        height: 310px;
+        background: #3b82f6;
+        top: -50px;
+        left: -50px;
+    }
+
+    .orb-2 {
+        width: 330px;
+        height: 330px;
+        background: #8b5cf6;
+        bottom: -50px;
+        right: -50px;
+    }
+
+    /* ===== Header Card ===== */
+    .edit-header-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid #e2e8f0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .header-icon-box {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        background: #eff6ff;
+        color: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+        border: 1px solid #dbeafe;
+    }
+
+    .card-title-custom {
+        font-size: 20px;
+        font-weight: 700;
+        color: #0f172a;
+        letter-spacing: -0.02em;
+    }
+
+    .card-subtitle-custom {
+        font-size: 13px;
+        color: #64748b;
+    }
+
+    /* ===== Main Body Card ===== */
+    .edit-body-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 28px;
+        border: 1px solid #e2e8f0;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ===== Avatar Photo Frame & Camera Overlay ===== */
+    .avatar-upload-frame {
+        position: relative;
+        width: 104px;
+        height: 104px;
+        border-radius: 50%;
+        padding: 3px;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+    }
+
+    .photo-preview-box {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .avatar-img-preview {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .avatar-fallback-initial {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
+        color: #ffffff;
+        font-size: 40px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .camera-upload-btn {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #2563eb;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        cursor: pointer;
+        border: 2px solid #ffffff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        transition: all 0.2s ease;
+    }
+
+        .camera-upload-btn:hover {
+            background: #1d4ed8;
+            transform: scale(1.1);
+        }
+
+    .upload-hint {
+        font-size: 12px;
+        color: #64748b;
+    }
+
+    /* ===== HR Authority Notice Badge ===== */
+    .hr-notice-badge {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 12px;
+        color: #475569;
+        display: flex;
+        align-items: center;
+    }
+
+    /* ===== Inputs Styling ===== */
+    .form-group-custom {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .input-label {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 6px;
+    }
+
+    .input-control-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .input-lead-icon {
+        position: absolute;
+        left: 14px;
+        color: #94a3b8;
+        font-size: 15px;
+        transition: color 0.2s ease;
+    }
+
+    .form-input-custom {
+        width: 100%;
+        padding: 10px 14px 10px 40px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        background-color: #f8fafc;
+        color: #0f172a;
+        font-size: 13.5px;
+        outline: none;
+        transition: all 0.2s ease;
+    }
+
+        .form-input-custom:focus {
+            border-color: #2563eb;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+            .form-input-custom:focus + .input-lead-icon,
+            .input-control-wrapper:focus-within .input-lead-icon {
+                color: #2563eb;
+            }
+
+    .form-textarea-custom {
+        width: 100%;
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        background-color: #f8fafc;
+        color: #0f172a;
+        font-size: 13.5px;
+        outline: none;
+        transition: all 0.2s ease;
+        resize: vertical;
+    }
+
+        .form-textarea-custom:focus {
+            border-color: #2563eb;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+    /* ===== Actions ===== */
+    .form-actions-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .btn-submit-edit {
+        flex: 1;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: 1px solid #1d4ed8;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.25s ease;
+    }
+
+        .btn-submit-edit:hover {
+            background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+        }
+
+    .btn-cancel-edit {
+        background: #ffffff;
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        text-align: center;
+    }
+
+        .btn-cancel-edit:hover {
+            background: #f8fafc;
+            color: #0f172a;
+            border-color: #94a3b8;
+        }
+
+    .text-danger-custom {
+        font-size: 11.5px;
+        color: #dc2626;
+        margin-top: 4px;
+        display: block;
+    }
+
+    .alert-danger-custom {
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+    }
+
+    /* ===== Keyframes ===== */
+    @@keyframes pageFadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ===== Mobile Adjustments ===== */
+    @@media (max-width: 576px) {
+        .edit-header-card, .edit-body-card {
+            padding: 20px;
+        }
+
+        .form-actions-wrapper {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .btn-submit-edit, .btn-cancel-edit {
+            width: 100%;
+        }
+    }
+</style>
