@@ -24,7 +24,6 @@ namespace HR_system.Controllers
         [AllowAnonymous]
         public IActionResult Login(string? returnUrl = null)
         {
-            // FIX: Agar user authenticated hai to direct Dashboard par bhejo (404 se bachne ke liye safe Index call)
             if (User.Identity != null && User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Dashboard");
@@ -37,7 +36,7 @@ namespace HR_system.Controllers
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
-        [IgnoreAntiforgeryToken] // Render reverse-proxy Bad Request 400 fix
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -47,7 +46,7 @@ namespace HR_system.Controllers
                 return View(model);
             }
 
-            // Find the employee by email
+            // 1. Find the employee by email
             var employee = await _employeeRepository.GetEmployeeByEmailAsync(model.Email);
 
             if (employee == null)
@@ -56,8 +55,8 @@ namespace HR_system.Controllers
                 return View(model);
             }
 
+            // 2. Verify Password
             PasswordVerificationResult result;
-
             try
             {
                 result = _passwordHasher.VerifyHashedPassword(employee, employee.PasswordHash, model.Password);
@@ -74,7 +73,14 @@ namespace HR_system.Controllers
                 return View(model);
             }
 
-            // Build identity claims
+            // 3. Status Check: Stop Inactive employees from logging in
+            if (string.Equals(employee.Status, "Inactive", StringComparison.OrdinalIgnoreCase))
+            {
+                ModelState.AddModelError(string.Empty, "Your account is currently inactive. Please contact HR or Admin.");
+                return View(model);
+            }
+
+            // 4. Build identity claims for Active users
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, employee.id.ToString()),
@@ -85,27 +91,22 @@ namespace HR_system.Controllers
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-            // Persistent properties for proxy cookies
             var authProperties = new AuthenticationProperties
             {
                 IsPersistent = true,
                 ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8)
             };
 
-            // Write cookie to response
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
 
-            // ReturnUrl redirect handling (Fixes loop)
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
                 return LocalRedirect(returnUrl);
             }
 
-            // FIX 404: Dono Roles (Admin & Employee) ko Dashboard/Index par bhejo 
-            // DashboardController khud verify karega ke employee View dikhana hai ya Admin View.
             return RedirectToAction("Index", "Dashboard");
         }
 
