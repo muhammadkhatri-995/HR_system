@@ -563,6 +563,12 @@
 
         <div class="sidebar-menu-wrapper">
             <ul class="sidebar-menu">
+                <li>
+                    <a asp-controller="Dashboard" asp-action="Index" data-title="Dashboard">
+                        <i class="bi bi-speedometer2"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
                 @if (User.IsInRole("Admin"))
                 {
                     <li>
@@ -607,12 +613,7 @@
                         </a>
                     </li>
                 }
-                <li>
-                    <a asp-controller="Dashboard" asp-action="Index" data-title="Dashboard">
-                        <i class="bi bi-speedometer2"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
+                
                 <li>
                     <a asp-controller="Attendance" asp-action="Index" data-title="Attendance">
                         <i class="bi bi-calendar-check"></i>
